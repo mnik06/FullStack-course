@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { IEntityRepo } from 'src/types/IEntityRepo';
-import { Entity, EntitySchema } from 'src/types/Entity';
+import { IEntityRepo } from 'src/types/repos/IEntityRepo';
+import { Entity, EntitySchema } from 'src/types/db/Entity';
 import { entityTable } from 'src/services/drizzle/schema';
 
 export function getEntityRepo(db: NodePgDatabase): IEntityRepo {

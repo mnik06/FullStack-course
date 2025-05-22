@@ -1,4 +1,4 @@
-import { Entity } from './Entity';
+import { Entity } from '../db/Entity';
 
 export interface IEntityRepo {
   createEntity(data: Partial<Entity>): Promise<Entity>;

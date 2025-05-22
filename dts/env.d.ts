@@ -1,4 +1,4 @@
-import type { Env } from './EnvSchema';
+import type { Env } from 'src/types/EnvSchema';
 
 // Here we all env vars
 declare global {
