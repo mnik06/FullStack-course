@@ -6,4 +6,4 @@ export const HealthMetricsSchema = z.object({
   errorMessage: z.unknown().optional()
 });
 
-export type HealthMetrics = z.infer<typeof HealthMetricsSchema>;
+export type THealthMetrics = z.infer<typeof HealthMetricsSchema>;

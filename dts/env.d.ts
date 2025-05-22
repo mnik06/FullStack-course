@@ -1,8 +1,8 @@
-import type { Env } from 'src/types/EnvSchema';
+import type { TEnv } from 'src/types/EnvSchema';
 
 // Here we all env vars
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends Env {}
+    interface ProcessEnv extends TEnv {}
   }
 }

@@ -61,7 +61,38 @@ export default [
       'object-curly-spacing': ['error', 'always'],
       curly: 'error',
       'no-async-promise-executor': ['error'],
-      'comma-dangle': ['error', 'never']
-    }
+      'comma-dangle': ['error', 'never'],
+
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'interface',
+          format: ['PascalCase'],
+          prefix: ['I'],
+          filter: {
+            regex: '^(NodeJS|Fastify|Zod|Drizzle|ProcessEnv)|^.*\\..*$',
+            match: false,
+          }
+        },
+        {
+          selector: 'typeAlias',
+          format: ['PascalCase'],
+          prefix: ['T'],
+          filter: {
+            regex: '^(NodeJS|Fastify|Zod|Drizzle)|^.*\\..*$',
+            match: false,
+          }
+        },
+        {
+          selector: 'enum',
+          format: ['PascalCase'],
+          prefix: ['E'],
+          filter: {
+            regex: '^(NodeJS|Fastify|Zod|Drizzle)|^.*\\..*$',
+            match: false,
+          }
+        }
+      ],
+    },
   })
 ];

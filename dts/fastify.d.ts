@@ -1,4 +1,4 @@
-import { IRepos } from 'src/repos';
+import { TRepos } from 'src/repos';
 import { IUUIDService } from 'src/services/uuid';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { IIdentityService } from 'src/types/IIdentityService';
@@ -11,7 +11,7 @@ declare module 'fastify' {
   interface FastifyInstance {
     uuid: IUUIDService;
     db: NodePgDatabase;
-    repos: IRepos;
+    repos: TRepos;
     identityService: IIdentityService,
     mailService: IMailService,
     storageService: IStorageService

@@ -1,4 +1,4 @@
-import { HealthMetrics } from 'src/types/HealthMetrics';
+import { THealthMetrics } from 'src/types/HealthMetrics';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { ITransactionManager } from 'src/types/ITransaction';
 
@@ -25,8 +25,8 @@ export function getDb(opts : {
   return db;
 }
 
-export async function dbHealthCheck(db: NodePgDatabase): Promise<HealthMetrics> {
-  const healthMetric: HealthMetrics = {
+export async function dbHealthCheck(db: NodePgDatabase): Promise<THealthMetrics> {
+  const healthMetric: THealthMetrics = {
     isOk: false,
     serviceName: 'postgres'
   };

@@ -1,11 +1,11 @@
 import { FastifyPluginAsync } from 'fastify';
 import fp from 'fastify-plugin';
 
-interface Options {
+interface IOptions {
   skip: string[];
 }
 
-const plugin: FastifyPluginAsync<Options> = async function (fastify, opts) {
+const plugin: FastifyPluginAsync<IOptions> = async function (fastify, opts) {
   fastify.addHook('onRoute', async (routeOptions) => {
     const skip = (opts.skip || []).some((url) => routeOptions.url.includes(url));
     if (skip) {
@@ -15,4 +15,4 @@ const plugin: FastifyPluginAsync<Options> = async function (fastify, opts) {
   });
 };
 
-export default fp<Options>(plugin, '5.x');
+export default fp<IOptions>(plugin, '5.x');

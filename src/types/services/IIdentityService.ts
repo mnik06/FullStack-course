@@ -1,5 +1,5 @@
-import { IdentityUser } from './IdentityUser';
+import { TIdentityUser } from '../IdentityUser';
 
 export interface IIdentityService {
-  getUserByAccessToken(token: string): Promise<IdentityUser>;
+  getUserByAccessToken(token: string): Promise<TIdentityUser>;
 }

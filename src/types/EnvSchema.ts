@@ -16,4 +16,4 @@ export const EnvSchema = z.object({
   SWAGGER_PWD: z.string().min(10)
 });
 
-export type Env = z.infer<typeof EnvSchema>;
+export type TEnv = z.infer<typeof EnvSchema>;
