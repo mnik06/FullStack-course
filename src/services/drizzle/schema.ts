@@ -8,3 +8,10 @@ export const postTable = pgTable('posts', {
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
+
+export const commentTable = pgTable('comments', {
+  id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
+  text: varchar({ length: 255 }).notNull(),
+  createdAt: timestamp().defaultNow(),
+  updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
+});

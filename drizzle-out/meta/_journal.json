@@ -15,6 +15,13 @@
       "when": 1747927325621,
       "tag": "0001_redundant_texas_twister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747929810202,
+      "tag": "0002_melted_thunderbolts",
+      "breakpoints": true
     }
   ]
 }
