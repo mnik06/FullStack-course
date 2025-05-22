@@ -19,8 +19,8 @@ export async function setupSwagger(server: FastifyInstance, userName: string, pw
   await server.register(fastifySwagger, {
     openapi: {
       info: {
-        title: 'fastify-boilerplate',
-        description: 'fastify-boilerplate',
+        title: 'fullstack-course',
+        description: 'fullstack-course',
         version: '1.0.0'
       },
       servers: [],
