@@ -1,5 +1,5 @@
 <template>
-  <el-card class="cursor-pointer">
+  <el-card>
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-bold">{{ post.title }}</span>
@@ -18,31 +18,62 @@
 
     <div class="flex flex-col">
       <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-        Fugit tempore magni rem consequatur blanditiis amet molestias hic soluta repellendus,
-        modi harum aut. Consectetur in, totam ab eum laboriosam rerum molestiae!
+        {{ post.description }}
       </p>
 
       <div class="flex items-end justify-between mt-3">
         <el-button
           class="!px-0"
           type="primary"
+          :loading="postCommentsLoading"
           link
+          @click="toggleComments"
         >
           <IconComments class="w-4 h-4 mr-2 [&_*]:!fill-primary" />
-          Show comments ({{ post.commentsCount }})
+          {{ isCommentsVisible ? 'Hide' : 'Show' }} comments
+          <template v-if="!isCommentsVisible">({{ post.commentsCount }})</template>
         </el-button>
 
-        <span class="italic text-sm">
+        <span class="italic text-xs ml-auto">
           {{ $filters.dateFilter(post.createdAt) }}
         </span>
       </div>
+
+      <PostItemComments
+        v-if="isCommentsVisible"
+        v-model:comments="postComments"
+        :post-id="post.id"
+      />
     </div>
   </el-card>
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   post: IPost
 }>()
+
+const postComments = ref<IPostComment[]>([])
+const postCommentsLoading = ref(false)
+
+const isCommentsVisible = ref(false)
+
+async function toggleComments () {
+  if (!isCommentsVisible.value && !postComments.value.length) {
+    await fetchPostComments()
+  }
+
+  isCommentsVisible.value = !isCommentsVisible.value
+}
+
+function fetchPostComments () {
+  postCommentsLoading.value = true
+
+  postsService.getComments(props.post.id).then((res) => {
+    postComments.value = res.data
+  })
+    .finally(() => {
+      postCommentsLoading.value = false
+    })
+}
 </script>

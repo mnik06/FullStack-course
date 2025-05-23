@@ -8,7 +8,7 @@ interface IPostComment {
 interface IPost {
   id: string
   title: string
-  body: string
+  description: string
   createdAt: string
   updatedAt: string
   comments?: IPostComment[]

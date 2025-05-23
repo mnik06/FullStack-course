@@ -11,6 +11,7 @@ import {
 } from '@/plugins'
 import { filters } from '@/core/filters'
 
+import '@/plugins/dayjs'
 import '@/assets/styles/main.scss'
 
 const app = createApp(App)

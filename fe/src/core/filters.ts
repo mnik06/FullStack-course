@@ -48,8 +48,15 @@ export const dateFilter = (
   return new Date(value).toLocaleString('en-US', dateFilterOptions[formatOption])
 }
 
+export const relativeDate = (value: string, stub = 'Unknown'): string => {
+  if (!value) return stub
+
+  return dayjs(value).fromNow()
+}
+
 export const allFilters = {
-  dateFilter
+  dateFilter,
+  relativeDate
 }
 
 export const filters = {

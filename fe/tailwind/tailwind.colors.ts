@@ -2,6 +2,7 @@ import twColors from 'tailwindcss/colors'
 
 export const colors = {
   ...twColors,
+  'cream-can': '#f2c75b',
 
   // todo: with the following code you can use element colors
   primary: 'var(--el-color-primary)',

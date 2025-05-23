@@ -13,7 +13,7 @@
       </div> -->
     </div>
 
-    <div class="flex-1 overflow-auto">
+    <div class="flex-1 overflow-auto bg-slate-50">
       <slot />
     </div>
   </div>

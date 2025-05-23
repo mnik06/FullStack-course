@@ -1,10 +1,11 @@
 <template>
   <div class="container mx-auto py-5">
-    <div class="flex flex-col gap-5">
+    <div class="flex flex-col items-center gap-5">
       <PostItem
         v-for="post in posts"
         :key="post.id"
         :post="post"
+        class="w-2/3"
       />
     </div>
   </div>

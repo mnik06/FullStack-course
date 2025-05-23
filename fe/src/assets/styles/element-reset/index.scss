@@ -6,6 +6,10 @@
       'base': colors.$primary,
     ),
   ),
+  $card: (
+    'padding': 14px,
+    'border-radius': 8px,
+  )
 );
 
 @use "element-plus/theme-chalk/src/base";
@@ -24,3 +28,4 @@
 @use "element-plus/theme-chalk/src/switch";
 @use "element-plus/theme-chalk/src/overlay";
 @use "element-plus/theme-chalk/src/dialog";
+@use "element-plus/theme-chalk/src/avatar";
