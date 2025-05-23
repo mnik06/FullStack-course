@@ -3,6 +3,10 @@ class PostsService {
     return useApiClient.get<IPost[]>('/posts')
   }
 
+  getPostById (id: string) {
+    return useApiClient.get<IPost>(`/posts/${id}`)
+  }
+
   createPost (post: Partial<IPost>) {
     return useApiClient.post<IPost>('/posts', post)
   }

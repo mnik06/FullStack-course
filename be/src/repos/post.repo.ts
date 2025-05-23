@@ -14,8 +14,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     async getPosts() {
       const posts = await db
         .select()
-        .from(postTable)
-        .groupBy(postTable.id);
+        .from(postTable);
       return posts.map(post => PostSchema.parse(post));
     },
 

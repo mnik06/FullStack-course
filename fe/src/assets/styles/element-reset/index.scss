@@ -13,9 +13,9 @@
 );
 
 @use "_form";
+@use "_button";
 
 @use "element-plus/theme-chalk/src/base";
-@use "element-plus/theme-chalk/src/button";
 @use "element-plus/theme-chalk/src/badge";
 @use "element-plus/theme-chalk/src/message";
 @use "element-plus/theme-chalk/src/select";
@@ -30,4 +30,4 @@
 @use "element-plus/theme-chalk/src/dialog";
 @use "element-plus/theme-chalk/src/avatar";
 @use "element-plus/theme-chalk/src/notification";
-
+@use "element-plus/theme-chalk/src/empty";

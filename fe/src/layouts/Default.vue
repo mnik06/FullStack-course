@@ -1,7 +1,12 @@
 <template>
   <div class="flex flex-col h-full w-full overflow-hidden">
     <div class="flex items-center p-5 border-b border-gray-300 shadow-md">
-      <h2 class="text-xl font-bold text-primary mr-10">FullStack Course</h2>
+      <router-link
+        to="/"
+        class="text-xl font-bold text-primary mr-10"
+      >
+        FullStack Course
+      </router-link>
 
       <!-- <div class="flex items-center">
         <router-link

@@ -21,6 +21,7 @@
           v-model="formData.description"
           type="textarea"
           resize="none"
+          :rows="10"
         />
       </el-form-item>
 

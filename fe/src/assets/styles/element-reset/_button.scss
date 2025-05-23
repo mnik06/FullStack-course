@@ -1,0 +1,7 @@
+@use "element-plus/theme-chalk/src/button";
+
+.el-button {
+  svg * {
+    fill: currentColor !important;
+  }
+}
