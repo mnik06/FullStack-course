@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between">
         <span class="font-bold">{{ post.title }}</span>
 
-        <div class="flex items-center">
+        <!-- <div class="flex items-center">
           <el-button size="small" class="w-7 h-7">
             <IconEdit class="w-4 h-4" />
           </el-button>
@@ -12,7 +12,7 @@
           <el-button type="danger" size="small" class="w-7 h-7">
             <IconDelete class="w-4 h-4 fill-white" />
           </el-button>
-        </div>
+        </div> -->
       </div>
     </template>
 
@@ -31,7 +31,7 @@
         >
           <IconComments class="w-4 h-4 mr-2 [&_*]:!fill-primary" />
           {{ isCommentsVisible ? 'Hide' : 'Show' }} comments
-          <template v-if="!isCommentsVisible">({{ post.commentsCount }})</template>
+          <template v-if="!isCommentsVisible">({{ postComments.length || post.commentsCount || 0 }})</template>
         </el-button>
 
         <span class="italic text-xs ml-auto">
@@ -49,11 +49,14 @@
 </template>
 
 <script lang="ts" setup>
+import { notificationHandler } from '@/core/helpers'
+
 const props = defineProps<{
   post: IPost
+  showComments?: boolean
 }>()
 
-const postComments = ref<IPostComment[]>([])
+const postComments = ref<IPostComment[]>(props.post.comments || [])
 const postCommentsLoading = ref(false)
 
 const isCommentsVisible = ref(false)
@@ -69,11 +72,19 @@ async function toggleComments () {
 function fetchPostComments () {
   postCommentsLoading.value = true
 
-  postsService.getComments(props.post.id).then((res) => {
-    postComments.value = res.data
-  })
+  postsService.getComments(props.post.id)
+    .then((res) => {
+      postComments.value = res.data
+    })
     .finally(() => {
       postCommentsLoading.value = false
     })
+    .catch(notificationHandler)
 }
+
+onMounted(() => {
+  if (props.showComments) {
+    toggleComments()
+  }
+})
 </script>

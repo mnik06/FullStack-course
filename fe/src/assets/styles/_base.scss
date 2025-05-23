@@ -7,7 +7,7 @@
   html,
   body,
   #app {
-    @apply h-full text-sm;
+    @apply h-full font-main #{!important};
   }
 
   html {

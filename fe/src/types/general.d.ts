@@ -17,3 +17,11 @@ type TTableHeadings<T = Record<string, any>> = Array<{
 }>
 
 type TLayoutName = 'Blank' | 'Default'
+
+type TAppAxiosError = import('axios').AxiosError<{ error: { code: number } }>
+
+interface ICustomNotification {
+  errorCode?: TCustomErrorCode
+  text?: string
+  type?: IElementPlus['NotificationType']
+}

@@ -8,7 +8,11 @@ export default {
   ],
   theme: {
     colors,
-    extend: {}
+    extend: {
+      fontFamily: {
+        main: ['DM Sans', 'sans-serif']
+      }
+    }
   },
   plugins: []
 } satisfies Config

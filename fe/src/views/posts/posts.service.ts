@@ -3,6 +3,10 @@ class PostsService {
     return useApiClient.get<IPost[]>('/posts')
   }
 
+  createPost (post: Partial<IPost>) {
+    return useApiClient.post<IPost>('/posts', post)
+  }
+
   getComments (postId: string) {
     return useApiClient.get<IPostComment[]>(`/posts/${postId}/comments`)
   }

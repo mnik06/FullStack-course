@@ -32,7 +32,7 @@
           A
         </el-avatar>
 
-        <span class="text-xs font-bold ml-2">Anonymous</span>
+        <span class="text-sm font-bold ml-2">Anonymous</span>
         <span class="text-xs text-gray-500 ml-2">{{ $filters.relativeDate(comment.createdAt) }}</span>
       </div>
 
@@ -46,13 +46,13 @@ const props = defineProps<{
   postId: string
 }>()
 
-const commentsModel = defineModel<IPostComment[]>('comments')
+const comments = defineModel<IPostComment[]>('comments')
 
 const newComment = ref('')
 const newCommentLoading = ref(false)
 
 const sortedComments = computed(() => {
-  return commentsModel.value.toSorted((a, b) => {
+  return comments.value.toSorted((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   })
 })
@@ -61,7 +61,7 @@ function saveComment () {
   newCommentLoading.value = true
 
   postsService.createComment(props.postId, newComment.value).then((res) => {
-    commentsModel.value.push(res.data)
+    comments.value.push(res.data)
     newComment.value = ''
   })
     .finally(() => {
