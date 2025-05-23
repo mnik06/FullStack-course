@@ -9,6 +9,7 @@ import {
   I18nPlugin,
   VueGlobalPropertiesPlugin
 } from '@/plugins'
+import { filters } from '@/core/filters'
 
 import '@/assets/styles/main.scss'
 
@@ -17,6 +18,7 @@ const app = createApp(App)
 app
   .use(store)
   .use(router)
+  .use(filters)
   .use(PortalPlugin)
   .use(I18nPlugin)
   .use(VueGlobalPropertiesPlugin)

@@ -15,3 +15,5 @@ type TTableHeadings<T = Record<string, any>> = Array<{
   sortMethod?: (a: number, b: number) => number
   formatter?: (row: T) => (number | string)
 }>
+
+type TLayoutName = 'Blank' | 'Default'

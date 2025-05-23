@@ -1,6 +1,7 @@
 import 'vue-router'
 import { routeNames } from '@/router/route-names'
 import { globalProperties, portalNames } from '@/plugins'
+import type { allFilters } from '@/core/filters'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -8,6 +9,7 @@ declare module 'vue-router' {
     label?: string
     parentName?: string
     requireAuth?: boolean
+    layout?: TLayoutName
   }
 }
 
@@ -16,6 +18,7 @@ declare module 'vue' {
     // todo: Here you define you global vue definitions.
     $portalNames: typeof portalNames
     $routeNames: typeof routeNames
+    $filters: typeof allFilters
   }
 }
 

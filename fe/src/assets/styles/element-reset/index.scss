@@ -1,6 +1,12 @@
 @use "../variables/colors";
 
-// @forward 'element-plus/theme-chalk/src/common/var.scss' with ();
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': colors.$primary,
+    ),
+  ),
+);
 
 @use "element-plus/theme-chalk/src/base";
 @use "element-plus/theme-chalk/src/button";

@@ -5,14 +5,16 @@
       el: messages[locale]?.el as TElementPlus['TranslatePair']
     }"
   >
-    <router-view />
-    <Modals />
+    <Layout :layout="$route.meta.layout">
+      <router-view />
+    </Layout>
 
-    <ElButton @click="openModal('TestModal')">Open modal</ElButton>
+    <Modals />
   </ElConfigProvider>
 </template>
 
 <script lang="ts" setup>
+import Layout from '@/layouts/Layout.vue'
+
 const { messages, locale } = useI18n()
-const { openModal } = useModals()
 </script>

@@ -9,13 +9,12 @@
     "build": "run-s type-check build-only",
     "preview": "vite preview",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix",
-    "openapi-generate": "npx openapi-typescript https://fakerestapi.azurewebsites.net/swagger/v1/swagger.json -o ./src/api/types/schema.d.ts",
-    "postinstall": "run-p openapi-generate"
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@vueuse/core": "^12.3.0",
     "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
     "element-plus": "^2.9.2",
     "pinia": "^2.3.0",
     "portal-vue": "^3.0.0",

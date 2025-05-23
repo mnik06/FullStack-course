@@ -33,3 +33,8 @@ coverage
 
 stats.html
 *.tsbuildinfo
+
+# Auto-generated type declaration files
+dts/auto-imports.d.ts
+dts/components.d.ts
+.eslintrc-auto-import.json

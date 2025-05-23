@@ -1,11 +1,7 @@
 import twColors from 'tailwindcss/colors'
 
 export const colors = {
-  white: twColors.white,
-  gray: twColors.gray,
-  red: twColors.red,
-  green: twColors.green,
-  orange: twColors.orange,
+  ...twColors,
 
   // todo: with the following code you can use element colors
   primary: 'var(--el-color-primary)',

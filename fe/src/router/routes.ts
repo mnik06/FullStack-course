@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { postsRoutes } from '@/views/posts/posts.routes'
 import { routeNames } from './route-names'
 
 const routes: Array<RouteRecordRaw> = [
@@ -8,9 +9,9 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/',
-    name: routeNames.home,
-    component: () => import('@/views/Home.vue')
-  }
+    redirect: { name: routeNames.posts }
+  },
+  ...postsRoutes
 ]
 
 export {
