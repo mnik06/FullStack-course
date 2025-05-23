@@ -12,14 +12,9 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
       return CommentSchema.parse(comment[0]);
     },
 
-    async getComments() {
-      const comments = await db.select().from(commentTable);
+    async getCommentsByPostId(postId) {
+      const comments = await db.select().from(commentTable).where(eq(commentTable.postId, postId));
       return comments.map(comment => CommentSchema.parse(comment));
-    },
-
-    async getCommentById(id) {
-      const comment = await db.select().from(commentTable).where(eq(commentTable.id, id));
-      return comment.length > 0 ? CommentSchema.parse(comment[0]) : null;
     },
 
     async updateCommentById(id, data) {

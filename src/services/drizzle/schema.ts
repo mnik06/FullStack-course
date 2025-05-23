@@ -1,5 +1,5 @@
 import { uuid, pgTable, varchar, timestamp } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 export const postTable = pgTable('posts', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
@@ -9,9 +9,21 @@ export const postTable = pgTable('posts', {
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
 
+export const postRelations = relations(postTable, ({ many }) => ({
+  comments: many(commentTable)
+}));
+
 export const commentTable = pgTable('comments', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
   text: varchar({ length: 255 }).notNull(),
+  postId: uuid().references(() => postTable.id, { onDelete: 'cascade' }).notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
+
+export const commentRelations = relations(commentTable, ({ one }) => ({
+  post: one(postTable, {
+    fields: [commentTable.id],
+    references: [postTable.id]
+  })
+}));

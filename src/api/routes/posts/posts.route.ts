@@ -19,7 +19,8 @@ const routes: FastifyPluginAsync = async function (f) {
     }
   }, () => {
     return getPosts({
-      postRepo: fastify.repos.postRepo
+      postRepo: fastify.repos.postRepo,
+      commentRepo: fastify.repos.commentRepo
     });
   });
 
@@ -33,6 +34,7 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return createPost({
       postRepo: fastify.repos.postRepo,
+      commentRepo: fastify.repos.commentRepo,
       data: req.body
     });
   });

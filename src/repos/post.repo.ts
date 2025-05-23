@@ -12,7 +12,10 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async getPosts() {
-      const posts = await db.select().from(postTable);
+      const posts = await db
+        .select()
+        .from(postTable)
+        .groupBy(postTable.id);
       return posts.map(post => PostSchema.parse(post));
     },
 

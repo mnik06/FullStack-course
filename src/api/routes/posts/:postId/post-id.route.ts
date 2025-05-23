@@ -15,11 +15,15 @@ const routes: FastifyPluginAsync = async function (f) {
     schema: {
       params: z.object({
         postId: z.string().uuid()
-      })
+      }),
+      response: {
+        200: GetPostByIdRespSchema
+      }
     }
   }, (req) => {
     return getPostById({
       postRepo: fastify.repos.postRepo,
+      commentRepo: fastify.repos.commentRepo,
       postId: req.params.postId
     });
   });
@@ -37,6 +41,7 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return updatePostById({
       postRepo: fastify.repos.postRepo,
+      commentRepo: fastify.repos.commentRepo,
       postId: req.params.postId,
       data: req.body
     });
