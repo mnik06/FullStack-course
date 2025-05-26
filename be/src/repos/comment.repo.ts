@@ -24,6 +24,11 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
         .where(eq(commentTable.id, id))
         .returning();
       return comments.length > 0 ? CommentSchema.parse(comments[0]) : null;
+    },
+
+    async deleteComment(id) {
+      const comments = await db.delete(commentTable).where(eq(commentTable.id, id)).returning();
+      return comments.length > 0;
     }
   };
 } 

@@ -38,7 +38,6 @@ const routes: FastifyPluginAsync = async function (f) {
       data: req.body
     });
   });
-
 };
 
 export default routes; 

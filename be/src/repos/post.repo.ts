@@ -30,6 +30,11 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .where(eq(postTable.id, id))
         .returning();
       return posts.length > 0 ? PostSchema.parse(posts[0]) : null;
+    },
+
+    async deletePost(id) {
+      const posts = await db.delete(postTable).where(eq(postTable.id, id)).returning();
+      return posts.length > 0;
     }
   };
 } 
