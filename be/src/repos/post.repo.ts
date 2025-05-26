@@ -1,4 +1,4 @@
-import { count, eq, getTableColumns } from 'drizzle-orm';
+import { asc, count, desc, eq, getTableColumns } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TPost, PostSchemaWithComments, PostSchemaWithCommentsCount } from 'src/types/db/Post';
@@ -15,15 +15,20 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       return PostSchemaWithComments.parse({ ...post[0], comments: [] });
     },
 
-    async getPosts() {
+    async getPosts(query) {
+      const queryColumns = {
+        ...getTableColumns(postTable),
+        commentsCount: count(commentTable)
+      };
+
+      const sortByColumn = queryColumns[query.sortBy || 'createdAt'];
+
       const posts = await db
-        .select({
-          ...getTableColumns(postTable),
-          commentsCount: count(commentTable.id)
-        })
+        .select(queryColumns)
         .from(postTable)
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
-        .groupBy(postTable.id);
+        .groupBy(postTable.id)
+        .orderBy(query.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn));
 
       return posts.map(post => PostSchemaWithCommentsCount.parse(post));
     },

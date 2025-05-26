@@ -1,6 +1,11 @@
 class PostsService {
   getPosts () {
-    return useApiClient.get<IPost[]>('/posts')
+    return useApiClient.get<IPost[]>('/posts', {
+      params: {
+        sortBy: 'title',
+        sortOrder: 'asc'
+      }
+    })
   }
 
   getPostById (id: string) {

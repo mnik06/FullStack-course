@@ -19,3 +19,7 @@ export const PostSchemaWithComments = PostSchema.extend({
   comments: z.array(CommentSchema)
 });
 export type TPostWithComments = z.infer<typeof PostSchemaWithComments>;
+
+export const PostSortBySchema = z.enum(['createdAt', 'title', 'commentsCount']);
+export type TPostSortBy = z.infer<typeof PostSortBySchema>;
+

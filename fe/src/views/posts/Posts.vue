@@ -2,7 +2,7 @@
   <div v-loading.fullscreen="loading" class="container mx-auto py-5">
     <div v-if="posts.length" class="flex flex-col items-center gap-5">
       <PostItem
-        v-for="(post) in sortedPosts"
+        v-for="(post) in posts"
         :key="post.id"
         :post="post"
         class="w-2/3"
@@ -30,12 +30,6 @@ const { openModal } = useModals()
 
 const loading = ref(false)
 const posts = ref<IPost[]>([])
-
-const sortedPosts = computed(() => {
-  return posts.value.toSorted((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  })
-})
 
 function fetchPosts () {
   loading.value = true
