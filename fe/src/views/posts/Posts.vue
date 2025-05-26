@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="loading" class="container h-full mx-auto py-5 overflow-auto">
+  <div v-loading.fullscreen="loading" class="container mx-auto py-5">
     <div v-if="posts.length" class="flex flex-col items-center gap-5">
       <PostItem
         v-for="(post) in sortedPosts"

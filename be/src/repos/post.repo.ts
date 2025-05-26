@@ -1,4 +1,4 @@
-import { count, eq, getTableColumns, sql } from 'drizzle-orm';
+import { count, eq, getTableColumns } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TPost, PostSchemaWithComments, PostSchemaWithCommentsCount } from 'src/types/db/Post';
@@ -10,12 +10,9 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       const post = await db
         .insert(postTable)
         .values(data as TPost)
-        .returning({
-          ...getTableColumns(postTable),
-          comments: sql`[]`
-        });
+        .returning();
 
-      return PostSchemaWithComments.parse(post[0]);
+      return PostSchemaWithComments.parse({ ...post[0], comments: [] });
     },
 
     async getPosts() {
