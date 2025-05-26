@@ -1,26 +1,51 @@
-import { eq } from 'drizzle-orm';
+import { count, eq, getTableColumns } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
-import { TPost, PostSchema } from 'src/types/db/Post';
-import { postTable } from 'src/services/drizzle/schema';
+import { TPost, PostSchemaWithComments, PostSchemaWithCommentsCount } from 'src/types/db/Post';
+import { commentTable, postTable } from 'src/services/drizzle/schema';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
     async createPost(data) {
-      const post = await db.insert(postTable).values(data as TPost).returning();
-      return PostSchema.parse(post[0]);
+      const post = await db
+        .insert(postTable)
+        .values(data as TPost)
+        .returning();
+
+      return PostSchemaWithComments.parse({ ...post[0], comments: [] });
     },
 
     async getPosts() {
       const posts = await db
-        .select()
-        .from(postTable);
-      return posts.map(post => PostSchema.parse(post));
+        .select({
+          ...getTableColumns(postTable),
+          commentsCount: count(commentTable.id)
+        })
+        .from(postTable)
+        .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
+        .groupBy(postTable.id);
+
+      return posts.map(post => PostSchemaWithCommentsCount.parse(post));
     },
 
     async getPostById(id) {
-      const post = await db.select().from(postTable).where(eq(postTable.id, id));
-      return post.length > 0 ? PostSchema.parse(post[0]) : null;
+      const posts = await db
+        .select({
+          ...getTableColumns(postTable),
+          comments: commentTable
+        })
+        .from(postTable)
+        .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
+        .where(eq(postTable.id, id));
+
+      if (!posts.length) {
+        return null;
+      }
+
+      return PostSchemaWithComments.parse({
+        ...posts[0],
+        comments: posts.flatMap(post => post.comments)
+      });
     },
 
     async updatePostById(id, data) {
@@ -29,7 +54,20 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .set(data as TPost)
         .where(eq(postTable.id, id))
         .returning();
-      return posts.length > 0 ? PostSchema.parse(posts[0]) : null;
+
+      if (!posts.length) {
+        return null;
+      }
+
+      const comments = await db
+        .select()
+        .from(commentTable)
+        .where(eq(commentTable.postId, id));
+
+      return PostSchemaWithComments.parse({
+        ...posts[0],
+        comments
+      });
     },
 
     async deletePost(id) {

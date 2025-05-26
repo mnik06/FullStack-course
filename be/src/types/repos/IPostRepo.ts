@@ -1,9 +1,9 @@
-import { TPost } from 'src/types/db/Post';
+import { TPost, TPostWithComments, TPostWithCommentsCount } from 'src/types/db/Post';
 
 export interface IPostRepo {
-  createPost(data: Partial<TPost>): Promise<TPost>;
-  getPosts(): Promise<TPost[]>;
-  getPostById(id: string): Promise<TPost | null>;
-  updatePostById(id: string, data: Partial<TPost>): Promise<TPost | null>;
+  createPost(data: Partial<TPost>): Promise<TPostWithComments>;
+  getPosts(): Promise<TPostWithCommentsCount[]>;
+  getPostById(id: string): Promise<TPostWithComments | null>;
+  updatePostById(id: string, data: Partial<TPost>): Promise<TPostWithComments | null>;
   deletePost(id: string): Promise<boolean>;
 } 

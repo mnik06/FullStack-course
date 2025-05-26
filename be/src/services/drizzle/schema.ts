@@ -9,6 +9,7 @@ export const postTable = pgTable('posts', {
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
 
+// TODO: check if needed
 export const postRelations = relations(postTable, ({ many }) => ({
   comments: many(commentTable)
 }));
@@ -21,6 +22,7 @@ export const commentTable = pgTable('comments', {
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
 
+// TODO: check if needed
 export const commentRelations = relations(commentTable, ({ one }) => ({
   post: one(postTable, {
     fields: [commentTable.id],
