@@ -3,6 +3,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TPost, PostSchemaWithComments, PostSchemaWithCommentsCount } from 'src/types/db/Post';
 import { commentTable, postTable } from 'src/services/drizzle/schema';
+import { calculatePaginationMeta, withPagination } from 'src/utils/pagination.utils';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -15,22 +16,32 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       return PostSchemaWithComments.parse({ ...post[0], comments: [] });
     },
 
-    async getPosts(query) {
+    async getPosts(params) {
       const queryColumns = {
         ...getTableColumns(postTable),
         commentsCount: count(commentTable)
       };
 
-      const sortByColumn = queryColumns[query.sortBy || 'createdAt'];
+      const sortByColumn = queryColumns[params.sortBy || 'createdAt'];
 
-      const posts = await db
+      const qb = db
         .select(queryColumns)
         .from(postTable)
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .groupBy(postTable.id)
-        .orderBy(query.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn));
+        .orderBy(params.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn))
+        .$dynamic();
 
-      return posts.map(post => PostSchemaWithCommentsCount.parse(post));
+      const postsCount = await db.$count(postTable);
+      const posts = await withPagination(
+        qb, 
+        params
+      ); 
+
+      return {
+        data: posts.map(post => PostSchemaWithCommentsCount.parse(post)),
+        meta: calculatePaginationMeta({ ...params, total: postsCount })
+      };
     },
 
     async getPostById(id) {

@@ -18,7 +18,9 @@ const routes: FastifyPluginAsync = async function (f) {
     schema: {
       querystring: z.object({
         sortBy: PostSortBySchema.optional(),
-        sortOrder: SortOrderSchema.optional()
+        sortOrder: SortOrderSchema.optional(),
+        offset: z.string().optional(),
+        limit: z.string().optional()
       }),
       response: {
         200: GetPostsRespSchema

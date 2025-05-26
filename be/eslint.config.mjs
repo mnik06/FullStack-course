@@ -34,6 +34,7 @@ export default [
       ],
       'max-depth': ['error', 3],
       quotes: [2, 'single', { avoidEscape: true }],
+      'indent': ['error', 2],
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',

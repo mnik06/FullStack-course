@@ -35,7 +35,7 @@ function fetchPosts () {
   loading.value = true
   postsService.getPosts()
     .then((res) => {
-      posts.value = res.data
+      posts.value = res.data.data
     })
     .finally(() => { loading.value = false })
     .catch(notificationHandler)
