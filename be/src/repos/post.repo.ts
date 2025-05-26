@@ -24,28 +24,27 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .from(postTable)
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .groupBy(postTable.id);
-      
+
       return posts.map(post => PostSchemaWithCommentsCount.parse(post));
     },
 
     async getPostById(id) {
       const posts = await db
-        .select()
+        .select({
+          ...getTableColumns(postTable),
+          comments: commentTable
+        })
         .from(postTable)
+        .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .where(eq(postTable.id, id));
 
       if (!posts.length) {
         return null;
       }
 
-      const comments = await db
-        .select()
-        .from(commentTable)
-        .where(eq(commentTable.postId, id));
-
       return PostSchemaWithComments.parse({
         ...posts[0],
-        comments
+        comments: posts.flatMap(post => post.comments)
       });
     },
 
