@@ -15,6 +15,10 @@ class PostsService {
     return useApiClient.patch<IPost>(`/posts/${id}`, post)
   }
 
+  deletePost (id: string) {
+    return useApiClient.delete<IPost>(`/posts/${id}`)
+  }
+
   getComments (postId: string) {
     return useApiClient.get<IPostComment[]>(`/posts/${postId}/comments`)
   }

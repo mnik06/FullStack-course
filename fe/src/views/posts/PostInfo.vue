@@ -16,6 +16,7 @@
       class="mt-5"
       show-full
       @edit-post="handleOpenUpsertModal"
+      @post-deleted="$router.push({ name: $routeNames.posts })"
     />
   </div>
 </template>

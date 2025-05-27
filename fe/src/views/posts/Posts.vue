@@ -7,6 +7,7 @@
         :post="post"
         class="w-2/3"
         @edit-post="handleOpenUpsertModal"
+        @post-deleted="handlePostDeleted"
       />
     </div>
 
@@ -46,6 +47,10 @@ function fetchPosts () {
     })
     .finally(() => { loading.value = false })
     .catch(notificationHandler)
+}
+
+function handlePostDeleted (post: IPost) {
+  posts.value = posts.value.filter((p) => p.id !== post.id)
 }
 
 function handleOpenUpsertModal (postToEdit?: IPost) {
