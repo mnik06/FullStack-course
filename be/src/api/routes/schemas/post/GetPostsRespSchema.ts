@@ -1,12 +1,6 @@
 import { z } from 'zod';
+import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 
-export const GetPostsRespSchema = z.array(z.object({
-  id: z.string().uuid(),
-  title: z.string(),
-  description: z.string().optional().nullable(),
-  updatedAt: z.date(),
-  createdAt: z.date(),
-  commentsCount: z.number()
-}));
+export const GetPostsRespSchema = z.array(PostSchemaWithCommentsCount);
 
 export type TGetPostsResp = z.infer<typeof GetPostsRespSchema>

@@ -1,5 +1,5 @@
 import { IPostRepo } from 'src/types/repos/IPostRepo';
-import { TPost } from 'src/types/db/Post';
+import { TPost } from 'src/types/post/schemas/Post';
 import { HttpError } from 'src/api/errors/HttpError';
 
 export async function updatePostById(params: {

@@ -1,4 +1,4 @@
-import { TPost, TPostWithComments, TPostWithCommentsCount } from 'src/types/db/Post';
+import { TPost, TPostWithComments, TPostWithCommentsCount } from 'src/types/post/schemas/Post';
 
 export interface IPostRepo {
   createPost(data: Partial<TPost>): Promise<TPostWithComments>;
