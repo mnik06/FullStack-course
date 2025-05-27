@@ -1,12 +1,13 @@
 class PostsService {
   getPosts () {
     return useApiClient.get<TResponseWithPagination<IPost[]>>('/posts', {
-      params: {
-        sortBy: 'commentsCount',
-        sortOrder: 'asc'
-        // offset: 6,
-        // limit: 3
-      }
+      // params: {
+      //   sortBy: 'commentsCount',
+      //   sortOrder: 'asc',
+      //   search: 'abc',
+      //   offset: 6,
+      //   limit: 3
+      // }
     })
   }
 

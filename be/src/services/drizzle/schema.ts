@@ -1,4 +1,4 @@
-import { uuid, pgTable, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, varchar, timestamp, index } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
 export const postTable = pgTable('posts', {
@@ -7,6 +7,11 @@ export const postTable = pgTable('posts', {
   description: varchar({ length: 1000 }),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
+}, (table) => {
+  return [
+    index('posts_table_title_trgm_index').using('gin', sql`${table.title} gin_trgm_ops`), 
+    index('posts_table_description_fts_index').using('gin', sql`to_tsvector('english', ${table.description})`)
+  ];
 });
 
 // TODO: check if needed

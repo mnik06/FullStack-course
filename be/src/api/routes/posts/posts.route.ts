@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
@@ -8,19 +7,14 @@ import { getPosts } from 'src/controllers/post/get-posts';
 import { CreatePostReqSchema } from 'src/api/routes/schemas/post/CreatePostReqSchema';
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
 import { GetPostsRespSchema } from 'src/api/routes/schemas/post/GetPostsRespSchema';
-import { PostSortBySchema } from 'src/types/post/Post.utils';
-import { SortOrderSchema } from 'src/types/Sorting';
-import { PaginationSchema } from 'src/types/Pagination';
+import { PostFiltersSchema } from 'src/types/post/schemas/PostFilters';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
 
   fastify.get('/', {
     schema: {
-      querystring: z.object({
-        sortBy: PostSortBySchema.optional(),
-        sortOrder: SortOrderSchema.optional()
-      }).extend(PaginationSchema.shape),
+      querystring: PostFiltersSchema,
       response: {
         200: GetPostsRespSchema
       }
