@@ -10,6 +10,7 @@ import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRe
 import { GetPostsRespSchema } from 'src/api/routes/schemas/post/GetPostsRespSchema';
 import { PostSortBySchema } from 'src/types/db/Post';
 import { SortOrderSchema } from 'src/types/Sorting';
+import { PaginationSchema } from 'src/types/Pagination';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -18,10 +19,8 @@ const routes: FastifyPluginAsync = async function (f) {
     schema: {
       querystring: z.object({
         sortBy: PostSortBySchema.optional(),
-        sortOrder: SortOrderSchema.optional(),
-        offset: z.string().optional(),
-        limit: z.string().optional()
-      }),
+        sortOrder: SortOrderSchema.optional()
+      }).extend(PaginationSchema.shape),
       response: {
         200: GetPostsRespSchema
       }
