@@ -44,7 +44,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
 
       return PostSchemaWithComments.parse({
         ...posts[0],
-        comments: posts.flatMap(post => post.comments)
+        comments: posts.flatMap(post => post.comments).filter(Boolean)
       });
     },
 

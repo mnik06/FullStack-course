@@ -11,6 +11,10 @@ class PostsService {
     return useApiClient.post<IPost>('/posts', post)
   }
 
+  updatePost (id: string, post: Partial<IPost>) {
+    return useApiClient.patch<IPost>(`/posts/${id}`, post)
+  }
+
   getComments (postId: string) {
     return useApiClient.get<IPostComment[]>(`/posts/${postId}/comments`)
   }

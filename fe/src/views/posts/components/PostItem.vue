@@ -13,15 +13,19 @@
           </router-link>
         </el-button>
 
-        <!-- <div class="flex items-center">
-          <el-button size="small" class="w-7 h-7">
+        <div class="flex items-center">
+          <el-button size="small" class="w-7 h-7" @click="$emit('editPost', post)">
             <IconEdit class="w-4 h-4" />
           </el-button>
 
-          <el-button type="danger" size="small" class="w-7 h-7">
+          <el-button
+            type="danger"
+            size="small"
+            class="w-7 h-7"
+          >
             <IconDelete class="w-4 h-4" />
           </el-button>
-        </div> -->
+        </div>
       </div>
     </template>
 
@@ -64,7 +68,7 @@
       </div>
 
       <PostItemComments
-        v-if="isCommentsVisible"
+        v-if="isCommentsVisible || showFull"
         v-model:comments="postComments"
         :post-id="post.id"
       />
@@ -75,6 +79,7 @@
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
 
+defineEmits(['editPost'])
 const props = defineProps<{
   post: IPost
   showFull?: boolean
@@ -105,10 +110,4 @@ function fetchPostComments () {
     })
     .catch(notificationHandler)
 }
-
-onMounted(() => {
-  if (props.showFull) {
-    toggleComments()
-  }
-})
 </script>

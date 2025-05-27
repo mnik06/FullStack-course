@@ -6,6 +6,7 @@
         :key="post.id"
         :post="post"
         class="w-2/3"
+        @edit-post="handleOpenUpsertModal"
       />
     </div>
 
@@ -16,7 +17,7 @@
         text-xl font-bold rounded-xl shadow-slate-400 shadow-xl"
       size="large"
       type="primary"
-      @click="handleAddNewPost"
+      @click="handleOpenUpsertModal()"
     >
       + Add Post
     </el-button>
@@ -47,10 +48,16 @@ function fetchPosts () {
     .catch(notificationHandler)
 }
 
-function handleAddNewPost () {
+function handleOpenUpsertModal (postToEdit?: IPost) {
   openModal('UpsertPostModal', {
+    postToEdit,
     onSave: (post) => {
-      posts.value.unshift(post)
+      if (postToEdit) {
+        const index = posts.value.findIndex((p) => p.id === postToEdit.id)
+        posts.value[index] = post
+      } else {
+        posts.value.unshift(post)
+      }
     }
   })
 }
