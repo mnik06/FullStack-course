@@ -14,7 +14,8 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
 
     async getCommentsByPostId(postId) {
       const comments = await db.select().from(commentTable).where(eq(commentTable.postId, postId));
-      return comments.map(comment => CommentSchema.parse(comment));
+
+      return CommentSchema.array().parse(comments);
     },
 
     async updateCommentById(id, data) {

@@ -25,7 +25,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .groupBy(postTable.id);
 
-      return posts.map(post => PostSchemaWithCommentsCount.parse(post));
+        return PostSchemaWithCommentsCount.array().parse(posts);
     },
 
     async getPostById(id) {
