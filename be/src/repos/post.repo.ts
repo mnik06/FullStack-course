@@ -2,12 +2,12 @@ import { asc, count, desc, eq, getTableColumns } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable } from 'src/services/drizzle/schema';
-import { calculatePaginationMeta, withPagination } from 'src/utils/pagination.utils';
 
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TPost } from 'src/types/post/schemas/Post';
 import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
+import { getPaginationService } from 'src/services/pagination/pagination.service';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -21,6 +21,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async getPosts(params) {
+      const paginationService = getPaginationService();
       const queryColumns = {
         ...getTableColumns(postTable),
         commentsCount: count(commentTable)
@@ -37,14 +38,14 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .$dynamic();
 
       const postsCount = await db.$count(postTable);
-      const posts = await withPagination(
+      const posts = await paginationService.withPagination(
         qb, 
         params
       ); 
 
       return {
         data: PostSchemaWithCommentsCount.array().parse(posts),
-        meta: calculatePaginationMeta({ ...params, total: postsCount })
+        meta: paginationService.calculatePaginationMeta({ ...params, total: postsCount })
       };
     },
 

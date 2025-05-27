@@ -1,4 +1,4 @@
-import { TPostSortBy } from 'src/types/db/Post';
+import { TPostSortBy } from 'src/types/post/Post.utils';
 import { TPagination } from 'src/types/Pagination';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TSorting } from 'src/types/Sorting';
