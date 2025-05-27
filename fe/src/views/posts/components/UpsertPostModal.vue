@@ -78,7 +78,11 @@ function handleSubmit () {
 
     submitLoading.value = true
 
-    postsService.createPost(formData.value)
+    const promise = props.postToEdit
+      ? postsService.updatePost(props.postToEdit.id, formData.value)
+      : postsService.createPost(formData.value)
+
+    promise
       .then((res) => {
         closeModal('UpsertPostModal')
         props.onSave?.(res.data)

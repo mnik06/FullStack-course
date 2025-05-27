@@ -1,4 +1,4 @@
-import { TComment } from 'src/types/db/Comment';
+import { TComment } from 'src/types/comment/schemas/Comment';
 export interface ICommentRepo {
   createComment(data: Partial<TComment>): Promise<TComment>;
   getCommentsByPostId(postId: string): Promise<TComment[]>;

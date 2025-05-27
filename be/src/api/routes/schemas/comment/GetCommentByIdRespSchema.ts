@@ -1,8 +1,3 @@
-import { z } from 'zod';
+import { CommentSchema } from 'src/types/comment/schemas/Comment';
 
-export const GetCommentByIdRespSchema = z.object({
-  id: z.string(),
-  text: z.string(),
-  updatedAt: z.date(),
-  createdAt: z.date()
-}); 
+export const GetCommentByIdRespSchema = CommentSchema.extend({});

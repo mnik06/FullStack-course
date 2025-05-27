@@ -13,15 +13,23 @@
           </router-link>
         </el-button>
 
-        <!-- <div class="flex items-center">
-          <el-button size="small" class="w-7 h-7">
+        <div class="flex items-center">
+          <el-button size="small" class="w-7 h-7" @click="$emit('editPost', post)">
             <IconEdit class="w-4 h-4" />
           </el-button>
 
-          <el-button type="danger" size="small" class="w-7 h-7">
-            <IconDelete class="w-4 h-4" />
-          </el-button>
-        </div> -->
+          <el-popconfirm
+            title="Are you sure to delete this post?"
+            width="200"
+            @confirm="handleDeletePost"
+          >
+            <template #reference>
+              <el-button type="danger" size="small" class="w-7 h-7">
+                <IconDelete class="w-4 h-4" />
+              </el-button>
+            </template>
+          </el-popconfirm>
+        </div>
       </div>
     </template>
 
@@ -64,7 +72,7 @@
       </div>
 
       <PostItemComments
-        v-if="isCommentsVisible"
+        v-if="isCommentsVisible || showFull"
         v-model:comments="postComments"
         :post-id="post.id"
       />
@@ -75,6 +83,7 @@
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
 
+const emit = defineEmits(['editPost', 'postDeleted'])
 const props = defineProps<{
   post: IPost
   showFull?: boolean
@@ -93,6 +102,15 @@ async function toggleComments () {
   isCommentsVisible.value = !isCommentsVisible.value
 }
 
+function handleDeletePost () {
+  postsService.deletePost(props.post.id)
+    .then(() => {
+      notificationHandler({ text: 'Post deleted successfully', type: 'success' })
+      emit('postDeleted', props.post)
+    })
+    .catch(notificationHandler)
+}
+
 function fetchPostComments () {
   postCommentsLoading.value = true
 
@@ -105,10 +123,4 @@ function fetchPostComments () {
     })
     .catch(notificationHandler)
 }
-
-onMounted(() => {
-  if (props.showFull) {
-    toggleComments()
-  }
-})
 </script>

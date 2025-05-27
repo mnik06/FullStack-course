@@ -1,5 +1,5 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
-import { TComment } from 'src/types/db/Comment';
+import { TComment } from 'src/types/comment/schemas/Comment';
 
 export function createComment(params: {
   commentRepo: ICommentRepo;

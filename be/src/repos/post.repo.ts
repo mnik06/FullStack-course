@@ -1,9 +1,13 @@
 import { asc, count, desc, eq, getTableColumns } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { IPostRepo } from 'src/types/repos/IPostRepo';
-import { TPost, PostSchemaWithComments, PostSchemaWithCommentsCount } from 'src/types/db/Post';
+
 import { commentTable, postTable } from 'src/services/drizzle/schema';
 import { calculatePaginationMeta, withPagination } from 'src/utils/pagination.utils';
+
+import { IPostRepo } from 'src/types/repos/IPostRepo';
+import { TPost } from 'src/types/post/schemas/Post';
+import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
+import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -39,7 +43,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       ); 
 
       return {
-        data: posts.map(post => PostSchemaWithCommentsCount.parse(post)),
+        data: PostSchemaWithCommentsCount.array().parse(posts),
         meta: calculatePaginationMeta({ ...params, total: postsCount })
       };
     },
@@ -60,7 +64,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
 
       return PostSchemaWithComments.parse({
         ...posts[0],
-        comments: posts.flatMap(post => post.comments)
+        comments: posts.flatMap(post => post.comments).filter(Boolean)
       });
     },
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CommentSchema } from 'src/types/db/Comment';
+import { CommentSchema } from 'src/types/comment/schemas/Comment';
 
 export const GetCommentsRespSchema = z.array(CommentSchema);
 

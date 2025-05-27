@@ -15,14 +15,18 @@
       :post="post"
       class="mt-5"
       show-full
+      @edit-post="handleOpenUpsertModal"
+      @post-deleted="$router.push({ name: $routeNames.posts })"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
+import { routeNames } from '@/router/route-names'
 
 const route = useRoute()
+const router = useRouter()
 
 const post = ref<IPost>()
 const loading = ref(false)
@@ -32,8 +36,23 @@ function fetchPost () {
 
   postsService.getPostById(route.params.id as string)
     .then((res) => { post.value = res.data })
-    .catch(notificationHandler)
+    .catch((err) => {
+      notificationHandler(err)
+
+      router.push({ name: routeNames.posts })
+    })
     .finally(() => { loading.value = false })
+}
+
+const { openModal } = useModals()
+
+function handleOpenUpsertModal () {
+  openModal('UpsertPostModal', {
+    postToEdit: post.value,
+    onSave: (updatedPost) => {
+      post.value = updatedPost
+    }
+  })
 }
 
 onMounted(() => {

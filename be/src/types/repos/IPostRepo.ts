@@ -1,4 +1,4 @@
-import { TPost, TPostSortBy, TPostWithComments, TPostWithCommentsCount } from 'src/types/db/Post';
+import { TPost, TPostWithComments, TPostWithCommentsCount } from 'src/types/post/schemas/Post';
 import { TSorting } from 'src/types/Sorting';
 import { TPagination, TPaginationResponse } from 'src/types/Pagination';
 
