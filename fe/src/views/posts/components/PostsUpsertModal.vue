@@ -1,7 +1,7 @@
 <template>
   <el-dialog
-    :model-value="isOpen.UpsertPostModal"
-    :before-close="() => closeModal('UpsertPostModal')"
+    :model-value="isOpen.PostsUpsertModal"
+    :before-close="() => closeModal('PostsUpsertModal')"
     :title="postToEdit ? 'Edit Post' : 'Add Post'"
     class="max-w-[700px]"
     destroy-on-close
@@ -26,7 +26,7 @@
       </el-form-item>
 
       <div class="flex items-center justify-end mt-5">
-        <el-button @click="closeModal('UpsertPostModal')">
+        <el-button @click="closeModal('PostsUpsertModal')">
           Cancel
         </el-button>
 
@@ -84,7 +84,7 @@ function handleSubmit () {
 
     promise
       .then((res) => {
-        closeModal('UpsertPostModal')
+        closeModal('PostsUpsertModal')
         props.onSave?.(res)
 
         notificationHandler({ text: 'Post successfully saved!', type: 'success' })

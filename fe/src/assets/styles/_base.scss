@@ -47,4 +47,9 @@
     display: none;
   }
 
+  .container {
+    &--small {
+      @apply max-w-[800px] #{!important};
+    }
+  }
 }

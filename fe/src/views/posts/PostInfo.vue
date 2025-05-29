@@ -47,7 +47,7 @@ function fetchPost () {
 const { openModal } = useModals()
 
 function handleOpenUpsertModal () {
-  openModal('UpsertPostModal', {
+  openModal('PostsUpsertModal', {
     postToEdit: post.value,
     onSave: (updatedPost) => {
       post.value = updatedPost
