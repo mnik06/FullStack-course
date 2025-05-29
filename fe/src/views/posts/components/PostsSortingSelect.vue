@@ -4,7 +4,7 @@
       v-model="localModelValue"
       placeholder="Sort by"
       value-key="id"
-      class="w-[200px]"
+      class="w-[210px]"
       clearable
     >
       <template #prefix>

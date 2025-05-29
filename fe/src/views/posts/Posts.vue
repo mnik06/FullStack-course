@@ -1,21 +1,26 @@
 <template>
-  <div v-loading.fullscreen="loading" class="container container--small mx-auto py-5">
-    <div v-if="posts.length" class="flex flex-col items-center gap-5">
-      <div class="flex items-center w-full">
-        <PostsSortingSelect v-model="sorting" />
-      </div>
-
-      <PostItem
-        v-for="(post) in posts"
-        :key="post.id"
-        :post="post"
-        class="w-full"
-        @edit-post="handleOpenUpsertModal"
-        @post-deleted="handlePostDeleted"
-      />
+  <div v-loading.fullscreen="loading" class="flex flex-col h-full overflow-hidden">
+    <div class="flex items-center w-full py-5 container container--small">
+      <SearchInput v-model="search" />
+      <PostsSortingSelect v-model="sorting" class="ml-auto" />
     </div>
 
-    <el-empty v-else-if="!loading" class="h-full" description="No posts found" />
+    <div class="flex-1 flex flex-col overflow-auto pb-5">
+      <div class="flex flex-col flex-1 container container--small">
+        <div v-if="posts.length" class="flex-1 flex flex-col items-center gap-5 !pr-0">
+          <PostItem
+            v-for="(post) in posts"
+            :key="post.id"
+            :post="post"
+            class="w-full"
+            @edit-post="handleOpenUpsertModal"
+            @post-deleted="handlePostDeleted"
+          />
+        </div>
+
+        <el-empty v-else-if="!loading" class="h-full" description="No posts found" />
+      </div>
+    </div>
 
     <el-button
       class="absolute bottom-[50px] right-[50px] w-[200px] h-[60px]
@@ -40,15 +45,18 @@ const { openModal } = useModals()
 const loading = ref(false)
 const posts = ref<TPosts>([])
 
+const search = ref<string>(route.query.search as string || '')
 const sorting = ref<IAppSorting<TPostsSortBy>>({
-  sortBy: route.query?.sortBy as TPostsSortBy,
-  sortOrder: route.query?.sortOrder as TSortOrder
+  sortBy: route.query.sortBy as TPostsSortBy,
+  sortOrder: route.query.sortOrder as TSortOrder
 })
 
 function fetchPosts () {
   loading.value = true
+
   postsService.getPosts({
-    ...(sorting.value || {})
+    ...(sorting.value || {}),
+    search: search.value
   })
     .then((res) => {
       posts.value = res.data
@@ -76,7 +84,7 @@ function handleOpenUpsertModal (postToEdit?: TPost) {
   })
 }
 
-watch([sorting], debouncedFetchPosts)
+watch([sorting, search], debouncedFetchPosts)
 
 onMounted(() => {
   fetchPosts()
