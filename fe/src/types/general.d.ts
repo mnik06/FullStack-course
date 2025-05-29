@@ -31,12 +31,6 @@ interface IPagination {
   limit: number
 }
 
-interface IPaginationMeta extends IPagination {
-  total: number
-  totalPages: number
-  page: number
-}
-
 type TResponseWithPagination<T> = {
   data: T
   meta: IPaginationMeta

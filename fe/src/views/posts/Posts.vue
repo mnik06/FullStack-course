@@ -5,7 +5,7 @@
       <PostsSortingSelect v-model="sorting" class="ml-auto" />
     </div>
 
-    <div class="flex-1 flex flex-col overflow-auto pb-5">
+    <div class="flex-1 flex flex-col overflow-auto">
       <div class="flex flex-col flex-1 container container--small">
         <div v-if="posts.length" class="flex-1 flex flex-col items-center gap-5 !pr-0">
           <PostItem
@@ -14,12 +14,16 @@
             :post="post"
             class="w-full"
             @edit-post="handleOpenUpsertModal"
-            @post-deleted="handlePostDeleted"
+            @post-deleted="fetchPosts"
           />
         </div>
 
         <el-empty v-else-if="!loading" class="h-full" description="No posts found" />
       </div>
+    </div>
+
+    <div class="flex items-center justify-center py-5">
+      <Pagination v-model="pagination" :pagination-meta="paginationMeta" />
     </div>
 
     <el-button
@@ -37,6 +41,7 @@
 <script lang="ts" setup>
 import debounce from 'lodash/debounce'
 import { notificationHandler } from '@/core/helpers'
+import { localStorageService } from '@/services/local-storage.service'
 
 const route = useRoute()
 
@@ -44,11 +49,16 @@ const { openModal } = useModals()
 
 const loading = ref(false)
 const posts = ref<TPosts>([])
+const paginationMeta = ref<TPaginationMeta>()
 
 const search = ref<string>(route.query.search as string || '')
 const sorting = ref<IAppSorting<TPostsSortBy>>({
   sortBy: route.query.sortBy as TPostsSortBy,
   sortOrder: route.query.sortOrder as TSortOrder
+})
+const pagination = ref<IPagination>({
+  offset: 0,
+  limit: localStorageService.getItem('lastPaginationPageSize') || 10
 })
 
 function fetchPosts () {
@@ -56,19 +66,18 @@ function fetchPosts () {
 
   postsService.getPosts({
     ...(sorting.value || {}),
-    search: search.value
+    search: search.value,
+    offset: pagination.value.offset,
+    limit: pagination.value.limit
   })
     .then((res) => {
       posts.value = res.data
+      paginationMeta.value = res.meta
     })
     .finally(() => { loading.value = false })
     .catch(notificationHandler)
 }
-const debouncedFetchPosts = debounce(fetchPosts, 300)
-
-function handlePostDeleted (post: TPost) {
-  posts.value = posts.value.filter((p) => p.id !== post.id)
-}
+const debouncedFetchPosts = debounce(fetchPosts, 200)
 
 function handleOpenUpsertModal (postToEdit?: TPost) {
   openModal('PostsUpsertModal', {
@@ -77,14 +86,17 @@ function handleOpenUpsertModal (postToEdit?: TPost) {
       if (postToEdit) {
         const index = posts.value.findIndex((p) => p.id === postToEdit.id)
         posts.value[index] = { ...post, commentsCount: post.comments?.length ?? 0 }
-      } else {
-        posts.value.unshift({ ...post, commentsCount: post.comments?.length ?? 0 })
+
+        return
       }
+
+      fetchPosts()
     }
   })
 }
 
-watch([sorting, search], debouncedFetchPosts)
+watch([sorting, pagination], fetchPosts, { deep: true })
+watch(search, debouncedFetchPosts)
 
 onMounted(() => {
   fetchPosts()
