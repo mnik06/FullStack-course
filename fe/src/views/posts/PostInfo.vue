@@ -28,14 +28,14 @@ import { routeNames } from '@/router/route-names'
 const route = useRoute()
 const router = useRouter()
 
-const post = ref<IPost>()
+const post = ref<TPost>()
 const loading = ref(false)
 
 function fetchPost () {
   loading.value = true
 
   postsService.getPostById(route.params.id as string)
-    .then((res) => { post.value = res.data })
+    .then((res) => { post.value = res })
     .catch((err) => {
       notificationHandler(err)
 

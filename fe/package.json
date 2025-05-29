@@ -9,7 +9,9 @@
     "build": "run-s type-check build-only",
     "preview": "vite preview",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "openapi-generate": "npx openapi-typescript http://127.0.0.1:3000/api/documentation/json -o ./src/api/types/schema.d.ts --header 'Authorization: Basic YWRtaW46MTIzNDVRd2VydHkq' --enum",
+    "postinstall": "run-p openapi-generate"
   },
   "dependencies": {
     "@vueuse/core": "^12.3.0",

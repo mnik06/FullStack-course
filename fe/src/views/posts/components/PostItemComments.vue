@@ -46,7 +46,7 @@ const props = defineProps<{
   postId: string
 }>()
 
-const comments = defineModel<IPostComment[]>('comments')
+const comments = defineModel<TPostComment[]>('comments')
 
 const newComment = ref('')
 const newCommentLoading = ref(false)
@@ -61,7 +61,7 @@ function saveComment () {
   newCommentLoading.value = true
 
   postsService.createComment(props.postId, newComment.value).then((res) => {
-    comments.value.push(res.data)
+    comments.value.push(res)
     newComment.value = ''
   })
     .finally(() => {

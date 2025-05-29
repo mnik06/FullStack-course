@@ -46,8 +46,8 @@
 import { notificationHandler } from '@/core/helpers'
 
 const props = defineProps<{
-  postToEdit?: IPost
-  onSave?: (post: IPost) => void
+  postToEdit?: TPost
+  onSave?: (post: TPost) => void
 }>()
 
 const { isOpen, closeModal } = useModals()
@@ -67,7 +67,7 @@ const formRules = useElFormRules({
 })
 
 const submitLoading = ref(false)
-const formData = ref<Partial<IPost>>({
+const formData = ref<TCreatePost>({
   title: '',
   description: ''
 })
@@ -85,7 +85,7 @@ function handleSubmit () {
     promise
       .then((res) => {
         closeModal('UpsertPostModal')
-        props.onSave?.(res.data)
+        props.onSave?.(res)
 
         notificationHandler({ text: 'Post successfully saved!', type: 'success' })
       })
