@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const PaginationSchema = z.object({
-  offset: z.string().or(z.number()).optional(),
-  limit: z.string().or(z.number()).optional()
+  offset: z.coerce.number().optional(),
+  limit: z.coerce.number().max(100).optional()
 });
 export type TPagination = z.infer<typeof PaginationSchema>;
 

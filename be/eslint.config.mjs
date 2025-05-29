@@ -63,6 +63,12 @@ export default [
       curly: 'error',
       'no-async-promise-executor': ['error'],
       'comma-dangle': ['error', 'never'],
+      "function-paren-newline": ["error", "multiline-arguments"],
+      "object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }],
+      "object-curly-newline": ["error", {
+        "multiline": true,
+        "consistent": true
+      }],
 
       '@typescript-eslint/naming-convention': [
         'error',

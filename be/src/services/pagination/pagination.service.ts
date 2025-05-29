@@ -30,8 +30,8 @@ export function getPaginationService(): IPaginationService {
       const limit = isNaN(Number(data.limit)) ? total : Number(data.limit);
       const offset = isNaN(Number(data.offset)) ? 0 : Number(data.offset);
   
-      const totalPages = Math.ceil(total / limit);
-      const page = Math.floor(offset / limit) + 1;
+      const totalPages = Math.ceil(total / limit) || 0;
+      const page = (Math.floor(offset / limit) || 0) + 1;
   
       return {
         totalPages,

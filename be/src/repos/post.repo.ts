@@ -2,12 +2,13 @@ import { and, asc, count, desc, eq, getTableColumns, or, sql } from 'drizzle-orm
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable } from 'src/services/drizzle/schema';
+import { getPaginationService } from 'src/services/pagination/pagination.service';
+import { getFiltersService } from 'src/services/filters/filters.service';
 
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TPost } from 'src/types/post/schemas/Post';
 import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
-import { getPaginationService } from 'src/services/pagination/pagination.service';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -22,32 +23,42 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
 
     async getPosts(params) {
       const paginationService = getPaginationService();
+      const filtersService = getFiltersService();
 
-      const queryColumns = {
+      const querySelection = {
         ...getTableColumns(postTable),
-        commentsCount: count(commentTable)
+        commentsCount: count(commentTable.id)
       };
-      const sortByColumn = queryColumns[params.sortBy || 'createdAt'];
-
-      const filters = and(
-        params.search
-          ? or(
-            sql`SIMILARITY(${postTable.title}, ${params.search}) > 0.3`,
-            sql`to_tsvector('english', ${postTable.description}) @@ plainto_tsquery('english', ${params.search})`
-          ) 
-          : undefined
+      const sortByColumn = querySelection[params.sortBy || 'createdAt'];
+      const filters = filtersService.getNumericFilters(
+        postTable,
+        querySelection, 
+        params.filters || []
       );
 
       const qb = db
-        .select(queryColumns)
+        .select({
+          ...querySelection, 
+          totalCount: sql<number>`cast(count(*) over() as int)` 
+        })
         .from(postTable)
-        .where(filters)
+        .where(
+          and(
+            params.search
+              ? or(
+                sql`SIMILARITY(${postTable.title}, ${params.search}) > 0.1`,
+                sql`to_tsvector('english', ${postTable.description}) @@ plainto_tsquery(${params.search})`
+              ) 
+              : undefined,
+            ...filters.whereFilters
+          )
+        )
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .groupBy(postTable.id)
+        .having(and(...filters.havingFilters))
         .orderBy(params.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn))
         .$dynamic();
 
-      const postsCount = await db.$count(postTable, filters);
       const posts = await paginationService.withPagination(
         qb, 
         params
@@ -55,7 +66,11 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
 
       return {
         data: PostSchemaWithCommentsCount.array().parse(posts),
-        meta: paginationService.calculatePaginationMeta({ ...params, total: postsCount })
+        meta: paginationService.calculatePaginationMeta({
+          ...params, 
+          total: posts[0]?.totalCount || 0 
+        })
+
       };
     },
 
