@@ -1,13 +1,23 @@
-import type { InternalAxiosRequestConfig } from 'axios'
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import { parseDynamicKeys } from '../helpers'
 
 const requestInterceptor = async (requestConfig: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
   // if (requestConfig.headers) {
   //   requestConfig.headers.Authorization = `Bearer ${await authStore.getToken()}`
   // }
 
+  if (requestConfig.url) {
+    requestConfig.url = parseDynamicKeys(requestConfig.url, requestConfig.dynamicKeys as TIndexedObject | undefined)
+  }
+
   return requestConfig
 }
 
+const requestErrorInterceptor = (error: AxiosError): Promise<AxiosError> => {
+  return Promise.reject(error)
+}
+
 export {
-  requestInterceptor
+  requestInterceptor,
+  requestErrorInterceptor
 }

@@ -31,7 +31,7 @@ import { notificationHandler } from '@/core/helpers'
 const { openModal } = useModals()
 
 const loading = ref(false)
-const posts = ref<IPost[]>([])
+const posts = ref<TPosts>([])
 
 const sortedPosts = computed(() => {
   return posts.value.toSorted((a, b) => {
@@ -43,25 +43,25 @@ function fetchPosts () {
   loading.value = true
   postsService.getPosts()
     .then((res) => {
-      posts.value = res.data
+      posts.value = res
     })
     .finally(() => { loading.value = false })
     .catch(notificationHandler)
 }
 
-function handlePostDeleted (post: IPost) {
+function handlePostDeleted (post: TPost) {
   posts.value = posts.value.filter((p) => p.id !== post.id)
 }
 
-function handleOpenUpsertModal (postToEdit?: IPost) {
+function handleOpenUpsertModal (postToEdit?: TPost) {
   openModal('UpsertPostModal', {
     postToEdit,
     onSave: (post) => {
       if (postToEdit) {
         const index = posts.value.findIndex((p) => p.id === postToEdit.id)
-        posts.value[index] = post
+        posts.value[index] = { ...post, commentsCount: post.comments?.length ?? 0 }
       } else {
-        posts.value.unshift(post)
+        posts.value.unshift({ ...post, commentsCount: post.comments?.length ?? 0 })
       }
     }
   })

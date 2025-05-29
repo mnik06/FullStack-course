@@ -62,7 +62,7 @@
           >
             <IconComments class="w-4 h-4 mr-2" />
             {{ isCommentsVisible ? 'Hide' : 'Show' }} comments
-            <template v-if="!isCommentsVisible">({{ postComments.length || post.commentsCount || 0 }})</template>
+            <template v-if="!isCommentsVisible">({{ commentsCount }})</template>
           </el-button>
         </div>
 
@@ -85,14 +85,18 @@ import { notificationHandler } from '@/core/helpers'
 
 const emit = defineEmits(['editPost', 'postDeleted'])
 const props = defineProps<{
-  post: IPost
+  post: TPost | TPosts[number]
   showFull?: boolean
 }>()
 
-const postComments = ref<IPostComment[]>(props.post.comments || [])
+const postComments = ref<TPostComment[]>((props.post as TPost).comments || [])
 const postCommentsLoading = ref(false)
 
 const isCommentsVisible = ref(false)
+
+const commentsCount = computed(() => {
+  return (props.post as TPosts[number]).commentsCount || postComments.value.length || 0
+})
 
 async function toggleComments () {
   if (!isCommentsVisible.value && !postComments.value.length) {
@@ -115,12 +119,8 @@ function fetchPostComments () {
   postCommentsLoading.value = true
 
   postsService.getComments(props.post.id)
-    .then((res) => {
-      postComments.value = res.data
-    })
-    .finally(() => {
-      postCommentsLoading.value = false
-    })
+    .then((res) => { postComments.value = res })
+    .finally(() => { postCommentsLoading.value = false })
     .catch(notificationHandler)
 }
 </script>
