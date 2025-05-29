@@ -126,6 +126,7 @@ export default [
       '@stylistic/arrow-spacing': ['error', { before: true, after: true }],
       '@stylistic/rest-spread-spacing': ['error'],
       '@stylistic/no-multi-spaces': ['error'],
+      '@stylistic/block-spacing': ['error', 'always'],
       '@stylistic/curly-newline': ['error', { multiline: true, minElements: 3, consistent: true }],
       '@stylistic/type-annotation-spacing': ['error', {
         before: false,

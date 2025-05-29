@@ -1,42 +1,30 @@
 class PostsService {
   getPosts () {
-    return useApiClient.get<TResponseWithPagination<IPost[]>>('/posts', {
-      params: {
-        filters: ['commentsCount_>=_0'],
-        sortBy: 'commentsCount',
-        sortOrder: 'desc',
-        search: 'lon',
-        offset: 0,
-        limit: 100
-      },
-      paramsSerializer: {
-        indexes: null
-      }
-    })
+    return useApiClient.get('/api/posts/')
   }
 
   getPostById (id: string) {
-    return useApiClient.get<IPost>(`/posts/${id}`)
+    return useApiClient.get('/api/posts/{postId}/', { dynamicKeys: { postId: id } })
   }
 
-  createPost (post: Partial<IPost>) {
-    return useApiClient.post<IPost>('/posts', post)
+  createPost (post: TCreatePost) {
+    return useApiClient.post('/api/posts/', post)
   }
 
-  updatePost (id: string, post: Partial<IPost>) {
-    return useApiClient.patch<IPost>(`/posts/${id}`, post)
+  updatePost (id: string, post: TUpdatePost) {
+    return useApiClient.patch('/api/posts/{postId}/', post, { dynamicKeys: { postId: id } })
   }
 
   deletePost (id: string) {
-    return useApiClient.delete<IPost>(`/posts/${id}`)
+    return useApiClient.delete('/api/posts/{postId}/', { dynamicKeys: { postId: id } })
   }
 
   getComments (postId: string) {
-    return useApiClient.get<IPostComment[]>(`/posts/${postId}/comments`)
+    return useApiClient.get('/api/posts/{postId}/comments/', { dynamicKeys: { postId } })
   }
 
   createComment (postId: string, text: string) {
-    return useApiClient.post<IPostComment>(`/posts/${postId}/comments`, { text })
+    return useApiClient.post('/api/posts/{postId}/comments/', { text }, { dynamicKeys: { postId } })
   }
 }
 
