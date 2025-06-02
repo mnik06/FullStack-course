@@ -24,7 +24,7 @@ export interface paths {
           search?: string;
           sortBy?: "createdAt" | "title" | "commentsCount";
           sortOrder?: "asc" | "desc";
-          filters?: string[] | string;
+          numericFilters?: string[] | string;
         };
       };
       responses: {

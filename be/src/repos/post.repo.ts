@@ -33,7 +33,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       const filters = filtersService.getNumericFilters(
         postTable,
         querySelection, 
-        params.filters || []
+        params.numericFilters || []
       );
 
       const qb = db

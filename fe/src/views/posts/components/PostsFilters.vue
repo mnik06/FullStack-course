@@ -116,7 +116,7 @@ function applyFilters () {
   modelValue.value = stringifiedFilters
   dropdownRef.value?.handleClose()
 
-  replaceRouterQuery({ filters: stringifiedFilters })
+  replaceRouterQuery({ numericFilters: stringifiedFilters })
 }
 
 function closeDropdown () {
@@ -129,7 +129,7 @@ function clearFilters () {
 
   dropdownRef.value?.handleClose()
 
-  replaceRouterQuery({ filters: null })
+  replaceRouterQuery({ numericFilters: null })
 }
 
 watch(modelValue, () => {
