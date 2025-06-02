@@ -8,7 +8,8 @@ export const GetPostsRespSchema = z.object({
     description: z.string().optional().nullable(),
     updatedAt: z.date(),
     createdAt: z.date(),
-    commentsCount: z.number()
+    commentsCount: z.number(),
+    readingTime: z.number()
   })),
   meta: PaginationMetadataSchema
 });

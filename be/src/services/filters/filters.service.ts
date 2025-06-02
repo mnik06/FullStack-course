@@ -1,7 +1,19 @@
-import { eq, getTableColumns, gt, gte, lt, lte, SQL, SQLWrapper } from 'drizzle-orm';
+import { BinaryOperator, eq, getTableColumns, gt, gte, lt, lte, SQL, SQLWrapper } from 'drizzle-orm';
 import { PgTable } from 'drizzle-orm/pg-core';
 
-export function getFiltersService() {
+export interface IFiltersService {
+  filterByOperator: Record<string, BinaryOperator>;
+  parseNumericFilter(
+    filter: string
+  ): { operatorFunc: BinaryOperator; value: number; filterName: string };
+  getNumericFilters<TTable extends PgTable>(
+    table: TTable, 
+    selection: Record<string, SQLWrapper>, 
+    filters: string[]
+  ): { whereFilters: SQLWrapper[]; havingFilters: SQLWrapper[] };
+}
+
+export function getFiltersService(): IFiltersService {
   return {
     filterByOperator: {
       '>=': gte,
