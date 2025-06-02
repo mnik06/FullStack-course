@@ -1,6 +1,6 @@
 class PostsService {
   getPosts (params: TRequestQuery<'/api/posts/', 'get'> = {}) {
-    return useApiClient.get('/api/posts/', { params })
+    return useApiClient.get('/api/posts/', { params, paramsSerializer: { indexes: null } })
   }
 
   getPostById (id: string) {

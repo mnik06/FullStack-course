@@ -1,8 +1,12 @@
 <template>
   <div v-loading.fullscreen="loading" class="flex flex-col h-full overflow-hidden">
-    <div class="flex items-center w-full py-5 container container--small">
+    <div class="flex items-center justify-between w-full py-5 container container--small">
       <SearchInput v-model="search" />
-      <PostsSortingSelect v-model="sorting" class="ml-auto" />
+
+      <div class="flex items-center gap-2">
+        <PostsSortingSelect v-model="sorting" />
+        <PostsFilters v-model="filters" />
+      </div>
     </div>
 
     <div class="flex-1 flex flex-col overflow-auto">
@@ -61,6 +65,8 @@ const pagination = ref<IPagination>({
   limit: localStorageService.getItem('lastPaginationPageSize') || 10
 })
 
+const filters = ref<string[]>([route.query.filters].flat(Infinity).filter(Boolean) as string[])
+
 function fetchPosts () {
   loading.value = true
 
@@ -68,7 +74,8 @@ function fetchPosts () {
     ...(sorting.value || {}),
     search: search.value,
     offset: pagination.value.offset,
-    limit: pagination.value.limit
+    limit: pagination.value.limit,
+    filters: filters.value
   })
     .then((res) => {
       posts.value = res.data
@@ -95,10 +102,6 @@ function handleOpenUpsertModal (postToEdit?: TPost) {
   })
 }
 
-watch([sorting, pagination], fetchPosts, { deep: true })
+watch([sorting, pagination, filters], fetchPosts, { deep: true, immediate: true })
 watch(search, debouncedFetchPosts)
-
-onMounted(() => {
-  fetchPosts()
-})
 </script>
