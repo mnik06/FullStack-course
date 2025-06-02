@@ -18,7 +18,7 @@
 
       <template #dropdown>
         <div class="flex flex-col min-h-[100px] min-w-[300px] py-2 px-3">
-          <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center justify-between">
             <span class="font-medium text-sm">Filters:</span>
 
             <el-button
@@ -32,10 +32,10 @@
             </el-button>
           </div>
 
-          <div v-for="option in options" :key="option.label" class="flex flex-col">
+          <div v-for="option in options" :key="option.label" class="flex flex-col mt-2">
             <span class="font-medium text-slate-600">{{ option.label }}:</span>
 
-            <div class="flex items-center gap-2 mt-1">
+            <div class="flex items-center gap-2 mt-0.5">
               <NumericOperatorSelect
                 v-model="localModel[option.key].operator"
                 class="flex-1"
@@ -82,6 +82,10 @@ const options = [
   {
     key: 'commentsCount',
     label: 'Comments Count'
+  },
+  {
+    key: 'readingTime',
+    label: 'Reading Time (min)'
   }
 ]
 
@@ -110,8 +114,14 @@ function createLocalModel () {
   }, {} as Record<string, { operator: string; value: number }>)
 }
 
+function convertParsedFiltersToString (filters: Record<string, { operator: string; value: number }>) {
+  return Object.entries(filters)
+    .filter(([_, { value, operator }]) => value !== undefined && operator !== undefined)
+    .map(([key, { value, operator }]) => `${key}_${operator}_${value}`)
+}
+
 function applyFilters () {
-  const stringifiedFilters = Object.entries(localModel.value).map(([key, { value, operator }]) => `${key}_${operator}_${value}`)
+  const stringifiedFilters = convertParsedFiltersToString(localModel.value)
 
   modelValue.value = stringifiedFilters
   dropdownRef.value?.handleClose()
