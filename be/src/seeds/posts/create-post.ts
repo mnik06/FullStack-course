@@ -1,6 +1,7 @@
 import { fakerEN as faker } from '@faker-js/faker';
 import { createReadlineInterface, getNumberInput, getDbConnection, executeSeed } from '../seeds.utils';
-import { postTable } from 'src/services/drizzle/schema';
+import { getPostRepo } from 'src/repos/post.repo';
+import { createPost } from 'src/controllers/post/create-post';
 
 async function getInput(): Promise<number> {
   const rl = createReadlineInterface();
@@ -19,13 +20,15 @@ async function createPosts(numberOfPosts: number) {
   const db = getDbConnection();
   const postsData = Array.from({ length: numberOfPosts }, () => ({
     title: faker.company.catchPhrase(),
-    description: faker.commerce.productDescription()
+    description: faker.lorem.paragraphs({ min: 3, max: 5 })
   }));
 
-  const posts = await db.insert(postTable).values(postsData);
-  console.log(`Successfully created ${numberOfPosts} posts in a single query!`);
-
-  return posts;
+  for (const post of postsData) {
+    await createPost({
+      postRepo: getPostRepo(db),
+      data: post
+    });
+  }
 }
 
 executeSeed(async () => {
