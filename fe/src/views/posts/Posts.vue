@@ -65,7 +65,7 @@ const pagination = ref<IPagination>({
   limit: localStorageService.getItem('lastPaginationPageSize') || 10
 })
 
-const numericFilters = ref<string[]>([route.query.filters].flat(Infinity).filter(Boolean) as string[])
+const numericFilters = ref<string[]>([route.query.numericFilters].flat(Infinity).filter(Boolean) as string[])
 
 function fetchPosts () {
   loading.value = true

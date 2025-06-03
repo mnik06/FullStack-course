@@ -39,7 +39,7 @@
       <TruncatedText
         v-else
         :text="post.description"
-        :max-length="200"
+        :max-length="220"
         button-text="Show full post"
       >
         <template #button>
