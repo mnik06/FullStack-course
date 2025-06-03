@@ -46,7 +46,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           and(
             params.search
               ? or(
-                sql`SIMILARITY(${postTable.title}, ${params.search}) > 0.1`,
+                sql`WORD_SIMILARITY(${params.search}, ${postTable.title}) > 0.5`,
                 sql`to_tsvector('english', ${postTable.description}) @@ plainto_tsquery(${params.search})`
               ) 
               : undefined,
@@ -70,7 +70,6 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           ...params, 
           total: posts[0]?.totalCount || 0 
         })
-
       };
     },
 
