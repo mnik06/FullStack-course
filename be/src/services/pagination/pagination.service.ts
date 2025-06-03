@@ -2,15 +2,15 @@ import { PgSelect } from 'drizzle-orm/pg-core';
 import { TPagination, TPaginationMetadata } from 'src/types/Pagination';
 
 export interface IPaginationService {
-  withPagination<T extends PgSelect>(qb: T, query: TPagination): T;
+  withPagination<T extends PgSelect>(qb: T, params: TPagination): T;
   calculatePaginationMeta(data: TPagination & { total: number }): TPaginationMetadata;
 }
 
 export function getPaginationService(): IPaginationService {
   return {
-    withPagination<T extends PgSelect>(qb: T, query: TPagination) {
-      const offset = Number(query.offset);
-      const limit = Number(query.limit);
+    withPagination<T extends PgSelect>(qb: T, params: TPagination) {
+      const offset = Number(params.offset);
+      const limit = Number(params.limit);
       
       if (!isNaN(offset)) {
         qb.offset(offset);
