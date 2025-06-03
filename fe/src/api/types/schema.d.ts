@@ -42,6 +42,7 @@ export interface paths {
                   /** Format: date-time */
                   createdAt: string;
                   commentsCount: number;
+                  readingTime: number;
                 })[];
               meta: {
                 offset?: number;
@@ -73,6 +74,7 @@ export interface paths {
               id: string;
               title: string;
               description?: string | null;
+              readingTime: number;
               /** Format: date-time */
               updatedAt: string;
               /** Format: date-time */
@@ -110,6 +112,7 @@ export interface paths {
               id: string;
               title: string;
               description?: string | null;
+              readingTime: number;
               /** Format: date-time */
               updatedAt: string;
               /** Format: date-time */
@@ -170,6 +173,7 @@ export interface paths {
               id: string;
               title: string;
               description?: string | null;
+              readingTime: number;
               /** Format: date-time */
               updatedAt: string;
               /** Format: date-time */

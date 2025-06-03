@@ -4,6 +4,7 @@
     placeholder="Operator"
     size="small"
     :teleported="false"
+    clearable
   >
     <el-option
       v-for="option in options"
