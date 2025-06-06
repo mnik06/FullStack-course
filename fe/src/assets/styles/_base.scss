@@ -2,6 +2,7 @@
 @layer base {
   * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+    box-sizing: border-box;
   }
 
   html,
@@ -30,21 +31,12 @@
     @apply block text-sm font-semibold text-gray-600;
   }
 
-  *::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-  }
 
-  /* scrollbar itself */
-  *::-webkit-scrollbar-thumb {
-    background-color: #babac0;
-    border-radius: 16px;
-    border: 2px solid #fff;
-  }
+  .container {
+    @apply mx-auto;
 
-  /* set button(top and bottom of the scrollbar) */
-  *::-webkit-scrollbar-button {
-    display: none;
+    &--small {
+      @apply max-w-[800px] #{!important};
+    }
   }
-
 }

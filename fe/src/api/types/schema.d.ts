@@ -17,21 +17,41 @@ export interface paths {
   };
   "/api/posts/": {
     get: {
+      parameters: {
+        query?: {
+          offset?: number;
+          limit?: number;
+          search?: string;
+          sortBy?: "createdAt" | "title" | "commentsCount";
+          sortOrder?: "asc" | "desc";
+          numericFilters?: string[] | string;
+        };
+      };
       responses: {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": ({
-                /** Format: uuid */
-                id: string;
-                title: string;
-                description?: string | null;
-                /** Format: date-time */
-                updatedAt: string;
-                /** Format: date-time */
-                createdAt: string;
-                commentsCount: number;
-              })[];
+            "application/json": {
+              data: ({
+                  /** Format: uuid */
+                  id: string;
+                  title: string;
+                  description?: string | null;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  commentsCount: number;
+                  readingTime: number;
+                })[];
+              meta: {
+                offset?: number;
+                limit?: number;
+                total?: number;
+                totalPages?: number;
+                page?: number;
+              };
+            };
           };
         };
       };
@@ -54,6 +74,7 @@ export interface paths {
               id: string;
               title: string;
               description?: string | null;
+              readingTime: number;
               /** Format: date-time */
               updatedAt: string;
               /** Format: date-time */
@@ -91,6 +112,7 @@ export interface paths {
               id: string;
               title: string;
               description?: string | null;
+              readingTime: number;
               /** Format: date-time */
               updatedAt: string;
               /** Format: date-time */
@@ -151,6 +173,7 @@ export interface paths {
               id: string;
               title: string;
               description?: string | null;
+              readingTime: number;
               /** Format: date-time */
               updatedAt: string;
               /** Format: date-time */

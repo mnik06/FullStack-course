@@ -1,0 +1,7 @@
+@use "element-plus/theme-chalk/src/pagination";
+
+.el-pagination {
+  &__total {
+    @apply font-medium text-base;
+  }
+}

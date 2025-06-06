@@ -39,7 +39,7 @@
       <TruncatedText
         v-else
         :text="post.description"
-        :max-length="200"
+        :max-length="220"
         button-text="Show full post"
       >
         <template #button>
@@ -66,9 +66,16 @@
           </el-button>
         </div>
 
-        <span class="italic text-xs ml-auto">
-          {{ $filters.dateFilter(post.createdAt) }}
-        </span>
+        <div class="flex items-center gap-2 ml-auto">
+          <div class="flex items-center gap-1 text-xs">
+            <IconRead class="w-4 h-4" />
+            {{ post.readingTime }} min read
+          </div>
+
+          <span class="italic text-xs">
+            {{ $filters.dateFilter(post.createdAt) }}
+          </span>
+        </div>
       </div>
 
       <PostItemComments

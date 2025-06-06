@@ -34,6 +34,7 @@ export default [
       ],
       'max-depth': ['error', 3],
       quotes: [2, 'single', { avoidEscape: true }],
+      'indent': ['error', 2],
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
@@ -62,6 +63,12 @@ export default [
       curly: 'error',
       'no-async-promise-executor': ['error'],
       'comma-dangle': ['error', 'never'],
+      "function-paren-newline": ["error", "multiline-arguments"],
+      "object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }],
+      "object-curly-newline": ["error", {
+        "multiline": true,
+        "consistent": true
+      }],
 
       '@typescript-eslint/naming-convention': [
         'error',

@@ -1,4 +1,5 @@
 import { ElNotification } from 'element-plus'
+import cloneDeep from 'lodash/cloneDeep'
 import capitalize from 'lodash/capitalize'
 
 export const notificationHandler = (
@@ -30,4 +31,16 @@ export const notificationHandler = (
     position: 'bottom-right',
     ...(customNotificationOptions || {})
   })
+}
+
+export const stringifyParams = (obj: TIndexedObject = {}, removeEmpty = true): TIndexedObject => {
+  const val = cloneDeep(obj)
+
+  for (const key of Object.keys(val)) {
+    if (removeEmpty && ((!val[key] && !Number.isInteger(val[key])) || val[key].length === 0)) delete val[key]
+    else if (Array.isArray(val[key])) val[key] = val[key].join()
+    else val[key] = String(val[key])
+  }
+
+  return val
 }

@@ -1,12 +1,18 @@
-import { uuid, pgTable, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, varchar, timestamp, index, integer } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
 export const postTable = pgTable('posts', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
   title: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 1000 }),
+  readingTime: integer().notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
+}, (table) => {
+  return [
+    index('posts_table_title_trgm_index').using('gin', sql`${table.title} gin_trgm_ops`), 
+    index('posts_table_description_fts_index').using('gin', sql`to_tsvector('english', ${table.description})`)
+  ];
 });
 
 // TODO: check if needed

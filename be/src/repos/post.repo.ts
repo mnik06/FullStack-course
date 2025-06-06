@@ -1,8 +1,12 @@
-import { count, eq, getTableColumns } from 'drizzle-orm';
+import { and, asc, count, desc, eq, getTableColumns, or, sql } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
+import { commentTable, postTable } from 'src/services/drizzle/schema';
+import { getPaginationService } from 'src/services/pagination/pagination.service';
+import { getFiltersService } from 'src/services/filters/filters.service';
+
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TPost } from 'src/types/post/schemas/Post';
-import { commentTable, postTable } from 'src/services/drizzle/schema';
 import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 
@@ -17,17 +21,56 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       return PostSchemaWithComments.parse({ ...post[0], comments: [] });
     },
 
-    async getPosts() {
-      const posts = await db
+    async getPosts(params) {
+      const paginationService = getPaginationService();
+      const filtersService = getFiltersService();
+
+      const querySelection = {
+        ...getTableColumns(postTable),
+        commentsCount: count(commentTable.id)
+      };
+      const sortByColumn = querySelection[params.sortBy || 'createdAt'];
+      const filters = filtersService.getNumericFilters(
+        postTable,
+        querySelection, 
+        params.numericFilters || []
+      );
+
+      const qb = db
         .select({
-          ...getTableColumns(postTable),
-          commentsCount: count(commentTable.id)
+          ...querySelection, 
+          totalCount: sql<number>`cast(count(*) over() as int)` 
         })
         .from(postTable)
+        .where(
+          and(
+            params.search
+              ? or(
+                sql`WORD_SIMILARITY(${params.search}, ${postTable.title}) > 0.5`,
+                sql`to_tsvector('english', ${postTable.description}) @@ plainto_tsquery(${params.search})`
+              ) 
+              : undefined,
+            ...filters.whereFilters
+          )
+        )
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
-        .groupBy(postTable.id);
+        .groupBy(postTable.id)
+        .having(and(...filters.havingFilters))
+        .orderBy(params.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn))
+        .$dynamic();
 
-        return PostSchemaWithCommentsCount.array().parse(posts);
+      const posts = await paginationService.withPagination(
+        qb, 
+        params
+      );
+
+      return {
+        data: PostSchemaWithCommentsCount.array().parse(posts),
+        meta: paginationService.calculatePaginationMeta({
+          ...params, 
+          total: posts[0]?.totalCount || 0 
+        })
+      };
     },
 
     async getPostById(id) {

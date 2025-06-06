@@ -20,6 +20,22 @@ type TLayoutName = 'Blank' | 'Default'
 
 type TAppAxiosError = import('axios').AxiosError<{ error: { code: number } }>
 
+type TSortOrder = 'asc' | 'desc'
+interface IAppSorting<T extends string> {
+  sortBy: T
+  sortOrder: TSortOrder
+}
+
+interface IPagination {
+  offset: number
+  limit: number
+}
+
+type TResponseWithPagination<T> = {
+  data: T
+  meta: IPaginationMeta
+}
+
 interface ICustomNotification {
   errorCode?: TCustomErrorCode
   text?: string

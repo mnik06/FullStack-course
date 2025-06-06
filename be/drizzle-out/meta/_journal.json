@@ -36,6 +36,20 @@
       "when": 1748010788939,
       "tag": "0004_past_cerise",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1748360088030,
+      "tag": "0005_premium_cyclops",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1748853854050,
+      "tag": "0006_smart_spirit",
+      "breakpoints": true
     }
   ]
 }
