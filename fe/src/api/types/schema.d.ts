@@ -15,6 +15,25 @@ export interface paths {
       };
     };
   };
+  "/api/auth/signup/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            /** Format: email */
+            email: string;
+            password: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/posts/": {
     get: {
       parameters: {
