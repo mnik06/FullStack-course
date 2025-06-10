@@ -50,6 +50,13 @@
       "when": 1748853854050,
       "tag": "0006_smart_spirit",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749561365471,
+      "tag": "0007_hesitant_nemesis",
+      "breakpoints": true
     }
   ]
 }

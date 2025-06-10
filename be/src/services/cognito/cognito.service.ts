@@ -1,11 +1,18 @@
-import { AdminCreateUserCommand, AdminCreateUserCommandOutput, AdminSetUserPasswordCommand, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
+import {
+  AdminCreateUserCommand, 
+  AdminCreateUserCommandOutput, 
+  AdminSetUserPasswordCommand,
+  AttributeType,
+  CognitoIdentityProviderClient 
+} from '@aws-sdk/client-cognito-identity-provider';
 
 export interface ICognitoService {
-  createNewUser(
+  createNewUser(params: {
     email: string, 
     password: string, 
     userAttributes?: Record<string, string>
-  ): Promise<AdminCreateUserCommandOutput>;
+  }): Promise<AdminCreateUserCommandOutput>;
+  transformAttributes(attributes: AttributeType[]): Record<string, string>;
 }
 
 export function getCognitoService(): ICognitoService {
@@ -17,7 +24,7 @@ export function getCognitoService(): ICognitoService {
   });
 
   return {
-    async createNewUser(email, password, userAttributes) {
+    async createNewUser({ email, password, userAttributes }) {
       const createUserCommand = new AdminCreateUserCommand({
         UserPoolId: process.env.COGNITO_USER_POOL_ID!,
         Username: email,
@@ -48,6 +55,17 @@ export function getCognitoService(): ICognitoService {
       }
 
       return res;
+    },
+
+    transformAttributes(attributes) {
+      return attributes.reduce((acc, attribute) => {
+
+        if (attribute.Name && attribute.Name !== 'email') {
+          acc[attribute.Name] = attribute.Value as string;
+        }
+
+        return acc;
+      }, {} as Record<string, string>);
     }
   };
 }

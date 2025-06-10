@@ -1,8 +1,8 @@
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
-import { SignupReqSchema } from 'src/api/routes/schemas/auth/SignUpReqSchema';
-import { getCognitoService } from 'src/services/cognito/cognito.service';
+import { SignupReqSchema } from 'src/api/routes/schemas/auth/SignupReqSchema';
+import { signup } from 'src/controllers/auth/signup';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -12,7 +12,10 @@ const routes: FastifyPluginAsync = async function (f) {
       body: SignupReqSchema
     }
   }, (req) => {
-    return getCognitoService().createNewUser(req.body.email, req.body.password);
+    return signup({
+      userRepo: fastify.repos.userRepo,
+      data: req.body
+    });
   });
 };
 

@@ -23,6 +23,7 @@ export interface paths {
             /** Format: email */
             email: string;
             password: string;
+            name: string;
           };
         };
       };
