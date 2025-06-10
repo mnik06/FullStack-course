@@ -1,0 +1,15 @@
+{
+  "authSelections": "userPoolOnly",
+  "resourceName": "fe9fxd6d808ee18",
+  "serviceType": "imported",
+  "region": "us-east-1",
+  "usernameAttributes": [
+    "email"
+  ],
+  "authProvidersUserPool": [],
+  "requiredAttributes": [],
+  "passwordPolicyMinLength": 8,
+  "passwordPolicyCharacters": [],
+  "mfaConfiguration": "OFF",
+  "mfaTypes": []
+}

@@ -4,7 +4,7 @@
       v-loading="isLoading"
       class="min-w-[400px]"
     >
-      <h1 class="text-2xl font-bold mb-3">Signup</h1>
+      <h1 class="text-2xl font-bold mb-3">Sign in</h1>
 
       <el-form
         ref="formRef"
@@ -12,20 +12,12 @@
         :rules="formRules"
         @submit.prevent="handleSubmit"
       >
-        <el-form-item label="Name" prop="name">
-          <el-input v-model="data.name" />
-        </el-form-item>
-
         <el-form-item label="Email" prop="email">
           <el-input v-model="data.email" />
         </el-form-item>
 
         <el-form-item label="Password" prop="password">
           <el-input v-model="data.password" type="password" />
-        </el-form-item>
-
-        <el-form-item label="Confirm Password" prop="confirmPassword">
-          <el-input v-model="data.confirmPassword" type="password" />
         </el-form-item>
 
         <div class="flex items-center justify-end">
@@ -38,19 +30,12 @@
 
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
-import { routeNames } from '@/router/route-names'
-
-interface IFormData extends TSignupData {
-  confirmPassword: string
-}
 
 const router = useRouter()
 
-const data = reactive<IFormData>({
+const data = reactive({
   email: '',
-  password: '',
-  confirmPassword: '',
-  name: ''
+  password: ''
 })
 const isLoading = ref(false)
 
@@ -64,21 +49,6 @@ const formRules = useElFormRules({
   password: [
     useRequiredRule(),
     useMinLenRule(8)
-  ],
-  confirmPassword: [
-    useRequiredRule(),
-    {
-      validator (_, val, callback) {
-        if (val !== data.password) {
-          callback(new Error('Passwords do not match'))
-        } else {
-          callback()
-        }
-      }
-    }
-  ],
-  name: [
-    useRequiredRule()
   ]
 })
 
@@ -88,10 +58,10 @@ function handleSubmit () {
 
     isLoading.value = true
 
-    authService.signup(data)
+    authService.signin(data)
       .then(() => {
-        notificationHandler({ text: 'Signup successful', type: 'success' })
-        router.push({ name: routeNames.signin })
+        notificationHandler({ text: 'Signin successful', type: 'success' })
+        router.push('/')
       })
       .catch(notificationHandler)
       .finally(() => {
