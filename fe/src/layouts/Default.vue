@@ -18,7 +18,7 @@
       </div> -->
     </div>
 
-    <div class="flex-1 overflow-auto bg-slate-50">
+    <div class="flex-1 overflow-auto">
       <slot />
     </div>
   </div>
