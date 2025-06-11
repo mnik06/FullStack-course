@@ -1,9 +1,8 @@
 import { z } from 'zod';
+import { IdentityUserSchema } from 'src/types/IdentityUser';
 
-export const UserSchema = z.object({
+export const UserSchema =  IdentityUserSchema.extend({
   id: z.string(),
-  email: z.string(),
-  cognitoId: z.string(),
   name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date()

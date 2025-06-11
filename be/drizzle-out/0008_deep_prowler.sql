@@ -1,0 +1,1 @@
+ALTER TABLE "users" RENAME COLUMN "cognito_id" TO "sub_id";

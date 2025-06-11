@@ -38,7 +38,6 @@
 
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
-import { routeNames } from '@/router/route-names'
 
 interface IFormData extends TSignupData {
   confirmPassword: string
@@ -89,9 +88,10 @@ function handleSubmit () {
     isLoading.value = true
 
     authService.signup(data)
+      .then(() => authService.signin(data))
       .then(() => {
         notificationHandler({ text: 'Signup successful', type: 'success' })
-        router.push({ name: routeNames.signin })
+        router.push('/')
       })
       .catch(notificationHandler)
       .finally(() => {

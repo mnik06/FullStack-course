@@ -40,7 +40,7 @@ export const userTable = pgTable('users', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull(),
-  cognitoId: varchar({ length: 255 }).notNull(),
+  subId: varchar({ length: 255 }).notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });

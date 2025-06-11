@@ -1,24 +1,28 @@
+import { HttpError } from 'src/api/errors/HttpError';
 import { TSignupReq } from 'src/api/routes/schemas/auth/SignupReqSchema';
-import { getCognitoService } from 'src/services/cognito/cognito.service';
 import { IUserRepo } from 'src/types/repos/IUserRepo';
+import { IIdentityService } from 'src/types/services/IIdentityService';
 
 export async function signup(params: {
   userRepo: IUserRepo;
+  identityService: IIdentityService
   data: TSignupReq
 }) {
-  const cognitoService = getCognitoService();
   const { email, password, name } = params.data;
 
-  const createUserRes = await cognitoService.createNewUser({
+  const identityUser = await params.identityService.createNewUser({
     email,
     password,
     userAttributes: { name }
   });
 
+  if (!identityUser) {
+    throw new HttpError(400, 'Failed to create user in identity platform');
+  }
+
   const user = await params.userRepo.createUser({
-    email,
-    name,
-    cognitoId: cognitoService.transformAttributes(createUserRes.User?.Attributes ?? []).sub
+    ...identityUser,
+    name
   });
 
   return user;
