@@ -4,7 +4,7 @@
       v-loading="isLoading"
       class="min-w-[400px]"
     >
-      <h1 class="text-2xl font-bold mb-3">Signup</h1>
+      <h1 class="text-2xl font-bold mb-3">Sign up</h1>
 
       <el-form
         ref="formRef"
@@ -28,7 +28,11 @@
           <el-input v-model="data.confirmPassword" type="password" />
         </el-form-item>
 
-        <div class="flex items-center justify-end">
+        <div class="flex items-center justify-between">
+          <router-link :to="{ name: $routeNames.signin }">
+            <el-button size="small" type="primary" link>Already have an account? Sign in</el-button>
+          </router-link>
+
           <el-button type="primary" native-type="submit">Submit</el-button>
         </div>
       </el-form>

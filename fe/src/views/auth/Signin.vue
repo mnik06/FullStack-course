@@ -20,7 +20,11 @@
           <el-input v-model="data.password" type="password" />
         </el-form-item>
 
-        <div class="flex items-center justify-end">
+        <div class="flex items-center justify-between">
+          <router-link :to="{ name: $routeNames.signup }">
+            <el-button size="small" type="primary" link>Don't have an account? Sign up</el-button>
+          </router-link>
+
           <el-button type="primary" native-type="submit">Submit</el-button>
         </div>
       </el-form>
@@ -38,6 +42,8 @@ const data = reactive({
   password: ''
 })
 const isLoading = ref(false)
+
+const authStore = useAuthStore()
 
 const formRef = useTemplateRef('formRef')
 
@@ -59,6 +65,7 @@ function handleSubmit () {
     isLoading.value = true
 
     authService.signin(data)
+      .then(authStore.getUserProfile)
       .then(() => {
         notificationHandler({ text: 'Signin successful', type: 'success' })
         router.push('/')
