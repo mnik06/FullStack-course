@@ -1,10 +1,18 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { routeNames } from './route-names'
 
-export const routeGuard = async (
+export const authRouteGuard = async (
   to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
+  _: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  // todo: please write your own route guard
-  next()
+  const isLoggedIn = !!(await authService.getAccessToken())
+
+  if (isLoggedIn && to.fullPath.includes('auth')) {
+    next('/')
+  } else if (!isLoggedIn && !to.fullPath.includes('auth')) {
+    next({ name: routeNames.signin })
+  } else {
+    next()
+  }
 }

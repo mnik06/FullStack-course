@@ -8,14 +8,7 @@
         FullStack Course
       </router-link>
 
-      <!-- <div class="flex items-center">
-        <router-link
-          :to="{ name: $routeNames.home }"
-          class="text-sm hover:text-primary"
-        >
-          Posts
-        </router-link>
-      </div> -->
+      <el-button type="primary" class="ml-auto" link @click="authService.signout">Logout</el-button>
     </div>
 
     <div class="flex-1 overflow-auto">
@@ -25,4 +18,5 @@
 </template>
 
 <script lang="ts" setup>
+import { authService } from '@/views/auth/auth.service'
 </script>

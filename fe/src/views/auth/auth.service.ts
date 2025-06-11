@@ -1,4 +1,6 @@
-import { signIn, fetchAuthSession } from 'aws-amplify/auth'
+import { router } from '@/router'
+import { routeNames } from '@/router/route-names'
+import { signIn, fetchAuthSession, signOut } from 'aws-amplify/auth'
 
 class AuthService {
   signup (data: TSignupData) {
@@ -12,8 +14,14 @@ class AuthService {
     })
   }
 
-  getSession () {
-    return fetchAuthSession()
+  signout () {
+    return signOut().then(() => {
+      window.location.href = router.resolve({ name: routeNames.signin }).fullPath
+    })
+  }
+
+  getAccessToken () {
+    return fetchAuthSession().then(ses => ses?.tokens?.accessToken)
   }
 }
 

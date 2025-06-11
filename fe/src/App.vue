@@ -6,7 +6,13 @@
     }"
   >
     <Layout :layout="$route.meta.layout">
-      <router-view />
+      <router-view>
+        <template #default="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </template>
+      </router-view>
     </Layout>
 
     <Modals />

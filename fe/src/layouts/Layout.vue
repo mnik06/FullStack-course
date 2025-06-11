@@ -1,9 +1,7 @@
 <template>
-  <transition name="fade" mode="out-in">
-    <component :is="components[props.layout] || components.Default">
-      <slot />
-    </component>
-  </transition>
+  <component :is="components[props.layout] || components.Default">
+    <slot />
+  </component>
 </template>
 
 <script setup lang="ts">
