@@ -24,6 +24,10 @@ class AuthService {
     return fetchAuthSession().then(ses => ses?.tokens?.accessToken)
   }
 
+  isLoggedIn () {
+    return this.getAccessToken().then(token => !!token)
+  }
+
   getUserProfile () {
     return useApiClient.get('/api/user-profile/')
   }

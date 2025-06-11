@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { authRouteGuard } from './route-guard'
+import { authRouteGuard, sessionRouteGuard } from './route-guard'
 import { routes } from './routes'
 import { stringifyParams } from '@/core/helpers'
 
@@ -18,4 +18,5 @@ export const replaceRouterQuery = function (obj) {
   }
 }
 
+router.beforeEach(sessionRouteGuard)
 router.beforeEach(authRouteGuard)

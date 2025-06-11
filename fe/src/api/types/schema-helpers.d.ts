@@ -1,5 +1,3 @@
-// TODO: change the key of returning content to the one your api returns
-
 type TApiPaths = import('./schema').paths
 
 type TPathKeys = keyof TApiPaths

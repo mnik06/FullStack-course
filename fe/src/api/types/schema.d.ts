@@ -332,7 +332,18 @@ export interface paths {
       responses: {
         /** @description Default Response */
         200: {
-          content: never;
+          content: {
+            "application/json": {
+              subId: string;
+              email: string;
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
         };
       };
     };
