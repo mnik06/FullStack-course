@@ -1,10 +1,10 @@
 import { HttpError } from 'src/api/errors/HttpError';
 import { TSignupReq } from 'src/api/routes/schemas/auth/SignupReqSchema';
-import { IUserRepo } from 'src/types/repos/IUserRepo';
+import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 import { IIdentityService } from 'src/types/services/IIdentityService';
 
 export async function signup(params: {
-  userRepo: IUserRepo;
+  userProfileRepo: IUserProfileRepo;
   identityService: IIdentityService
   data: TSignupReq
 }) {
@@ -20,7 +20,7 @@ export async function signup(params: {
     throw new HttpError(400, 'Failed to create user in identity platform');
   }
 
-  const user = await params.userRepo.createUser({
+  const user = await params.userProfileRepo.createUserProfile({
     ...identityUser,
     name
   });

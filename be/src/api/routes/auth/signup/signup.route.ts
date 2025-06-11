@@ -13,7 +13,7 @@ const routes: FastifyPluginAsync = async function (f) {
     }
   }, (req) => {
     return signup({
-      userRepo: fastify.repos.userRepo,
+      userProfileRepo: fastify.repos.userProfileRepo,
       identityService: fastify.identityService,
       data: req.body
     });

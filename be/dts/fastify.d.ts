@@ -3,8 +3,8 @@ import { IUUIDService } from 'src/services/uuid';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { IMailService } from 'src/types/IMailService';
 import { IStorageService } from 'src/types/IStorageService';
-import { IIdentityService } from 'src/services/cognito/cognito.service';
-import { TUser } from 'src/types/user/schemas/User';
+import { IIdentityService } from 'src/types/services/IIdentityService';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 // set context type
 declare module 'fastify' {
@@ -18,6 +18,7 @@ declare module 'fastify' {
   }
 
   interface FastifyRequest {
-    user?: TUser;
+    user?: TUserProfile;
+    skipAuth?: boolean;
   }
 }

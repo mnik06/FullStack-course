@@ -23,6 +23,10 @@ class AuthService {
   getAccessToken () {
     return fetchAuthSession().then(ses => ses?.tokens?.accessToken)
   }
+
+  getUserProfile () {
+    return useApiClient.get('/api/user-profile/')
+  }
 }
 
 export const authService = new AuthService()

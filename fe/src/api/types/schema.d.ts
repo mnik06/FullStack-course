@@ -327,6 +327,16 @@ export interface paths {
       };
     };
   };
+  "/api/user-profile/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
