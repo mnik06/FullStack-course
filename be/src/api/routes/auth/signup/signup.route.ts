@@ -7,6 +7,14 @@ import { signup } from 'src/controllers/auth/signup';
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
 
+  fastify.addHook('onRoute', (routeOptions) => {
+    if (!routeOptions.config) {
+      routeOptions.config = {};
+    }
+    
+    routeOptions.config.skipAuth = true;
+  });
+
   fastify.post('/', {
     schema: {
       body: SignupReqSchema

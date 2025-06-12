@@ -8,20 +8,7 @@
         FullStack Course
       </router-link>
 
-      <el-dropdown trigger="click">
-        <el-avatar class="bg-primary cursor-pointer">
-          {{ authStore.userInitials }}
-        </el-avatar>
-
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="authService.signout">
-              Logout
-              <IconLogout class="w-4 h-4 ml-2" />
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <HeaderSettingsDropdown />
     </div>
 
     <div class="flex-1 overflow-auto">
@@ -29,10 +16,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { useAuthStore } from '@/views/auth/auth.store'
-import { authService } from '@/views/auth/auth.service'
-
-const authStore = useAuthStore()
-</script>

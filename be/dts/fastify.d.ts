@@ -21,4 +21,8 @@ declare module 'fastify' {
     user?: TUserProfile;
     skipAuth?: boolean;
   }
+
+  interface FastifyContextConfig {
+    skipAuth?: boolean;
+  }
 }

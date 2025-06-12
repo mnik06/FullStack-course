@@ -1,5 +1,6 @@
 export enum EErrorCodes {
-  GENERAL_ERROR = 1000
+  GENERAL_ERROR = 1000,
+  USER_ALREADY_EXISTS = 1001
 }
 
 export function getErrorCodesDescription() {

@@ -13,7 +13,7 @@
         @submit.prevent="handleSubmit"
       >
         <el-form-item label="Email" prop="email">
-          <el-input v-model="data.email" />
+          <el-input v-model="data.email" type="email" />
         </el-form-item>
 
         <el-form-item label="Password" prop="password">

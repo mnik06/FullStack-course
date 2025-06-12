@@ -17,15 +17,15 @@
         </el-form-item>
 
         <el-form-item label="Email" prop="email">
-          <el-input v-model="data.email" />
+          <el-input v-model="data.email" type="email" />
         </el-form-item>
 
         <el-form-item label="Password" prop="password">
-          <el-input v-model="data.password" type="password" />
+          <el-input v-model="data.password" type="password" show-password />
         </el-form-item>
 
         <el-form-item label="Confirm Password" prop="confirmPassword">
-          <el-input v-model="data.confirmPassword" type="password" />
+          <el-input v-model="data.confirmPassword" type="password" show-password />
         </el-form-item>
 
         <div class="flex items-center justify-between">

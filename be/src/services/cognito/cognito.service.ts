@@ -3,8 +3,11 @@ import {
   AdminSetUserPasswordCommand,
   AttributeType,
   CognitoIdentityProviderClient, 
-  GetUserCommand
+  GetUserCommand,
+  UsernameExistsException
 } from '@aws-sdk/client-cognito-identity-provider';
+import { EErrorCodes } from 'src/api/errors/EErrorCodes';
+import { HttpError } from 'src/api/errors/HttpError';
 import { TIdentityUser } from 'src/types/IdentityUser';
 import { IIdentityService } from 'src/types/services/IIdentityService';
 
@@ -54,13 +57,23 @@ export function getCognitoService(): IIdentityService {
         Permanent: true
       });
 
-      const res = await client.send(createUserCommand);
+      try {
+        const res = await client.send(createUserCommand);
+  
+        if (res.User) {
+          await client.send(setUserPasswordCommand);
+        }
+        
+        return getIdentityUserByAttributes(res.User?.Attributes ?? []);
 
-      if (res.User) {
-        await client.send(setUserPasswordCommand);
+      } catch (error) {
+        if (error instanceof UsernameExistsException) {
+          throw new HttpError(400, 'User already exists', error, EErrorCodes.USER_ALREADY_EXISTS);
+        } 
+
+        throw new HttpError(400, 'Failed to create user in cognito');
       }
 
-      return getIdentityUserByAttributes(res.User?.Attributes ?? []);
     },
 
     async getUserByAccessToken(token: string) {
