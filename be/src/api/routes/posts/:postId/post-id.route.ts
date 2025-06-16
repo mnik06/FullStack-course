@@ -42,6 +42,7 @@ const routes: FastifyPluginAsync = async function (f) {
     return updatePostById({
       postRepo: fastify.repos.postRepo,
       postId: req.params.postId,
+      userId: req.user?.id as string,
       data: req.body
     });
   });
@@ -60,7 +61,8 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return deletePost({
       postRepo: fastify.repos.postRepo,
-      postId: req.params.postId
+      postId: req.params.postId,
+      userId: req.user?.id as string
     });
   });
 };
