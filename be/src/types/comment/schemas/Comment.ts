@@ -5,7 +5,8 @@ export const CommentSchema = z.object({
   text: z.string(),
   updatedAt: z.date(),
   createdAt: z.date(),
-  postId: z.string().uuid()
+  postId: z.string().uuid(),
+  userId: z.string().uuid()
 });
 
 export type TComment = z.infer<typeof CommentSchema>; 

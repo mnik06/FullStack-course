@@ -6,7 +6,7 @@ import { TPostFilters } from 'src/types/post/schemas/PostFilters';
 
 export interface IPostRepo {
   createPost(data: Partial<TPost>): Promise<TPostWithComments>;
-  getPosts(query: TPostFilters): Promise<TPaginationResponse<TPostWithCommentsCount[]>>;
+  getPosts(query?: Partial<TPostFilters>): Promise<TPaginationResponse<TPostWithCommentsCount[]>>;
   getPostById(id: string): Promise<TPostWithComments | null>;
   updatePostById(id: string, data: Partial<TPost>): Promise<TPostWithComments | null>;
   deletePost(id: string): Promise<boolean>;

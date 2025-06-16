@@ -64,6 +64,20 @@
       "when": 1749639254521,
       "tag": "0008_deep_prowler",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1750090439551,
+      "tag": "0009_polite_madame_hydra",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1750091507993,
+      "tag": "0010_typical_vargas",
+      "breakpoints": true
     }
   ]
 }

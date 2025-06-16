@@ -31,7 +31,7 @@
             </router-link>
           </div>
 
-          <el-button type="primary" native-type="submit">Submit</el-button>
+          <el-button type="primary" native-type="submit">Sign in</el-button>
         </div>
       </el-form>
     </el-card>

@@ -21,7 +21,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       return PostSchemaWithComments.parse({ ...post[0], comments: [] });
     },
 
-    async getPosts(params) {
+    async getPosts(params = {}) {
       const paginationService = getPaginationService();
       const filtersService = getFiltersService();
 
