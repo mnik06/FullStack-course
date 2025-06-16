@@ -36,7 +36,10 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return createPost({
       postRepo: fastify.repos.postRepo,
-      data: req.body
+      data: {
+        ...req.body,
+        userId: req.user?.id as string
+      }
     });
   });
 };

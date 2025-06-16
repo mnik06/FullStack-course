@@ -41,7 +41,11 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return createComment({
       commentRepo: fastify.repos.commentRepo,
-      data: { ...req.body, postId: req.params.postId }
+      data: {
+        ...req.body,
+        postId: req.params.postId,
+        userId: req.user?.id as string
+      }
     });
   });
 };
