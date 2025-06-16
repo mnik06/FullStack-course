@@ -1,10 +1,13 @@
-<template>
+template  <template>
   <div class="flex items-center justify-center h-full">
     <el-card
       v-loading="isLoading"
       class="min-w-[400px]"
     >
-      <h1 class="text-xl font-bold mb-3">Sign in</h1>
+      <h1 class="text-xl font-bold">Confirm reset password</h1>
+      <p class="text-sm text-gray-500 mb-3">
+        Enter verification code and new password to reset your password.
+      </p>
 
       <el-form
         ref="formRef"
@@ -13,25 +16,30 @@
         @submit.prevent="handleSubmit"
       >
         <el-form-item label="Email" prop="email">
-          <el-input v-model="data.email" type="email" />
+          <el-input :model-value="(route.query.email as string)" readonly />
         </el-form-item>
 
-        <el-form-item label="Password" prop="password">
+        <el-form-item label="Verification code" prop="code">
+          <el-input v-model="data.code" />
+        </el-form-item>
+
+        <el-form-item label="New password" prop="password">
           <el-input v-model="data.password" type="password" show-password />
         </el-form-item>
 
         <div class="flex items-center justify-between">
           <div class="flex flex-col items-start">
-            <router-link :to="{ name: $routeNames.resetPassword }">
-              <el-button size="small" type="primary" link>Forgot password?</el-button>
-            </router-link>
-
-            <router-link :to="{ name: $routeNames.signup }">
-              <el-button size="small" type="primary" link>Don't have an account? Sign up</el-button>
+            <router-link :to="{ name: $routeNames.signin }">
+              <el-button size="small" type="primary" link>Back to sign in</el-button>
             </router-link>
           </div>
 
-          <el-button type="primary" native-type="submit">Submit</el-button>
+          <el-button
+            type="primary"
+            native-type="submit"
+          >
+            Reset password
+          </el-button>
         </div>
       </el-form>
     </el-card>
@@ -40,23 +48,21 @@
 
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
+import { routeNames } from '@/router/route-names'
 
+const route = useRoute()
 const router = useRouter()
-
 const data = reactive({
-  email: '',
+  code: '',
   password: ''
 })
 const isLoading = ref(false)
 
-const authStore = useAuthStore()
-
 const formRef = useTemplateRef('formRef')
 
 const formRules = useElFormRules({
-  email: [
-    useRequiredRule(),
-    useEmailRule()
+  code: [
+    useRequiredRule()
   ],
   password: [
     useRequiredRule(),
@@ -70,11 +76,10 @@ function handleSubmit () {
 
     isLoading.value = true
 
-    authService.signin(data)
-      .then(authStore.getUserProfile)
+    authService.confirmResetPassword(route.query.email as string, data.code, data.password)
       .then(() => {
-        notificationHandler({ text: 'Signin successful', type: 'success' })
-        router.push('/')
+        notificationHandler({ text: 'Password reset successfully', type: 'success' })
+        router.push({ name: routeNames.signin })
       })
       .catch(notificationHandler)
       .finally(() => {
@@ -82,5 +87,11 @@ function handleSubmit () {
       })
   })
 }
+
+onMounted(() => {
+  if (!route.query.email) {
+    router.push({ name: routeNames.resetPassword })
+  }
+})
 </script>
 

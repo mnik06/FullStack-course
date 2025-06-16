@@ -7,6 +7,11 @@ export const authRouteGuard = async (
   _: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
+  if (to.meta.isAuthInsensitive) {
+    next()
+    return
+  }
+
   const isLoggedIn = !!(await authService.isLoggedIn())
 
   if (isLoggedIn && to.fullPath.includes('auth')) {

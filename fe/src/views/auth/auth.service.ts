@@ -1,6 +1,6 @@
 import { router } from '@/router'
 import { routeNames } from '@/router/route-names'
-import { signIn, fetchAuthSession, signOut } from 'aws-amplify/auth'
+import { signIn, fetchAuthSession, signOut, resetPassword, confirmResetPassword } from 'aws-amplify/auth'
 
 class AuthService {
   signup (data: TSignupData) {
@@ -18,6 +18,14 @@ class AuthService {
     return signOut().then(() => {
       window.location.href = router.resolve({ name: routeNames.signin }).fullPath
     })
+  }
+
+  sendResetPasswordCode (email: string) {
+    return resetPassword({ username: email })
+  }
+
+  confirmResetPassword (email: string, confirmationCode: string, newPassword: string) {
+    return confirmResetPassword({ username: email, confirmationCode, newPassword })
   }
 
   getAccessToken () {

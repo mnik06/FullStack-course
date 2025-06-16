@@ -3,7 +3,10 @@ import type { RouteRecordRaw } from 'vue-router'
 export const authRouteNames = {
   auth: 'auth',
   signup: 'signup',
-  signin: 'signin'
+  signin: 'signin',
+  resetPassword: 'resetPassword',
+  resetPasswordSend: 'resetPasswordSend',
+  resetPasswordConfirm: 'resetPasswordConfirm'
 }
 
 export const authRoutes: RouteRecordRaw[] = [
@@ -24,6 +27,28 @@ export const authRoutes: RouteRecordRaw[] = [
         path: 'signin',
         name: authRouteNames.signin,
         component: () => import('@/views/auth/Signin.vue')
+      },
+      {
+        path: 'reset-password',
+        name: authRouteNames.resetPassword,
+        meta: {
+          isAuthInsensitive: true
+        },
+        redirect: {
+          name: authRouteNames.resetPasswordSend
+        },
+        children: [
+          {
+            path: 'send',
+            name: authRouteNames.resetPasswordSend,
+            component: () => import('@/views/auth/reset-password/ResetPassword.vue')
+          },
+          {
+            path: 'confirm',
+            name: authRouteNames.resetPasswordConfirm,
+            component: () => import('@/views/auth/reset-password/ResetPasswordConfirm.vue')
+          }
+        ]
       }
     ]
   }

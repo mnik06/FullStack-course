@@ -44,6 +44,10 @@ export function getCognitoService(): IIdentityService {
             Name: 'email',
             Value: email
           },
+          {
+            Name: 'email_verified', 
+            Value: 'true'
+          },
           ...Object.entries(userAttributes ?? {}).map(([key, value]) => ({
             Name: key,
             Value: value

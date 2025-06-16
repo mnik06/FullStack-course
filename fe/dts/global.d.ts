@@ -5,11 +5,11 @@ import type { allFilters } from '@/core/filters'
 
 declare module 'vue-router' {
   interface RouteMeta {
-    // todo: this is just an example. Please setup your own route meta params.
     label?: string
     parentName?: string
     requireAuth?: boolean
     layout?: TLayoutName
+    isAuthInsensitive?: boolean
   }
 }
 

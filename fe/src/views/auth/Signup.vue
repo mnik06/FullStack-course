@@ -4,7 +4,7 @@
       v-loading="isLoading"
       class="min-w-[400px]"
     >
-      <h1 class="text-2xl font-bold mb-3">Sign up</h1>
+      <h1 class="text-xl font-bold mb-3">Sign up</h1>
 
       <el-form
         ref="formRef"
@@ -12,12 +12,12 @@
         :rules="formRules"
         @submit.prevent="handleSubmit"
       >
-        <el-form-item label="Name" prop="name">
-          <el-input v-model="data.name" />
-        </el-form-item>
-
         <el-form-item label="Email" prop="email">
           <el-input v-model="data.email" type="email" />
+        </el-form-item>
+
+        <el-form-item label="Name" prop="name">
+          <el-input v-model="data.name" />
         </el-form-item>
 
         <el-form-item label="Password" prop="password">
