@@ -125,7 +125,7 @@ function handleDeletePost () {
 function fetchPostComments () {
   postCommentsLoading.value = true
 
-  postsService.getComments(props.post.id)
+  return postsService.getComments(props.post.id)
     .then((res) => { postComments.value = res })
     .finally(() => { postCommentsLoading.value = false })
     .catch(notificationHandler)
