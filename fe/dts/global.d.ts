@@ -15,7 +15,6 @@ declare module 'vue-router' {
 
 declare module 'vue' {
   interface ComponentCustomProperties {
-    // todo: Here you define you global vue definitions.
     $portalNames: typeof portalNames
     $routeNames: typeof routeNames
     $filters: typeof allFilters

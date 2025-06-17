@@ -25,12 +25,7 @@ function getIdentityUserByAttributes(attributes: AttributeType[]): TIdentityUser
 }
 
 export function getCognitoService(): IIdentityService {
-  const client = new CognitoIdentityProviderClient({
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
-    }
-  });
+  const client = new CognitoIdentityProviderClient();
 
   return {
     async createNewUser({ email, password, userAttributes }) {

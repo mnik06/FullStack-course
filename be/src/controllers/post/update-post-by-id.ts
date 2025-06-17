@@ -6,16 +6,9 @@ import { getPostService } from 'src/services/post/post.service';
 export async function updatePostById(params: {
   postRepo: IPostRepo;
   postId: string;
-  userId: string;
   data: Partial<TPost>;
 }) {
   const postService = getPostService();
-
-  await postService.validatePostAccess({
-    postRepo: params.postRepo,
-    postId: params.postId,
-    userId: params.userId
-  });
 
   const post = await params.postRepo.updatePostById(
     params.postId,

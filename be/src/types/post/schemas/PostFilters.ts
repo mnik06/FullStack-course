@@ -7,7 +7,6 @@ export const PostFiltersSchema = PaginationSchema.extend({
   search: z.string().optional(),
   sortBy: PostSortBySchema.optional(),
   sortOrder: SortOrderSchema.optional(),
-  // TODO: ask
   numericFilters: z.array(z.string()).or(z.string()).optional()
     .transform(val => {
       if (!val) {

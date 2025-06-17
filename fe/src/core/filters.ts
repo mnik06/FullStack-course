@@ -37,7 +37,6 @@ export const dateFilterOptions = {
   }
 } as const
 
-// TODO: use object for params
 export const dateFilter = (
   value: string | Date | undefined,
   formatOption: keyof typeof dateFilterOptions = 'default',

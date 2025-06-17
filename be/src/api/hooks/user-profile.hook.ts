@@ -12,6 +12,11 @@ export const userProfileHook: preHandlerAsyncHookHandler = async function (reque
   }
   
   const identityUser = await request.server.identityService.getUserByAccessToken(token);
+
+  if (!identityUser) {
+    throw new HttpError(401, 'Unauthorized');
+  }
+
   const userProfileRes = await request.server.repos.userProfileRepo.getUserProfileBySubId(
     identityUser.subId
   );

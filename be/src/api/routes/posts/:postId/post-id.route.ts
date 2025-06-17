@@ -5,12 +5,32 @@ import { z } from 'zod';
 import { updatePostById } from 'src/controllers/post/update-post-by-id';
 import { getPostById } from 'src/controllers/post/get-post-by-id';
 import { deletePost } from 'src/controllers/post/delete-post';
+import { HttpError } from 'src/api/errors/HttpError';
 
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
 import { UpdatePostReqSchema } from 'src/api/routes/schemas/post/UpdatePostReqSchema';
 
+const PostByIdParamsSchema = z.object({
+  postId: z.string().uuid()
+});
+type TPostByIdParams = z.infer<typeof PostByIdParamsSchema>;
+
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
+
+  fastify.addHook('onRequest', async (req) => {
+    if (req.method === 'GET') {
+      return;
+    }
+
+    const post = await fastify.repos.postRepo.getPostById((req.params as TPostByIdParams).postId);
+
+    if (post && post.userId !== req.user?.id as string) {
+      throw new HttpError(403, 'Permission denied');
+    }
+
+    return true;
+  });
 
   fastify.get('/', {
     schema: {
@@ -30,9 +50,7 @@ const routes: FastifyPluginAsync = async function (f) {
 
   fastify.patch('/', {
     schema: {
-      params: z.object({
-        postId: z.string().uuid()
-      }),
+      params: PostByIdParamsSchema,
       response: {
         200: GetPostByIdRespSchema
       },
@@ -42,16 +60,13 @@ const routes: FastifyPluginAsync = async function (f) {
     return updatePostById({
       postRepo: fastify.repos.postRepo,
       postId: req.params.postId,
-      userId: req.user?.id as string,
       data: req.body
     });
   });
 
   fastify.delete('/', {
     schema: {
-      params: z.object({
-        postId: z.string().uuid()
-      }),
+      params: PostByIdParamsSchema,
       response: {
         200: z.object({
           success: z.boolean()
@@ -61,8 +76,7 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return deletePost({
       postRepo: fastify.repos.postRepo,
-      postId: req.params.postId,
-      userId: req.user?.id as string
+      postId: req.params.postId
     });
   });
 };
