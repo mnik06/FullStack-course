@@ -4,6 +4,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 import { createComment } from 'src/controllers/comment/create-comment';
 import { getCommentsByPostId } from 'src/controllers/comment/get-comments-by-post-id';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 import { CreateCommentReqSchema } from 'src/api/routes/schemas/comment/CreateCommentReqSchema';
 import { GetCommentsRespSchema } from 'src/api/routes/schemas/comment/GetCommentsRespSchema';
@@ -45,7 +46,8 @@ const routes: FastifyPluginAsync = async function (f) {
         ...req.body,
         postId: req.params.postId,
         userId: req.user?.id as string
-      }
+      },
+      user: req.user as TUserProfile
     });
   });
 };

@@ -3,6 +3,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 import { createPost } from 'src/controllers/post/create-post';
 import { getPosts } from 'src/controllers/post/get-posts';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 import { CreatePostReqSchema } from 'src/api/routes/schemas/post/CreatePostReqSchema';
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
@@ -39,7 +40,8 @@ const routes: FastifyPluginAsync = async function (f) {
       data: {
         ...req.body,
         userId: req.user?.id as string
-      }
+      },
+      user: req.user as TUserProfile
     });
   });
 };

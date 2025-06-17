@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { updateCommentById } from 'src/controllers/comment/update-comment-by-id';
 import { deleteComment } from 'src/controllers/comment/delete-comment';
 import { HttpError } from 'src/api/errors/HttpError';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 import { GetCommentByIdRespSchema } from 'src/api/routes/schemas/comment/GetCommentByIdRespSchema';
 import { UpdateCommentReqSchema } from 'src/api/routes/schemas/comment/UpdateCommentsReqSchema';
@@ -45,7 +46,8 @@ const routes: FastifyPluginAsync = async function (f) {
     return updateCommentById({
       commentRepo: fastify.repos.commentRepo,
       commentId: req.params.commentId,
-      data: req.body
+      data: req.body,
+      user: req.user as TUserProfile
     });
   });
 

@@ -6,6 +6,7 @@ import { updatePostById } from 'src/controllers/post/update-post-by-id';
 import { getPostById } from 'src/controllers/post/get-post-by-id';
 import { deletePost } from 'src/controllers/post/delete-post';
 import { HttpError } from 'src/api/errors/HttpError';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
 import { UpdatePostReqSchema } from 'src/api/routes/schemas/post/UpdatePostReqSchema';
@@ -60,7 +61,8 @@ const routes: FastifyPluginAsync = async function (f) {
     return updatePostById({
       postRepo: fastify.repos.postRepo,
       postId: req.params.postId,
-      data: req.body
+      data: req.body,
+      user: req.user as TUserProfile
     });
   });
 

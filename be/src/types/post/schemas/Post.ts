@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserProfileSchema } from 'src/types/user-profile/schemas/UserProfile';
 
 export const PostSchema = z.object({
   id: z.string().uuid(),
@@ -7,7 +8,8 @@ export const PostSchema = z.object({
   readingTime: z.number(),
   updatedAt: z.date(),
   createdAt: z.date(),
-  userId: z.string().uuid()
+  userId: z.string().uuid(),
+  user: UserProfileSchema
 });
 export type TPost = z.infer<typeof PostSchema>; 
 
