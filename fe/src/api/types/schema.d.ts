@@ -57,12 +57,24 @@ export interface paths {
                   id: string;
                   title: string;
                   description?: string | null;
+                  readingTime: number;
                   /** Format: date-time */
                   updatedAt: string;
                   /** Format: date-time */
                   createdAt: string;
+                  /** Format: uuid */
+                  userId: string;
+                  user: {
+                    subId: string;
+                    email: string;
+                    id: string;
+                    name: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                  };
                   commentsCount: number;
-                  readingTime: number;
                 })[];
               meta: {
                 offset?: number;
@@ -99,6 +111,18 @@ export interface paths {
               updatedAt: string;
               /** Format: date-time */
               createdAt: string;
+              /** Format: uuid */
+              userId: string;
+              user: {
+                subId: string;
+                email: string;
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              };
               comments: {
                   /** Format: uuid */
                   id: string;
@@ -109,6 +133,18 @@ export interface paths {
                   createdAt: string;
                   /** Format: uuid */
                   postId: string;
+                  /** Format: uuid */
+                  userId: string;
+                  user: {
+                    subId: string;
+                    email: string;
+                    id: string;
+                    name: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                  };
                 }[];
             };
           };
@@ -137,6 +173,18 @@ export interface paths {
               updatedAt: string;
               /** Format: date-time */
               createdAt: string;
+              /** Format: uuid */
+              userId: string;
+              user: {
+                subId: string;
+                email: string;
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              };
               comments: {
                   /** Format: uuid */
                   id: string;
@@ -147,6 +195,18 @@ export interface paths {
                   createdAt: string;
                   /** Format: uuid */
                   postId: string;
+                  /** Format: uuid */
+                  userId: string;
+                  user: {
+                    subId: string;
+                    email: string;
+                    id: string;
+                    name: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                  };
                 }[];
             };
           };
@@ -198,6 +258,18 @@ export interface paths {
               updatedAt: string;
               /** Format: date-time */
               createdAt: string;
+              /** Format: uuid */
+              userId: string;
+              user: {
+                subId: string;
+                email: string;
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              };
               comments: {
                   /** Format: uuid */
                   id: string;
@@ -208,6 +280,18 @@ export interface paths {
                   createdAt: string;
                   /** Format: uuid */
                   postId: string;
+                  /** Format: uuid */
+                  userId: string;
+                  user: {
+                    subId: string;
+                    email: string;
+                    id: string;
+                    name: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                  };
                 }[];
             };
           };
@@ -236,6 +320,18 @@ export interface paths {
                 createdAt: string;
                 /** Format: uuid */
                 postId: string;
+                /** Format: uuid */
+                userId: string;
+                user: {
+                  subId: string;
+                  email: string;
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                };
               }[];
           };
         };
@@ -268,6 +364,18 @@ export interface paths {
               createdAt: string;
               /** Format: uuid */
               postId: string;
+              /** Format: uuid */
+              userId: string;
+              user: {
+                subId: string;
+                email: string;
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              };
             };
           };
         };
@@ -321,6 +429,18 @@ export interface paths {
               createdAt: string;
               /** Format: uuid */
               postId: string;
+              /** Format: uuid */
+              userId: string;
+              user: {
+                subId: string;
+                email: string;
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              };
             };
           };
         };
@@ -356,9 +476,10 @@ export interface components {
   schemas: {
     /**
      * @description - GENERAL_ERROR -> 1000
+     * - USER_ALREADY_EXISTS -> 1001
      * @enum {integer}
      */
-    ErrorCodes: 1000;
+    ErrorCodes: 1000 | 1001;
   };
   responses: never;
   parameters: never;

@@ -1,3 +1,5 @@
+import { getInitials } from '@/core/helpers'
+
 export const useAuthStore = defineStore('authStore', () => {
   const user = ref<TUserProfile>(null)
   const isUser = computed(() => !!user.value)
@@ -5,7 +7,7 @@ export const useAuthStore = defineStore('authStore', () => {
   const userInitials = computed(() => {
     if (!user.value) return ''
 
-    return user.value.name.split(' ').map(name => name[0]).join('')
+    return getInitials(user.value.name)
   })
 
   async function getUserProfile () {
