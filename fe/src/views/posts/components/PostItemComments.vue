@@ -32,7 +32,9 @@
           {{ $filters.getInitials(comment.user.name) }}
         </el-avatar>
 
-        <span class="text-sm font-bold ml-2">{{ comment.user.name }}</span>
+        <span class="text-sm font-bold ml-2">
+          {{ comment.user.id === authStore.user.id ? 'You' : comment.user.name }}
+        </span>
         <span class="text-xs text-gray-500 ml-2">{{ $filters.relativeDate(comment.createdAt) }}</span>
       </div>
 
@@ -47,6 +49,8 @@ const props = defineProps<{
 }>()
 
 const comments = defineModel<TPostComment[]>('comments')
+
+const authStore = useAuthStore()
 
 const newComment = ref('')
 const newCommentLoading = ref(false)
