@@ -1,19 +1,19 @@
 {
-  "develop": {
+  "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-fe9fxd6-develop-d8caa-authRole",
-      "UnauthRoleArn": "arn:aws:iam::086401416777:role/amplify-fe9fxd6-develop-d8caa-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::086401416777:role/amplify-fe9fxd6-develop-d8caa-authRole",
+      "AuthRoleName": "amplify-fej6js9-dev-b650e-authRole",
+      "UnauthRoleArn": "arn:aws:iam::086401416777:role/amplify-fej6js9-dev-b650e-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::086401416777:role/amplify-fej6js9-dev-b650e-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-fe9fxd6-develop-d8caa-deployment",
-      "UnauthRoleName": "amplify-fe9fxd6-develop-d8caa-unauthRole",
-      "StackName": "amplify-fe9fxd6-develop-d8caa",
-      "StackId": "arn:aws:cloudformation:us-east-1:086401416777:stack/amplify-fe9fxd6-develop-d8caa/13c76ca0-462b-11f0-841e-1236c4850f23",
-      "AmplifyAppId": "d2gczkmwgcfepz"
+      "DeploymentBucketName": "amplify-fej6js9-dev-b650e-deployment",
+      "UnauthRoleName": "amplify-fej6js9-dev-b650e-unauthRole",
+      "StackName": "amplify-fej6js9-dev-b650e",
+      "StackId": "arn:aws:cloudformation:us-east-1:086401416777:stack/amplify-fej6js9-dev-b650e/5e6728a0-4b93-11f0-ad39-0e40cd111649",
+      "AmplifyAppId": "d3kkzstn2vlm8m"
     },
     "categories": {
       "auth": {
-        "fe9fxd6d808ee18": {
+        "fej6js95b4f3c32": {
           "userPoolId": "us-east-1_toOSW06VM",
           "userPoolName": "FullStack course User pool",
           "webClientId": "59e1b56jel1pk1s0akp0tqoec4",
