@@ -13,7 +13,7 @@
           </router-link>
         </el-button>
 
-        <div class="flex items-center">
+        <div v-if="post.user.id === authStore.user.id" class="flex items-center">
           <el-button size="small" class="w-7 h-7" @click="$emit('editPost', post)">
             <IconEdit class="w-4 h-4" />
           </el-button>
@@ -95,6 +95,8 @@ const props = defineProps<{
   post: TPost | TPosts[number]
   showFull?: boolean
 }>()
+
+const authStore = useAuthStore()
 
 const postComments = ref<TPostComment[]>((props.post as TPost).comments || [])
 const postCommentsLoading = ref(false)

@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown trigger="click">
+  <el-dropdown trigger="click" popper-class="w-[250px]">
     <el-avatar class="bg-primary cursor-pointer">
       {{ authStore.userInitials }}
     </el-avatar>
