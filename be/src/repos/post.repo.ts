@@ -1,7 +1,7 @@
 import { and, asc, count, desc, eq, getTableColumns, or, sql } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-import { commentTable, postTable } from 'src/services/drizzle/schema';
+import { commentTable, postTable, userTable } from 'src/services/drizzle/schema';
 import { getPaginationService } from 'src/services/pagination/pagination.service';
 import { getFiltersService } from 'src/services/filters/filters.service';
 
@@ -12,21 +12,22 @@ import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithComm
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
-    async createPost(data) {
+    async createPost(data, user) {
       const post = await db
         .insert(postTable)
         .values(data as TPost)
         .returning();
 
-      return PostSchemaWithComments.parse({ ...post[0], comments: [] });
+      return PostSchemaWithComments.parse({ ...post[0], user, comments: [] });
     },
 
-    async getPosts(params) {
+    async getPosts(params = {}) {
       const paginationService = getPaginationService();
       const filtersService = getFiltersService();
 
       const querySelection = {
         ...getTableColumns(postTable),
+        user: userTable,
         commentsCount: count(commentTable.id)
       };
       const sortByColumn = querySelection[params.sortBy || 'createdAt'];
@@ -53,8 +54,9 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
             ...filters.whereFilters
           )
         )
+        .leftJoin(userTable, eq(postTable.userId, userTable.id))
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
-        .groupBy(postTable.id)
+        .groupBy(postTable.id, userTable.id)
         .having(and(...filters.havingFilters))
         .orderBy(params.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn))
         .$dynamic();
@@ -77,11 +79,20 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       const posts = await db
         .select({
           ...getTableColumns(postTable),
-          comments: commentTable
+          user: userTable
         })
         .from(postTable)
-        .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
+        .leftJoin(userTable, eq(postTable.userId, userTable.id))
         .where(eq(postTable.id, id));
+
+      const comments = await db
+        .select({
+          ...getTableColumns(commentTable),
+          user: userTable
+        })
+        .from(commentTable)
+        .where(eq(commentTable.postId, id))
+        .leftJoin(userTable, eq(commentTable.userId, userTable.id));
 
       if (!posts.length) {
         return null;
@@ -89,11 +100,11 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
 
       return PostSchemaWithComments.parse({
         ...posts[0],
-        comments: posts.flatMap(post => post.comments).filter(Boolean)
+        comments
       });
     },
 
-    async updatePostById(id, data) {
+    async updatePostById(id, data, user) {
       const posts = await db
         .update(postTable)
         .set(data as TPost)
@@ -111,7 +122,8 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
 
       return PostSchemaWithComments.parse({
         ...posts[0],
-        comments
+        comments,
+        user
       });
     },
 

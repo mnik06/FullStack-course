@@ -1,16 +1,9 @@
 import { z } from 'zod';
 import { PaginationMetadataSchema } from 'src/types/Pagination';
+import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 
 export const GetPostsRespSchema = z.object({
-  data: z.array(z.object({
-    id: z.string().uuid(),
-    title: z.string(),
-    description: z.string().optional().nullable(),
-    updatedAt: z.date(),
-    createdAt: z.date(),
-    commentsCount: z.number(),
-    readingTime: z.number()
-  })),
+  data: z.array(PostSchemaWithCommentsCount),
   meta: PaginationMetadataSchema
 });
 

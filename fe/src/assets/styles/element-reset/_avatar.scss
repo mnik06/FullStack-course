@@ -1,0 +1,9 @@
+@use "element-plus/theme-chalk/src/avatar";
+
+.el-avatar {
+  @apply capitalize;
+
+  &--small {
+    @apply text-xs;
+  }
+}

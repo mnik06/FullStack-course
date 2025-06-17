@@ -15,7 +15,7 @@
 @use "_form";
 @use "_button";
 @use "_pagination";
-
+@use "_avatar";
 @use "element-plus/theme-chalk/src/base";
 @use "element-plus/theme-chalk/src/badge";
 @use "element-plus/theme-chalk/src/message";
@@ -30,9 +30,10 @@
 @use "element-plus/theme-chalk/src/switch";
 @use "element-plus/theme-chalk/src/overlay";
 @use "element-plus/theme-chalk/src/dialog";
-@use "element-plus/theme-chalk/src/avatar";
 @use "element-plus/theme-chalk/src/notification";
 @use "element-plus/theme-chalk/src/empty";
 @use "element-plus/theme-chalk/src/popconfirm";
 @use "element-plus/theme-chalk/src/dropdown";
+@use "element-plus/theme-chalk/src/dropdown-menu";
+@use "element-plus/theme-chalk/src/dropdown-item";
 

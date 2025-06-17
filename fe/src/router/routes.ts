@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { postsRoutes } from '@/views/posts/posts.routes'
 import { routeNames } from './route-names'
-
+import { authRoutes } from '@/views/auth/auth.routes'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/:pathMatch(.*)*',
@@ -11,7 +11,8 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: { name: routeNames.posts }
   },
-  ...postsRoutes
+  ...postsRoutes,
+  ...authRoutes
 ]
 
 export {

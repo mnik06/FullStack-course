@@ -44,3 +44,7 @@ export const stringifyParams = (obj: TIndexedObject = {}, removeEmpty = true): T
 
   return val
 }
+
+export const getInitials = (name: string) => {
+  return name.split(' ').map(n => n[0]).join('')
+}

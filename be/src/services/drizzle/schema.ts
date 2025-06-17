@@ -3,6 +3,7 @@ import { relations, sql } from 'drizzle-orm';
 
 export const postTable = pgTable('posts', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
+  userId: uuid().references(() => userTable.id, { onDelete: 'cascade' }).notNull(),
   title: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 1000 }),
   readingTime: integer().notNull(),
@@ -22,8 +23,9 @@ export const postRelations = relations(postTable, ({ many }) => ({
 
 export const commentTable = pgTable('comments', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
-  text: varchar({ length: 255 }).notNull(),
+  userId: uuid().references(() => userTable.id, { onDelete: 'cascade' }).notNull(),
   postId: uuid().references(() => postTable.id, { onDelete: 'cascade' }).notNull(),
+  text: varchar({ length: 255 }).notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
@@ -35,3 +37,12 @@ export const commentRelations = relations(commentTable, ({ one }) => ({
     references: [postTable.id]
   })
 }));
+
+export const userTable = pgTable('users', {
+  id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
+  name: varchar({ length: 255 }).notNull(),
+  email: varchar({ length: 255 }).notNull(),
+  subId: varchar({ length: 255 }).notNull(),
+  createdAt: timestamp().defaultNow(),
+  updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
+});

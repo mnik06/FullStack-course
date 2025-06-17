@@ -13,7 +13,7 @@
           </router-link>
         </el-button>
 
-        <div class="flex items-center">
+        <div v-if="post.user.id === authStore.user.id" class="flex items-center">
           <el-button size="small" class="w-7 h-7" @click="$emit('editPost', post)">
             <IconEdit class="w-4 h-4" />
           </el-button>
@@ -51,6 +51,16 @@
           </router-link>
         </template>
       </TruncatedText>
+
+      <div class="flex items-center mt-2 gap-1">
+        <el-avatar class="bg-cream-can" size="small">
+          {{ $filters.getInitials(post.user.name) }}
+        </el-avatar>
+
+        <span class="font-medium text-xs">
+          {{ post.user.id === authStore.user.id ? 'You' : post.user.name }}
+        </span>
+      </div>
 
       <div class="flex items-end justify-between mt-3">
         <div v-if="!showFull" class="flex items-center gap-2">
@@ -96,6 +106,8 @@ const props = defineProps<{
   showFull?: boolean
 }>()
 
+const authStore = useAuthStore()
+
 const postComments = ref<TPostComment[]>((props.post as TPost).comments || [])
 const postCommentsLoading = ref(false)
 
@@ -125,7 +137,7 @@ function handleDeletePost () {
 function fetchPostComments () {
   postCommentsLoading.value = true
 
-  postsService.getComments(props.post.id)
+  return postsService.getComments(props.post.id)
     .then((res) => { postComments.value = res })
     .finally(() => { postCommentsLoading.value = false })
     .catch(notificationHandler)

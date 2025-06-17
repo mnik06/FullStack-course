@@ -2,6 +2,7 @@ import { TPost } from 'src/types/post/schemas/Post';
 
 interface IPostService {
   calculateReadingTime(post: Partial<TPost>): number;
+
 }
 
 export function getPostService(): IPostService {

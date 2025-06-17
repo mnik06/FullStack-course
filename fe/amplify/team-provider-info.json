@@ -1,0 +1,25 @@
+{
+  "develop": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-fe9fxd6-develop-d8caa-authRole",
+      "UnauthRoleArn": "arn:aws:iam::086401416777:role/amplify-fe9fxd6-develop-d8caa-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::086401416777:role/amplify-fe9fxd6-develop-d8caa-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-fe9fxd6-develop-d8caa-deployment",
+      "UnauthRoleName": "amplify-fe9fxd6-develop-d8caa-unauthRole",
+      "StackName": "amplify-fe9fxd6-develop-d8caa",
+      "StackId": "arn:aws:cloudformation:us-east-1:086401416777:stack/amplify-fe9fxd6-develop-d8caa/13c76ca0-462b-11f0-841e-1236c4850f23",
+      "AmplifyAppId": "d2gczkmwgcfepz"
+    },
+    "categories": {
+      "auth": {
+        "fe9fxd6d808ee18": {
+          "userPoolId": "us-east-1_toOSW06VM",
+          "userPoolName": "FullStack course User pool",
+          "webClientId": "59e1b56jel1pk1s0akp0tqoec4",
+          "nativeClientId": "59e1b56jel1pk1s0akp0tqoec4"
+        }
+      }
+    }
+  }
+}

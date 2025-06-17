@@ -1,10 +1,10 @@
 import { TRepos } from 'src/repos';
 import { IUUIDService } from 'src/services/uuid';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { IIdentityService } from 'src/types/IIdentityService';
 import { IMailService } from 'src/types/IMailService';
-import { IdentityUser } from 'src/types/IdentityUser';
 import { IStorageService } from 'src/types/IStorageService';
+import { IIdentityService } from 'src/types/services/IIdentityService';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 // set context type
 declare module 'fastify' {
@@ -18,6 +18,11 @@ declare module 'fastify' {
   }
 
   interface FastifyRequest {
-    identityUser?: IdentityUser;
+    user?: TUserProfile;
+    skipAuth?: boolean;
+  }
+
+  interface FastifyContextConfig {
+    skipAuth?: boolean;
   }
 }

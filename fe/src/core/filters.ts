@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-
+import { getInitials } from '@/core/helpers'
 export const dateFilterOptions = {
   default: {
     year: 'numeric',
@@ -37,7 +37,6 @@ export const dateFilterOptions = {
   }
 } as const
 
-// TODO: use object for params
 export const dateFilter = (
   value: string | Date | undefined,
   formatOption: keyof typeof dateFilterOptions = 'default',
@@ -56,7 +55,8 @@ export const relativeDate = (value: string, stub = 'Unknown'): string => {
 
 export const allFilters = {
   dateFilter,
-  relativeDate
+  relativeDate,
+  getInitials
 }
 
 export const filters = {

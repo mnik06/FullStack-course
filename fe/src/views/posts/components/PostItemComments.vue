@@ -29,10 +29,12 @@
     <div v-for="comment of sortedComments" :key="comment.id" class="mt-5">
       <div class="flex items-center">
         <el-avatar class="bg-cream-can" size="small">
-          A
+          {{ $filters.getInitials(comment.user.name) }}
         </el-avatar>
 
-        <span class="text-sm font-bold ml-2">Anonymous</span>
+        <span class="text-sm font-bold ml-2">
+          {{ comment.user.id === authStore.user.id ? 'You' : comment.user.name }}
+        </span>
         <span class="text-xs text-gray-500 ml-2">{{ $filters.relativeDate(comment.createdAt) }}</span>
       </div>
 
@@ -47,6 +49,8 @@ const props = defineProps<{
 }>()
 
 const comments = defineModel<TPostComment[]>('comments')
+
+const authStore = useAuthStore()
 
 const newComment = ref('')
 const newCommentLoading = ref(false)
