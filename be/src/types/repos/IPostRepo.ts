@@ -11,8 +11,7 @@ export interface IPostRepo {
   getPostById(id: string): Promise<TPostWithComments | null>;
   updatePostById(
     id: string, 
-    data: Partial<TPost>, 
-    user: TUserProfile
+    data: Partial<TPost>
   ): Promise<TPostWithComments | null>;
   deletePost(id: string): Promise<boolean>;
 } 

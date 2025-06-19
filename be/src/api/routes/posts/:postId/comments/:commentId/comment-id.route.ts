@@ -1,11 +1,11 @@
-import { FastifyPluginAsync } from 'fastify';
+import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
+import { requirePermission } from 'src/api/hooks/require-permission.hook';
+
 import { updateCommentById } from 'src/controllers/comment/update-comment-by-id';
 import { deleteComment } from 'src/controllers/comment/delete-comment';
-import { HttpError } from 'src/api/errors/HttpError';
-import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 import { GetCommentByIdRespSchema } from 'src/api/routes/schemas/comment/GetCommentByIdRespSchema';
 import { UpdateCommentReqSchema } from 'src/api/routes/schemas/comment/UpdateCommentsReqSchema';
@@ -19,21 +19,13 @@ type TCommentByIdParams = z.infer<typeof CommentByIdParamsSchema>;
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
 
-  fastify.addHook('onRequest', async (req) => {
-    if (req.method === 'GET') {
-      return;
-    }
+  const checkIsCommentOwner = async (request: FastifyRequest) => {
+    const comment = await fastify.repos.commentRepo
+      .getCommentById((request.params as TCommentByIdParams).commentId);
 
-    const post = await fastify.repos.postRepo
-      .getPostById((req.params as TCommentByIdParams).postId);
-
-    if (post && post.userId !== req.user?.id as string) {
-      throw new HttpError(403, 'Permission denied');
-    }
-
-    return true;
-  });
-
+    return comment?.userId === request.user?.id as string;
+  };
+  
   fastify.patch('/', {
     schema: {
       params: CommentByIdParamsSchema,
@@ -41,13 +33,13 @@ const routes: FastifyPluginAsync = async function (f) {
         200: GetCommentByIdRespSchema
       },
       body: UpdateCommentReqSchema
-    }
+    },
+    preHandler: [requirePermission('update_comment', checkIsCommentOwner)]
   }, (req) => {
     return updateCommentById({
       commentRepo: fastify.repos.commentRepo,
       commentId: req.params.commentId,
-      data: req.body,
-      user: req.user as TUserProfile
+      data: req.body
     });
   });
 
@@ -59,7 +51,8 @@ const routes: FastifyPluginAsync = async function (f) {
           success: z.boolean()
         })
       }
-    }
+    },
+    preHandler: [requirePermission('delete_comment', checkIsCommentOwner)]
   }, (req) => {
     return deleteComment({
       commentRepo: fastify.repos.commentRepo,

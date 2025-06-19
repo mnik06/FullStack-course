@@ -13,12 +13,12 @@ import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithComm
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
     async createPost(data, user) {
-      const post = await db
+      const [post] = await db
         .insert(postTable)
         .values(data as TPost)
         .returning();
 
-      return PostSchemaWithComments.parse({ ...post[0], user, comments: [] });
+      return PostSchemaWithComments.parse({ ...post, user, comments: [] });
     },
 
     async getPosts(params = {}) {
@@ -76,60 +76,73 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async getPostById(id) {
-      const posts = await db
-        .select({
-          ...getTableColumns(postTable),
-          user: userTable
-        })
-        .from(postTable)
-        .leftJoin(userTable, eq(postTable.userId, userTable.id))
-        .where(eq(postTable.id, id));
+      const [[post], comments] = await Promise.all([
+        db
+          .select({
+            ...getTableColumns(postTable),
+            user: userTable
+          })
+          .from(postTable)
+          .leftJoin(userTable, eq(postTable.userId, userTable.id))
+          .where(eq(postTable.id, id)),
+        db
+          .select({
+            ...getTableColumns(commentTable),
+            user: userTable
+          })
+          .from(commentTable)
+          .where(eq(commentTable.postId, id))
+          .leftJoin(userTable, eq(commentTable.userId, userTable.id))
+      ]);
 
-      const comments = await db
-        .select({
-          ...getTableColumns(commentTable),
-          user: userTable
-        })
-        .from(commentTable)
-        .where(eq(commentTable.postId, id))
-        .leftJoin(userTable, eq(commentTable.userId, userTable.id));
-
-      if (!posts.length) {
+      if (!post) {
         return null;
       }
 
       return PostSchemaWithComments.parse({
-        ...posts[0],
+        ...post,
         comments
       });
     },
 
-    async updatePostById(id, data, user) {
-      const posts = await db
+    async updatePostById(id, data) {
+      const [post] = await db
         .update(postTable)
         .set(data as TPost)
         .where(eq(postTable.id, id))
         .returning();
 
-      if (!posts.length) {
+      if (!post) {
         return null;
       }
 
-      const comments = await db
-        .select()
-        .from(commentTable)
-        .where(eq(commentTable.postId, id));
+      const [[user], comments] = await Promise.all([
+        db
+          .select({
+            ...getTableColumns(userTable)
+          })
+          .from(userTable)
+          .where(eq(userTable.id, post.userId)),
+        db
+          .select({
+            ...getTableColumns(commentTable),
+            user: userTable
+          })
+          .from(commentTable)
+          .where(eq(commentTable.postId, id))
+          .leftJoin(userTable, eq(commentTable.userId, userTable.id))
+      ]);
 
       return PostSchemaWithComments.parse({
-        ...posts[0],
+        ...post,
         comments,
         user
       });
     },
 
     async deletePost(id) {
-      const posts = await db.delete(postTable).where(eq(postTable.id, id)).returning();
-      return posts.length > 0;
+      const [post] = await db.delete(postTable).where(eq(postTable.id, id)).returning();
+      return !!post;
     }
   };
 } 
