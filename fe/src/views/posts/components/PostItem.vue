@@ -34,6 +34,16 @@
     </template>
 
     <div class="flex flex-col">
+      <div class="flex items-center mb-2 gap-1">
+        <el-avatar class="bg-cream-can" size="small">
+          {{ $filters.getInitials(post.user.name) }}
+        </el-avatar>
+
+        <span class="font-medium text-xs">
+          {{ post.user.id === authStore.user.id ? 'You' : post.user.name }}
+        </span>
+      </div>
+
       <p v-if="showFull">{{ post.description }}</p>
 
       <TruncatedText
@@ -51,16 +61,6 @@
           </router-link>
         </template>
       </TruncatedText>
-
-      <div class="flex items-center mt-2 gap-1">
-        <el-avatar class="bg-cream-can" size="small">
-          {{ $filters.getInitials(post.user.name) }}
-        </el-avatar>
-
-        <span class="font-medium text-xs">
-          {{ post.user.id === authStore.user.id ? 'You' : post.user.name }}
-        </span>
-      </div>
 
       <div class="flex items-end justify-between mt-3">
         <div v-if="!showFull" class="flex items-center gap-2">
