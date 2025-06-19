@@ -81,7 +81,6 @@ function handleSubmit () {
         notificationHandler({ text: 'Password reset successfully', type: 'success' })
         router.push({ name: routeNames.signin })
       })
-      .catch(notificationHandler)
       .finally(() => {
         isLoading.value = false
       })

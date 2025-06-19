@@ -92,7 +92,6 @@ function handleSubmit () {
       .finally(() => {
         submitLoading.value = false
       })
-      .catch(notificationHandler)
   })
 }
 

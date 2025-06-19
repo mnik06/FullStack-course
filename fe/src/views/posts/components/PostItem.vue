@@ -136,7 +136,6 @@ function handleDeletePost () {
       notificationHandler({ text: 'Post deleted successfully', type: 'success' })
       emit('postDeleted', props.post)
     })
-    .catch(notificationHandler)
 }
 
 function fetchPostComments () {
@@ -145,6 +144,5 @@ function fetchPostComments () {
   return postsService.getComments(props.post.id)
     .then((res) => { postComments.value = res })
     .finally(() => { postCommentsLoading.value = false })
-    .catch(notificationHandler)
 }
 </script>
