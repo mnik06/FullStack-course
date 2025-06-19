@@ -20,6 +20,7 @@
         size="small"
         class="mt-2"
         :disabled="!newComment"
+        :loading="newCommentLoading"
         @click="saveComment"
       >
         Save
@@ -36,6 +37,23 @@
           {{ comment.user.id === authStore.user.id ? 'You' : comment.user.name }}
         </span>
         <span class="text-xs text-gray-500 ml-2">{{ $filters.relativeDate(comment.createdAt) }}</span>
+
+        <AppAccess
+          :force-allow="comment.user.id === authStore.user.id"
+          :allowed-roles="['admin']"
+        >
+          <el-popconfirm
+            title="Are you sure to delete this comment?"
+            width="200"
+            @confirm="handleDeleteComment(comment.id)"
+          >
+            <template #reference>
+              <el-button size="small" type="danger" link>
+                <IconDelete class="w-4 h-4" />
+              </el-button>
+            </template>
+          </el-popconfirm>
+        </AppAccess>
       </div>
 
       <p class="mt-2">{{ comment.text }}</p>
@@ -60,6 +78,13 @@ const sortedComments = computed(() => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   })
 })
+
+function handleDeleteComment (commentId: string) {
+  postsService.deleteComment(props.postId, commentId)
+    .then(() => {
+      comments.value = comments.value.filter((comment) => comment.id !== commentId)
+    })
+}
 
 function saveComment () {
   newCommentLoading.value = true
