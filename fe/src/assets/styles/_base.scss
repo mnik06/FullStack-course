@@ -39,4 +39,28 @@
       @apply max-w-[800px] #{!important};
     }
   }
+
+  .link {
+    @apply text-gray-600;
+
+    svg, svg * {
+      @apply fill-gray-600;
+    }
+
+    &:hover {
+      @apply text-primary;
+
+      svg, svg * {
+        @apply fill-primary;
+      }
+    }
+
+    &.router-link-active {
+      @apply text-primary font-medium #{!important};
+
+      svg, svg * {
+        @apply fill-primary #{!important};
+      }
+    }
+  }
 }
