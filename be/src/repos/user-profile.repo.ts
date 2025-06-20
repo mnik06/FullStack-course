@@ -14,6 +14,11 @@ export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
     async getUserProfileBySubId(subId) {
       const user = await db.select().from(userTable).where(eq(userTable.subId, subId));
       return { user: UserProfileSchema.parse(user[0]) };
+    },
+
+    async getAllUserProfiles() {
+      const users = await db.select().from(userTable);
+      return { users: UserProfileSchema.array().parse(users) };
     }
   };
 } 
