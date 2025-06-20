@@ -1,6 +1,6 @@
 import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 
-export function getAllUserProfiles(params: {
+export function getUsers(params: {
   userProfileRepo: IUserProfileRepo
 }) {
   return params.userProfileRepo.getAllUserProfiles();

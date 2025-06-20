@@ -2,8 +2,8 @@ import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
 
-import { GetAllUserProfilesRespSchema } from 'src/api/routes/schemas/user-profile/GetAllUserProfilesRespSchema';
-import { getAllUserProfiles } from 'src/controllers/user-profile/get-all-user-profiles';
+import { getUsers } from 'src/controllers/admin/users/get-users';
+import { GetUsersRespSchema } from 'src/api/routes/schemas/admin/users/GetUsersRespSchema';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -11,12 +11,12 @@ const routes: FastifyPluginAsync = async function (f) {
   fastify.get('/', {
     schema: {
       response: {
-        200: GetAllUserProfilesRespSchema
+        200: GetUsersRespSchema
       }
     },
     preHandler: [requirePermission('manage_users')]
   }, () => {
-    return getAllUserProfiles({ userProfileRepo: fastify.repos.userProfileRepo });
+    return getUsers({ userProfileRepo: fastify.repos.userProfileRepo });
   });
 };
 
