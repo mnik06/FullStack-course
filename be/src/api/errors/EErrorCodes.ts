@@ -1,6 +1,7 @@
 export enum EErrorCodes {
   GENERAL_ERROR = 1000,
-  USER_ALREADY_EXISTS = 1001
+  USER_ALREADY_EXISTS = 1001,
+  PERMISSION_DENIED = 1002,
 }
 
 export function getErrorCodesDescription() {

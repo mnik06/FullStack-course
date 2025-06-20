@@ -9,7 +9,6 @@ const requestInterceptor = async (requestConfig: InternalAxiosRequestConfig): Pr
   if (requestConfig.url) {
     requestConfig.url = parseDynamicKeys(requestConfig.url, requestConfig.dynamicKeys as TIndexedObject | undefined)
   }
-
   return requestConfig
 }
 

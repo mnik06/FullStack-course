@@ -70,7 +70,6 @@ function handleSubmit () {
         notificationHandler({ text: `Verification code sent to ${data.email}`, type: 'success' })
         router.push({ name: routeNames.resetPasswordConfirm, query: { email: data.email } })
       })
-      .catch(notificationHandler)
       .finally(() => {
         isLoading.value = false
       })

@@ -8,8 +8,21 @@ import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
   return {
     async createComment(data, user) {
-      const comment = await db.insert(commentTable).values(data as TComment).returning();
-      return CommentSchema.parse({ ...comment[0], user });
+      const [comment] = await db.insert(commentTable).values(data as TComment).returning();
+      return CommentSchema.parse({ ...comment, user });
+    },
+
+    async getCommentById(id) {
+      const [comment] = await db
+        .select({
+          ...getTableColumns(commentTable),
+          user: userTable
+        })
+        .from(commentTable)
+        .where(eq(commentTable.id, id))
+        .leftJoin(userTable, eq(commentTable.userId, userTable.id));
+
+      return CommentSchema.parse(comment);
     },
 
     async getCommentsByPostId(postId) {
@@ -25,19 +38,26 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
       return CommentSchema.array().parse(comments);
     },
 
-    async updateCommentById(id, data, user) {
-      const comments = await db
+    async updateCommentById(id, data) {
+      const [comment] = await db
         .update(commentTable)
         .set(data as TComment)
         .where(eq(commentTable.id, id))
         .returning();
 
-      return comments.length > 0 ? CommentSchema.parse({ ...comments[0], user }) : null;
+      const [user] = await db
+        .select({
+          ...getTableColumns(userTable)
+        })
+        .from(userTable)
+        .where(eq(userTable.id, comment.userId));
+
+      return comment ? CommentSchema.parse({ ...comment, user }) : null;
     },
 
     async deleteComment(id) {
-      const comments = await db.delete(commentTable).where(eq(commentTable.id, id)).returning();
-      return comments.length > 0;
+      const [comment] = await db.delete(commentTable).where(eq(commentTable.id, id)).returning();
+      return !!comment;
     }
   };
 } 

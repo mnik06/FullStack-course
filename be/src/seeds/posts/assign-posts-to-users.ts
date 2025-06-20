@@ -2,7 +2,6 @@ import { executeSeed, getDbConnection } from '../seeds.utils';
 import { userTable } from 'src/services/drizzle/schema';
 import { sql } from 'drizzle-orm';
 import { getPostRepo } from 'src/repos/post.repo';
-import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 async function getRandomUsers() {
   const db = getDbConnection();
@@ -42,7 +41,7 @@ async function assignPostsToUsers() {
     
     await postRepo.updatePostById(posts[i].id, {
       userId: user.id
-    }, user as TUserProfile);
+    });
   }
   
   console.log(`Successfully assigned ${posts.length} posts to ${users.length} users`);

@@ -44,7 +44,6 @@
 
 <script lang="ts" setup>
 import debounce from 'lodash/debounce'
-import { notificationHandler } from '@/core/helpers'
 import { localStorageService } from '@/services/local-storage.service'
 
 const route = useRoute()
@@ -82,7 +81,6 @@ function fetchPosts () {
       paginationMeta.value = res.meta
     })
     .finally(() => { loading.value = false })
-    .catch(notificationHandler)
 }
 const debouncedFetchPosts = debounce(fetchPosts, 200)
 

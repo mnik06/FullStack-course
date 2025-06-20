@@ -26,6 +26,10 @@ class PostsService {
   createComment (postId: string, text: string) {
     return useApiClient.post('/api/posts/{postId}/comments/', { text }, { dynamicKeys: { postId } })
   }
+
+  deleteComment (postId: string, commentId: string) {
+    return useApiClient.delete('/api/posts/{postId}/comments/{commentId}/', { dynamicKeys: { postId, commentId } })
+  }
 }
 
 export const postsService = new PostsService()

@@ -13,23 +13,28 @@
           </router-link>
         </el-button>
 
-        <div v-if="post.user.id === authStore.user.id" class="flex items-center">
-          <el-button size="small" class="w-7 h-7" @click="$emit('editPost', post)">
-            <IconEdit class="w-4 h-4" />
-          </el-button>
+        <AppAccess
+          :allowed-roles="['admin']"
+          :force-allow="post.user.id === authStore.user.id"
+        >
+          <div class="flex items-center">
+            <el-button size="small" class="w-7 h-7" @click="$emit('editPost', post)">
+              <IconEdit class="w-4 h-4" />
+            </el-button>
 
-          <el-popconfirm
-            title="Are you sure to delete this post?"
-            width="200"
-            @confirm="handleDeletePost"
-          >
-            <template #reference>
-              <el-button type="danger" size="small" class="w-7 h-7">
-                <IconDelete class="w-4 h-4" />
-              </el-button>
-            </template>
-          </el-popconfirm>
-        </div>
+            <el-popconfirm
+              title="Are you sure to delete this post?"
+              width="200"
+              @confirm="handleDeletePost"
+            >
+              <template #reference>
+                <el-button type="danger" size="small" class="w-7 h-7">
+                  <IconDelete class="w-4 h-4" />
+                </el-button>
+              </template>
+            </el-popconfirm>
+          </div>
+        </AppAccess>
       </div>
     </template>
 
@@ -131,7 +136,6 @@ function handleDeletePost () {
       notificationHandler({ text: 'Post deleted successfully', type: 'success' })
       emit('postDeleted', props.post)
     })
-    .catch(notificationHandler)
 }
 
 function fetchPostComments () {
@@ -140,6 +144,5 @@ function fetchPostComments () {
   return postsService.getComments(props.post.id)
     .then((res) => { postComments.value = res })
     .finally(() => { postCommentsLoading.value = false })
-    .catch(notificationHandler)
 }
 </script>

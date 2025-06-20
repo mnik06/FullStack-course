@@ -73,6 +73,8 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    /** @enum {string} */
+                    role: "admin" | "user";
                   };
                   commentsCount: number;
                 })[];
@@ -122,8 +124,10 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                /** @enum {string} */
+                role: "admin" | "user";
               };
-              comments: {
+              comments: ({
                   /** Format: uuid */
                   id: string;
                   text: string;
@@ -144,8 +148,10 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    /** @enum {string} */
+                    role: "admin" | "user";
                   };
-                }[];
+                })[];
             };
           };
         };
@@ -184,8 +190,10 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                /** @enum {string} */
+                role: "admin" | "user";
               };
-              comments: {
+              comments: ({
                   /** Format: uuid */
                   id: string;
                   text: string;
@@ -206,8 +214,10 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    /** @enum {string} */
+                    role: "admin" | "user";
                   };
-                }[];
+                })[];
             };
           };
         };
@@ -269,8 +279,10 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                /** @enum {string} */
+                role: "admin" | "user";
               };
-              comments: {
+              comments: ({
                   /** Format: uuid */
                   id: string;
                   text: string;
@@ -291,8 +303,10 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    /** @enum {string} */
+                    role: "admin" | "user";
                   };
-                }[];
+                })[];
             };
           };
         };
@@ -310,7 +324,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            "application/json": ({
                 /** Format: uuid */
                 id: string;
                 text: string;
@@ -331,8 +345,10 @@ export interface paths {
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
+                  /** @enum {string} */
+                  role: "admin" | "user";
                 };
-              }[];
+              })[];
           };
         };
       };
@@ -375,6 +391,8 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                /** @enum {string} */
+                role: "admin" | "user";
               };
             };
           };
@@ -440,6 +458,8 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                /** @enum {string} */
+                role: "admin" | "user";
               };
             };
           };
@@ -462,6 +482,8 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              /** @enum {string} */
+              role: "admin" | "user";
             };
           };
         };
@@ -477,9 +499,10 @@ export interface components {
     /**
      * @description - GENERAL_ERROR -> 1000
      * - USER_ALREADY_EXISTS -> 1001
+     * - PERMISSION_DENIED -> 1002
      * @enum {integer}
      */
-    ErrorCodes: 1000 | 1001;
+    ErrorCodes: 1000 | 1001 | 1002;
   };
   responses: never;
   parameters: never;

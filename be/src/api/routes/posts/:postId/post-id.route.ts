@@ -1,12 +1,12 @@
-import { FastifyPluginAsync } from 'fastify';
+import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
+
+import { requirePermission } from 'src/api/hooks/require-permission.hook';
 
 import { updatePostById } from 'src/controllers/post/update-post-by-id';
 import { getPostById } from 'src/controllers/post/get-post-by-id';
 import { deletePost } from 'src/controllers/post/delete-post';
-import { HttpError } from 'src/api/errors/HttpError';
-import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
 import { UpdatePostReqSchema } from 'src/api/routes/schemas/post/UpdatePostReqSchema';
@@ -19,19 +19,12 @@ type TPostByIdParams = z.infer<typeof PostByIdParamsSchema>;
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
 
-  fastify.addHook('onRequest', async (req) => {
-    if (req.method === 'GET') {
-      return;
-    }
+  const checkIsPostOwner = async (request: FastifyRequest) => {
+    const post = await fastify.repos.postRepo
+      .getPostById((request.params as TPostByIdParams).postId);
 
-    const post = await fastify.repos.postRepo.getPostById((req.params as TPostByIdParams).postId);
-
-    if (post && post.userId !== req.user?.id as string) {
-      throw new HttpError(403, 'Permission denied');
-    }
-
-    return true;
-  });
+    return post?.userId === request.user?.id as string;
+  };
 
   fastify.get('/', {
     schema: {
@@ -56,13 +49,13 @@ const routes: FastifyPluginAsync = async function (f) {
         200: GetPostByIdRespSchema
       },
       body: UpdatePostReqSchema
-    }
+    },
+    preHandler: [requirePermission('update_post', checkIsPostOwner)]
   }, (req) => {
     return updatePostById({
       postRepo: fastify.repos.postRepo,
       postId: req.params.postId,
-      data: req.body,
-      user: req.user as TUserProfile
+      data: req.body
     });
   });
 
@@ -74,7 +67,8 @@ const routes: FastifyPluginAsync = async function (f) {
           success: z.boolean()
         })
       }
-    }
+    },
+    preHandler: [requirePermission('delete_post', checkIsPostOwner)]
   }, (req) => {
     return deletePost({
       postRepo: fastify.repos.postRepo,

@@ -22,7 +22,6 @@
 </template>
 
 <script lang="ts" setup>
-import { notificationHandler } from '@/core/helpers'
 import { routeNames } from '@/router/route-names'
 
 const route = useRoute()
@@ -36,9 +35,7 @@ function fetchPost () {
 
   postsService.getPostById(route.params.id as string)
     .then((res) => { post.value = res })
-    .catch((err) => {
-      notificationHandler(err)
-
+    .catch(() => {
       router.push({ name: routeNames.posts })
     })
     .finally(() => { loading.value = false })
