@@ -23,6 +23,10 @@
         <el-button type="danger">Deactivate</el-button>
       </template>
     </AppTable>
+
+    <div class="flex items-center justify-center py-5">
+      <Pagination v-model="pagination" :pagination-meta="paginationMeta" />
+    </div>
   </div>
 </template>
 
@@ -48,17 +52,24 @@ const headers: IAppTableHeader[] = [
   }
 ]
 
-const users = ref<TUsers>([])
 const loading = ref(false)
+const users = ref<TUsers>([])
+const paginationMeta = ref<TPaginationMeta>()
+
+const pagination = ref<IPagination>({
+  offset: 0,
+  limit: localStorageService.getItem('lastPaginationPageSize') || 10
+})
 
 const search = ref('')
 
 function fetchUsers () {
   loading.value = true
 
-  usersService.getUsers({ search: search.value })
+  usersService.getUsers({ search: search.value, ...pagination.value })
     .then((res) => {
-      users.value = res.users
+      users.value = res.data
+      paginationMeta.value = res.meta
     })
     .finally(() => {
       loading.value = false
@@ -67,9 +78,6 @@ function fetchUsers () {
 
 const debouncedFetchUsers = debounce(fetchUsers, 200)
 
-onMounted(() => {
-  fetchUsers()
-})
-
+watch(pagination, fetchUsers, { immediate: true, deep: true })
 watch(search, debouncedFetchUsers)
 </script>

@@ -29,7 +29,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              users: ({
+              data: ({
                   subId: string;
                   email: string;
                   id: string;
@@ -41,6 +41,13 @@ export interface paths {
                   /** @enum {string} */
                   role: "admin" | "user";
                 })[];
+              meta: {
+                offset?: number;
+                limit?: number;
+                total?: number;
+                totalPages?: number;
+                page?: number;
+              };
             };
           };
         };
