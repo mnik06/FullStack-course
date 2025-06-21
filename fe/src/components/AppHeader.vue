@@ -8,16 +8,20 @@
     </router-link>
 
     <div class="flex items-center gap-4">
-      <router-link
+      <AppAccess
         v-for="item in navigationItems"
         :key="item.routeName"
-        :to="{ name: item.routeName }"
-        class="flex items-center gap-1 link text-lg"
-        active-class="active"
+        :allowed-roles="item.roles"
       >
-        <component :is="item.icon" class="w-5 h-5" />
-        <span>{{ item.label }}</span>
-      </router-link>
+        <router-link
+          :to="{ name: item.routeName }"
+          class="flex items-center gap-1 link text-lg"
+          active-class="active"
+        >
+          <component :is="item.icon" class="w-5 h-5" />
+          <span>{{ item.label }}</span>
+        </router-link>
+      </AppAccess>
     </div>
 
     <div class="flex items-center gap-2 ml-auto">
@@ -39,6 +43,7 @@ import IconUser from '~icons/icon/user'
 interface INavigationItem {
   label: string
   routeName: TRouteName
+  roles?: TUserRole[]
   icon: Component
 }
 
@@ -51,7 +56,8 @@ const navigationItems: INavigationItem[] = [
   {
     label: 'Users',
     routeName: 'users',
-    icon: IconUser
+    icon: IconUser,
+    roles: ['admin']
   }
 ]
 </script>

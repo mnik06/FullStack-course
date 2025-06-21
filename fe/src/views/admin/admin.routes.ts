@@ -11,6 +11,9 @@ export const adminRoutes: RouteRecordRaw[] = [
     path: '/admin',
     name: adminRouteNames.admin,
     redirect: { name: adminRouteNames.users },
+    meta: {
+      roles: ['admin']
+    },
     children: [
       ...usersRoutes
     ]
