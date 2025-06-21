@@ -9,6 +9,7 @@
         :key="header.property"
         :label="header.label"
         :width="header.width"
+        :align="header.align"
       >
         <template #header>
           <slot :name="`header_${header.property}`">{{ header.label }}</slot>

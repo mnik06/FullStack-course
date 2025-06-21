@@ -49,4 +49,5 @@ interface IAppTableHeader {
   property: string
   label?: string
   width?: number
+  align?: TElementPlus['TableColumnProps']['align']
 }

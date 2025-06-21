@@ -38,6 +38,7 @@ export interface paths {
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
+                  isActive: boolean;
                   /** @enum {string} */
                   role: "admin" | "user";
                 })[];
@@ -48,6 +49,48 @@ export interface paths {
                 totalPages?: number;
                 page?: number;
               };
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/disable-user/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            id: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/enable-user/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            id: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
             };
           };
         };
@@ -112,6 +155,7 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -163,6 +207,7 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -187,6 +232,7 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -229,6 +275,7 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -253,6 +300,7 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -318,6 +366,7 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -342,6 +391,7 @@ export interface paths {
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -384,6 +434,7 @@ export interface paths {
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
+                  isActive: boolean;
                   /** @enum {string} */
                   role: "admin" | "user";
                 };
@@ -430,6 +481,7 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -497,6 +549,7 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -521,6 +574,7 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              isActive: boolean;
               /** @enum {string} */
               role: "admin" | "user";
             };

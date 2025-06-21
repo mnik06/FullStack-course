@@ -31,8 +31,8 @@ export const sessionRouteGuard: NavigationGuard = async (to, _from, next) => {
     if (isLoggedIn && !authStore.isUser) {
       await authStore.getUserProfile()
     }
-  } catch (e) {
-    console.error('Error inside authBeforeEachGuard', e)
+  } catch {
+    authService.signout()
   }
 
   if (to.meta.roles) {

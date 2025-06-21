@@ -1,3 +1,4 @@
+import { notificationHandler } from '@/core/helpers'
 import { router } from '@/router'
 import { routeNames } from '@/router/route-names'
 import { signIn, fetchAuthSession, signOut, resetPassword, confirmResetPassword } from 'aws-amplify/auth'
@@ -12,6 +13,13 @@ class AuthService {
       username: data.email,
       password: data.password
     })
+      .catch(er => {
+        if (er?.message === 'User is disabled.') {
+          notificationHandler('Your account was disabled. Please contact to admin')
+        }
+
+        throw er
+      })
   }
 
   signout () {

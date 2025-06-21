@@ -13,14 +13,40 @@
     <AppTable
       class="mt-5"
       :headers="headers"
-      :data="users"
+      :data="filteredUsers"
     >
       <template #createdAt="{ row }">
         {{ $filters.dateFilter(row.createdAt) }}
       </template>
 
-      <template #actions>
-        <el-button type="danger">Deactivate</el-button>
+      <template #isActive="{ row }">
+        {{ $filters.yesOrNo(row.isActive) }}
+      </template>
+
+      <template #actions="{ row }">
+        <el-popconfirm
+          v-if="row.isActive"
+          title="Are you sure to deactivate this user?"
+          width="200"
+          @confirm="handleDisableUser(row.id)"
+        >
+          <template #reference>
+            <el-button type="danger" class="w-full">Deactivate</el-button>
+          </template>
+        </el-popconfirm>
+
+        <el-popconfirm
+          v-else
+          title="Are you sure to activate this user?"
+          width="200"
+          type="success"
+          hide-icon
+          @confirm="handleActivateUser(row.id)"
+        >
+          <template #reference>
+            <el-button type="success" class="w-full">Activate</el-button>
+          </template>
+        </el-popconfirm>
       </template>
     </AppTable>
 
@@ -31,6 +57,7 @@
 </template>
 
 <script lang="ts" setup>
+import { notificationHandler } from '@/core/helpers'
 import debounce from 'lodash/debounce'
 
 const headers: IAppTableHeader[] = [
@@ -43,6 +70,10 @@ const headers: IAppTableHeader[] = [
     label: 'Name'
   },
   {
+    property: 'isActive',
+    label: 'Active'
+  },
+  {
     property: 'createdAt',
     label: 'Created at'
   },
@@ -51,6 +82,8 @@ const headers: IAppTableHeader[] = [
     width: 130
   }
 ]
+
+const authStore = useAuthStore()
 
 const loading = ref(false)
 const users = ref<TUsers>([])
@@ -63,6 +96,12 @@ const pagination = ref<IPagination>({
 
 const search = ref('')
 
+const filteredUsers = computed(() => {
+  return users.value.filter((user) => {
+    return user.id !== authStore.user?.id
+  })
+})
+
 function fetchUsers () {
   loading.value = true
 
@@ -73,6 +112,26 @@ function fetchUsers () {
     })
     .finally(() => {
       loading.value = false
+    })
+}
+
+function handleDisableUser (id: string) {
+  loading.value = true
+
+  usersService.disableUser(id)
+    .then(fetchUsers)
+    .then(() => {
+      notificationHandler({ text: 'User deactivated successfully', type: 'success' })
+    })
+}
+
+function handleActivateUser (id: string) {
+  loading.value = true
+
+  usersService.enableUser(id)
+    .then(fetchUsers)
+    .then(() => {
+      notificationHandler({ text: 'User activated successfully', type: 'success' })
     })
 }
 

@@ -1,8 +1,16 @@
 class UsersService {
-  async getUsers (filters?: TUserFilters) {
+  getUsers (filters?: TUserFilters) {
     return useApiClient.get('/api/admin/users/', {
       params: filters
     })
+  }
+
+  disableUser (id: string) {
+    return useApiClient.post('/api/admin/users/disable-user/', { id })
+  }
+
+  enableUser (id: string) {
+    return useApiClient.post('/api/admin/users/enable-user/', { id })
   }
 }
 
