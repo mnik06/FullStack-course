@@ -3,6 +3,8 @@ import { eq } from 'drizzle-orm';
 import { userTable } from 'src/services/drizzle/schema';
 import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 import { TUserProfile, UserProfileSchema } from 'src/types/user-profile/schemas/UserProfile';
+import { getPaginationService } from 'src/services/pagination/pagination.service';
+import { getSearchService } from 'src/services/search/search.service';
 
 export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
   return {
@@ -16,8 +18,23 @@ export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
       return { user: UserProfileSchema.parse(user[0]) };
     },
 
-    async getAllUserProfiles() {
-      const users = await db.select().from(userTable);
+    async getAllUserProfiles(filters = {}) {
+      const paginationService = getPaginationService();
+      const searchService = getSearchService();
+
+      const searchFilters = searchService.getSearchFilters({
+        searchQuery: filters.search,
+        trgmSearchColumns: [userTable.email, userTable.name]
+      });
+
+      const query = db
+        .select()
+        .from(userTable)
+        .where(searchFilters)
+        .$dynamic();
+
+      const users = await paginationService.withPagination(query, filters);
+
       return { users: UserProfileSchema.array().parse(users) };
     }
   };
