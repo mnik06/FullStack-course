@@ -1,5 +1,5 @@
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eq } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import { userTable } from 'src/services/drizzle/schema';
 import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 import { TUserProfile, UserProfileSchema } from 'src/types/user-profile/schemas/UserProfile';
@@ -27,15 +27,29 @@ export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
         trgmSearchColumns: [userTable.email, userTable.name]
       });
 
-      const query = db
+      const qb = db
         .select()
         .from(userTable)
         .where(searchFilters)
         .$dynamic();
 
-      const users = await paginationService.withPagination(query, filters);
+      const totalQb = db
+        .select({ count: count() })
+        .from(userTable)
+        .where(searchFilters)
+        .$dynamic();
 
-      return { users: UserProfileSchema.array().parse(users) };
+      const [users, total] = await Promise.all([
+        paginationService.withPagination(qb, filters),
+        totalQb
+      ]);
+
+      const paginationMeta = paginationService.calculatePaginationMeta({
+        total: total[0].count,
+        ...filters
+      });
+
+      return { data: UserProfileSchema.array().parse(users), meta: paginationMeta };
     }
   };
 } 

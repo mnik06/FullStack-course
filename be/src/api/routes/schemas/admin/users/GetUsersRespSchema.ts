@@ -1,6 +1,8 @@
-import { UserProfileSchema } from 'src/types/user-profile/schemas/UserProfile';
 import { z } from 'zod';
+import { UserProfileSchema } from 'src/types/user-profile/schemas/UserProfile';
+import { PaginationMetadataSchema } from 'src/types/Pagination';
 
 export const GetUsersRespSchema = z.object({
-  users: UserProfileSchema.array()
+  data: UserProfileSchema.array(),
+  meta: PaginationMetadataSchema
 });
