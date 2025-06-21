@@ -4,6 +4,8 @@ import { TPaginationResponse } from 'src/types/Pagination';
 
 export interface IUserProfileRepo {
   createUserProfile(data: Partial<TUserProfile>): Promise<{ user: TUserProfile }>;
+  updateUserProfileById(id: string, data: Partial<TUserProfile>): Promise<{ user: TUserProfile }>;
+  getUserProfileById(id: string): Promise<{ user: TUserProfile }>;
   getUserProfileBySubId(subId: string): Promise<{ user: TUserProfile }>;
   getAllUserProfiles(filters: TUserProfileFilters): Promise<TPaginationResponse<TUserProfile[]>>;
 }

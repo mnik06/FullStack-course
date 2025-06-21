@@ -9,6 +9,7 @@ export const UserProfileSchema = IdentityUserSchema.extend({
   name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  isActive: z.boolean(),
   role: UserRoleSchema
 });
 

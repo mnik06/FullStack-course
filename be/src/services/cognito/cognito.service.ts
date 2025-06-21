@@ -1,5 +1,7 @@
 import {
   AdminCreateUserCommand, 
+  AdminDisableUserCommand, 
+  AdminEnableUserCommand, 
   AdminSetUserPasswordCommand,
   AttributeType,
   CognitoIdentityProviderClient, 
@@ -81,6 +83,20 @@ export function getCognitoService(): IIdentityService {
       }));
 
       return getIdentityUserByAttributes(res.UserAttributes ?? []);
+    },
+
+    async disableUser(email: string) {
+      await client.send(new AdminDisableUserCommand({
+        Username: email,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID!
+      }));
+    },
+
+    async enableUser(email: string) {
+      await client.send(new AdminEnableUserCommand({
+        Username: email,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID!
+      }));
     }
   };
 }

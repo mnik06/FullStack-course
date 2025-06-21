@@ -1,5 +1,5 @@
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { count, eq } from 'drizzle-orm';
+import { count, desc, eq } from 'drizzle-orm';
 import { userTable } from 'src/services/drizzle/schema';
 import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 import { TUserProfile, UserProfileSchema } from 'src/types/user-profile/schemas/UserProfile';
@@ -11,6 +11,16 @@ export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
     async createUserProfile(data) {
       const user = await db.insert(userTable).values(data as TUserProfile).returning();
       return { user: UserProfileSchema.parse(user[0]) };
+    },
+
+    async updateUserProfileById(id, data) {
+      const [user] = await db.update(userTable).set(data).where(eq(userTable.id, id)).returning();
+      return { user: UserProfileSchema.parse(user) };
+    },
+
+    async getUserProfileById(id) {
+      const [user] = await db.select().from(userTable).where(eq(userTable.id, id));
+      return { user: UserProfileSchema.parse(user) };
     },
 
     async getUserProfileBySubId(subId) {
@@ -31,6 +41,8 @@ export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
         .select()
         .from(userTable)
         .where(searchFilters)
+        .orderBy(desc(userTable.createdAt))
+        .groupBy(userTable.id)
         .$dynamic();
 
       const totalQb = db

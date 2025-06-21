@@ -1,4 +1,4 @@
-import { uuid, pgTable, varchar, timestamp, index, integer, pgEnum } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, varchar, timestamp, index, integer, pgEnum, boolean } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
 const roleEnum = pgEnum('role', ['admin', 'user']);
@@ -46,6 +46,7 @@ export const userTable = pgTable('users', {
   email: varchar({ length: 255 }).notNull(),
   subId: varchar({ length: 255 }).notNull(),
   role: roleEnum().default('user').notNull(),
+  isActive: boolean().default(true).notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });

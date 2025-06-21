@@ -5,6 +5,7 @@ import { requirePermission } from 'src/api/hooks/require-permission.hook';
 import { getUsers } from 'src/controllers/admin/users/get-users';
 import { GetUsersRespSchema } from 'src/api/routes/schemas/admin/users/GetUsersRespSchema';
 import { UserProfileFiltersSchema } from 'src/types/user-profile/UserProfileFilters';
+
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
 

@@ -7,4 +7,6 @@ export interface IIdentityService {
     password: string, 
     userAttributes?: Record<string, string>
   }): Promise<TIdentityUser>;
+  disableUser(email: string): Promise<void>;
+  enableUser(email: string): Promise<void>;
 }
