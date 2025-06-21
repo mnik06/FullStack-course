@@ -17,6 +17,13 @@ export interface paths {
   };
   "/api/admin/users/": {
     get: {
+      parameters: {
+        query?: {
+          offset?: number;
+          limit?: number;
+          search?: string;
+        };
+      };
       responses: {
         /** @description Default Response */
         200: {

@@ -1,6 +1,8 @@
 class UsersService {
-  async getUsers () {
-    return useApiClient.get('/api/admin/users/')
+  async getUsers (filters?: TUserFilters) {
+    return useApiClient.get('/api/admin/users/', {
+      params: filters
+    })
   }
 }
 

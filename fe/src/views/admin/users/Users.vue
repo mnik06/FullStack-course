@@ -5,6 +5,11 @@
   >
     <h2 class="text-2xl font-bold">Users</h2>
 
+    <SearchInput
+      v-model="search"
+      class="mt-5"
+    />
+
     <AppTable
       class="mt-5"
       :headers="headers"
@@ -22,6 +27,8 @@
 </template>
 
 <script lang="ts" setup>
+import debounce from 'lodash/debounce'
+
 const headers: IAppTableHeader[] = [
   {
     property: 'email',
@@ -44,10 +51,12 @@ const headers: IAppTableHeader[] = [
 const users = ref<TUsers>([])
 const loading = ref(false)
 
+const search = ref('')
+
 function fetchUsers () {
   loading.value = true
 
-  usersService.getUsers()
+  usersService.getUsers({ search: search.value })
     .then((res) => {
       users.value = res.users
     })
@@ -56,7 +65,11 @@ function fetchUsers () {
     })
 }
 
+const debouncedFetchUsers = debounce(fetchUsers, 200)
+
 onMounted(() => {
   fetchUsers()
 })
+
+watch(search, debouncedFetchUsers)
 </script>
