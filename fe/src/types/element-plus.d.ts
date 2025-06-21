@@ -19,6 +19,8 @@ type TElementPlus = {
 
   LoadingInstance: import('element-plus/es/components/loading/src/loading').LoadingInstance
   TranslatePair: import('element-plus/es/locale').TranslatePair
+
+  TableColumn: import('element-plus').TableColumn
 }
 
 type TElEpPropMergeType<Type, Value, Validator> = import('element-plus/es/utils/index.mjs').EpPropMergeType<Type, Value, Validator>

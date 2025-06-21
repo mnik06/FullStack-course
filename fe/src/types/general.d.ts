@@ -44,3 +44,9 @@ interface ICustomNotification {
   text?: string
   type?: IElementPlus['NotificationType']
 }
+
+interface IAppTableHeader {
+  property: string
+  label?: string
+  width?: number
+}

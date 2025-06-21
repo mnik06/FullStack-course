@@ -15,6 +15,31 @@ export interface paths {
       };
     };
   };
+  "/api/admin/users/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              users: ({
+                  subId: string;
+                  email: string;
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  /** @enum {string} */
+                  role: "admin" | "user";
+                })[];
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/auth/signup/": {
     post: {
       requestBody: {

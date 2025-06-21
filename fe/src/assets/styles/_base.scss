@@ -55,7 +55,7 @@
       }
     }
 
-    &.router-link-active {
+    &.active {
       @apply text-primary font-medium #{!important};
 
       svg, svg * {

@@ -11,8 +11,9 @@
       <router-link
         v-for="item in navigationItems"
         :key="item.routeName"
-        :to="item.routeName"
+        :to="{ name: item.routeName }"
         class="flex items-center gap-1 link text-lg"
+        active-class="active"
       >
         <component :is="item.icon" class="w-5 h-5" />
         <span>{{ item.label }}</span>
@@ -33,7 +34,7 @@
 
 <script lang="ts" setup>
 import IconPost from '~icons/icon/post'
-// import IconUser from '~icons/icon/user'
+import IconUser from '~icons/icon/user'
 
 interface INavigationItem {
   label: string
@@ -46,11 +47,11 @@ const navigationItems: INavigationItem[] = [
     label: 'Posts',
     routeName: 'posts',
     icon: IconPost
+  },
+  {
+    label: 'Users',
+    routeName: 'users',
+    icon: IconUser
   }
-  // {
-  //   label: 'Users',
-  //   routeName: 'users',
-  //   icon: IconUser
-  // }
 ]
 </script>
