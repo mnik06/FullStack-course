@@ -10,6 +10,7 @@ declare module 'vue-router' {
     requireAuth?: boolean
     layout?: TLayoutName
     isAuthInsensitive?: boolean
+    roles?: TUserRole[]
   }
 }
 

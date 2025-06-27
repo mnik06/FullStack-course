@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, getTableColumns, or, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, getTableColumns, sql } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable, userTable } from 'src/services/drizzle/schema';
@@ -9,6 +9,7 @@ import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { TPost } from 'src/types/post/schemas/Post';
 import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
+import { getSearchService } from 'src/services/search/search.service';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -24,6 +25,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     async getPosts(params = {}) {
       const paginationService = getPaginationService();
       const filtersService = getFiltersService();
+      const searchService = getSearchService();
 
       const querySelection = {
         ...getTableColumns(postTable),
@@ -31,11 +33,17 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         commentsCount: count(commentTable.id)
       };
       const sortByColumn = querySelection[params.sortBy || 'createdAt'];
-      const filters = filtersService.getNumericFilters(
+
+      const numericFilters = filtersService.getNumericFilters(
         postTable,
         querySelection, 
         params.numericFilters || []
       );
+      const searchFilters = searchService.getSearchFilters({
+        searchQuery: params.search,
+        trgmSearchColumns: [postTable.title],
+        tsVectorSearchColumns: [postTable.description]
+      });
 
       const qb = db
         .select({
@@ -43,21 +51,11 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           totalCount: sql<number>`cast(count(*) over() as int)` 
         })
         .from(postTable)
-        .where(
-          and(
-            params.search
-              ? or(
-                sql`WORD_SIMILARITY(${params.search}, ${postTable.title}) > 0.5`,
-                sql`to_tsvector('english', ${postTable.description}) @@ plainto_tsquery(${params.search})`
-              ) 
-              : undefined,
-            ...filters.whereFilters
-          )
-        )
+        .where(and(searchFilters,...numericFilters.whereFilters))
         .leftJoin(userTable, eq(postTable.userId, userTable.id))
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .groupBy(postTable.id, userTable.id)
-        .having(and(...filters.havingFilters))
+        .having(and(...numericFilters.havingFilters))
         .orderBy(params.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn))
         .$dynamic();
 

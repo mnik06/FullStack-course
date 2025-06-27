@@ -17,13 +17,13 @@ export const userProfileHook: preHandlerAsyncHookHandler = async function (reque
     throw new HttpError(401, 'Unauthorized');
   }
 
-  const userProfileRes = await request.server.repos.userProfileRepo.getUserProfileBySubId(
+  const user = await request.server.repos.userProfileRepo.getUserProfileBySubId(
     identityUser.subId
   );
 
-  if (!userProfileRes.user) {
+  if (!user) {
     throw new HttpError(401, 'Unauthorized');
   }
 
-  request.user = userProfileRes.user;
+  request.user = user;
 };

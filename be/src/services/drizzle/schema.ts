@@ -1,7 +1,5 @@
-import { uuid, pgTable, varchar, timestamp, index, integer, pgEnum } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, varchar, timestamp, index, integer } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
-
-const roleEnum = pgEnum('role', ['admin', 'user']);
 
 export const postTable = pgTable('posts', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
@@ -45,7 +43,7 @@ export const userTable = pgTable('users', {
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull(),
   subId: varchar({ length: 255 }).notNull(),
-  role: roleEnum().default('user').notNull(),
+  role: varchar({ length: 20 }).default('user').notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });

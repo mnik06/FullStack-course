@@ -1,4 +1,4 @@
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import type { NavigationGuard, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { routeNames } from './route-names'
 import { useAuthStore } from '@/views/auth/auth.store'
 
@@ -23,7 +23,7 @@ export const authRouteGuard = async (
   }
 }
 
-export const sessionRouteGuard = async (_to, _from, next) => {
+export const sessionRouteGuard: NavigationGuard = async (to, _from, next) => {
   const authStore = useAuthStore()
   const isLoggedIn = !!(await authService.isLoggedIn())
 
@@ -31,8 +31,15 @@ export const sessionRouteGuard = async (_to, _from, next) => {
     if (isLoggedIn && !authStore.isUser) {
       await authStore.getUserProfile()
     }
-  } catch (e) {
-    console.error('Error inside authBeforeEachGuard', e)
+  } catch {
+    authService.signout()
+  }
+
+  if (to.meta.roles) {
+    if (!to.meta.roles.includes(authStore.user.role)) {
+      next({ name: routeNames.signin })
+      return
+    }
   }
 
   next()

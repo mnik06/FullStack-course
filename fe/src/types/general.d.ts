@@ -21,6 +21,9 @@ type TLayoutName = 'Blank' | 'Default'
 type TAppAxiosError = import('axios').AxiosError<{ error: { code: number } }>
 
 type TSortOrder = 'asc' | 'desc'
+
+type TRouteName = keyof typeof import('@/router/route-names')['routeNames']
+
 interface IAppSorting<T extends string> {
   sortBy: T
   sortOrder: TSortOrder
@@ -40,4 +43,11 @@ interface ICustomNotification {
   errorCode?: TCustomErrorCode
   text?: string
   type?: IElementPlus['NotificationType']
+}
+
+interface IAppTableHeader {
+  property: string
+  label?: string
+  width?: number
+  align?: TElementPlus['TableColumnProps']['align']
 }

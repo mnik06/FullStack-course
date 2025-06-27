@@ -13,3 +13,9 @@ export const UserProfileSchema = IdentityUserSchema.extend({
 });
 
 export type TUserProfile = z.infer<typeof UserProfileSchema>;
+
+export const UserProfileSchemaWithActiveField = UserProfileSchema.extend({
+  isActive: z.boolean()
+});
+
+export type TUserProfileWithActiveField = z.infer<typeof UserProfileSchemaWithActiveField>;

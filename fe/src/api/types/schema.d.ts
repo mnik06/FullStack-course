@@ -15,6 +15,84 @@ export interface paths {
       };
     };
   };
+  "/api/admin/users/": {
+    get: {
+      parameters: {
+        query?: {
+          offset?: number;
+          limit?: number;
+          search?: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              data: ({
+                  subId: string;
+                  email: string;
+                  isActive: boolean;
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  /** @enum {string} */
+                  role: "admin" | "user";
+                })[];
+              meta: {
+                offset?: number;
+                limit?: number;
+                total?: number;
+                totalPages?: number;
+                page?: number;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/disable-user/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/enable-user/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/auth/signup/": {
     post: {
       requestBody: {
@@ -67,6 +145,7 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
@@ -118,6 +197,7 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
@@ -142,6 +222,7 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
@@ -184,6 +265,7 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
@@ -208,6 +290,7 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
@@ -273,6 +356,7 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
@@ -297,6 +381,7 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
@@ -339,6 +424,7 @@ export interface paths {
                 user: {
                   subId: string;
                   email: string;
+                  isActive?: boolean;
                   id: string;
                   name: string;
                   /** Format: date-time */
@@ -385,6 +471,7 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
@@ -452,6 +539,7 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
@@ -476,6 +564,7 @@ export interface paths {
             "application/json": {
               subId: string;
               email: string;
+              isActive?: boolean;
               id: string;
               name: string;
               /** Format: date-time */

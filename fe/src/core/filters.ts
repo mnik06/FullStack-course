@@ -53,10 +53,13 @@ export const relativeDate = (value: string, stub = 'Unknown'): string => {
   return dayjs(value).fromNow()
 }
 
+const yesOrNo = (val: boolean) => val ? 'Yes' : 'No'
+
 export const allFilters = {
   dateFilter,
   relativeDate,
-  getInitials
+  getInitials,
+  yesOrNo
 }
 
 export const filters = {
