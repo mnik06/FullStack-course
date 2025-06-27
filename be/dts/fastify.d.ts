@@ -5,6 +5,7 @@ import { IMailService } from 'src/types/IMailService';
 import { IStorageService } from 'src/types/IStorageService';
 import { IIdentityService } from 'src/types/services/IIdentityService';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
+import { ISignatureService } from 'src/types/services/ISignatureService';
 
 // set context type
 declare module 'fastify' {
@@ -14,7 +15,8 @@ declare module 'fastify' {
     repos: TRepos;
     identityService: IIdentityService,
     mailService: IMailService,
-    storageService: IStorageService
+    storageService: IStorageService,
+    signatureService: ISignatureService
   }
 
   interface FastifyRequest {

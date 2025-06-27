@@ -2,6 +2,8 @@ export enum EErrorCodes {
   GENERAL_ERROR = 1000,
   USER_ALREADY_EXISTS = 1001,
   PERMISSION_DENIED = 1002,
+  INVALID_SIGNATURE = 1003,
+  INVITE_EXPIRED = 1004,
 }
 
 export function getErrorCodesDescription() {

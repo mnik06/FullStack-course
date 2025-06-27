@@ -7,5 +7,6 @@ export interface IUserProfileRepo {
   updateUserProfileById(id: string, data: Partial<TUserProfile>): Promise<TUserProfile | null>;
   getUserProfileById(id: string): Promise<TUserProfile | null>;
   getUserProfileBySubId(subId: string): Promise<TUserProfile | null>;
+  getUserProfileByEmail(email: string): Promise<TUserProfile | null>;
   getAllUserProfiles(filters: TUserProfileFilters): Promise<TPaginationResponse<TUserProfile[]>>;
 }

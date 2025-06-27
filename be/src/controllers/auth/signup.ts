@@ -12,18 +12,17 @@ export async function signup(params: {
 
   const identityUser = await params.identityService.createNewUser({
     email,
-    password,
-    userAttributes: { name }
+    password
   });
 
   if (!identityUser) {
     throw new HttpError(400, 'Failed to create user in identity platform');
   }
 
-  const user = await params.userProfileRepo.createUserProfile({
+  await params.userProfileRepo.createUserProfile({
     ...identityUser,
     name
   });
 
-  return user;
+  return { success: true };
 }

@@ -43,6 +43,16 @@ export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
       return UserProfileSchema.parse(user);
     },
 
+    async getUserProfileByEmail(email) {
+      const [user] = await db.select().from(userTable).where(eq(userTable.email, email));
+
+      if (!user) {
+        return null;
+      }
+
+      return UserProfileSchema.parse(user);
+    },
+
     async getAllUserProfiles(filters = {}) {
       const paginationService = getPaginationService();
       const searchService = getSearchService();
