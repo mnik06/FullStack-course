@@ -8,23 +8,19 @@ const rolePermissions: Record<TUserRole, IPermissionEntry[]> = {
   admin: [
     { action: 'create_post' },
     { action: 'read_post' },
-    { action: 'update_post' },
-    { action: 'delete_post' },
+    { action: 'manage_post' },
     { action: 'create_comment' },
     { action: 'read_comment' },
-    { action: 'update_comment' },
-    { action: 'delete_comment' },
+    { action: 'manage_comment' },
     { action: 'manage_users' }
   ],
   user: [
     { action: 'create_post' },
     { action: 'read_post' },
-    { action: 'delete_post', requireResourceCheck: true },
-    { action: 'update_post', requireResourceCheck: true },
+    { action: 'manage_post', requireResourceCheck: true },
     { action: 'create_comment' },
     { action: 'read_comment' },
-    { action: 'update_comment', requireResourceCheck: true },
-    { action: 'delete_comment', requireResourceCheck: true }
+    { action: 'manage_comment', requireResourceCheck: true }
   ]
 };
 

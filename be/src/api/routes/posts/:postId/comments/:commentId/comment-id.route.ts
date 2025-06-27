@@ -34,7 +34,7 @@ const routes: FastifyPluginAsync = async function (f) {
       },
       body: UpdateCommentReqSchema
     },
-    preHandler: [requirePermission('update_comment', checkIsCommentOwner)]
+    preHandler: [requirePermission('manage_comment', checkIsCommentOwner)]
   }, (req) => {
     return updateCommentById({
       commentRepo: fastify.repos.commentRepo,
@@ -52,7 +52,7 @@ const routes: FastifyPluginAsync = async function (f) {
         })
       }
     },
-    preHandler: [requirePermission('delete_comment', checkIsCommentOwner)]
+    preHandler: [requirePermission('manage_comment', checkIsCommentOwner)]
   }, (req) => {
     return deleteComment({
       commentRepo: fastify.repos.commentRepo,

@@ -50,7 +50,7 @@ const routes: FastifyPluginAsync = async function (f) {
       },
       body: UpdatePostReqSchema
     },
-    preHandler: [requirePermission('update_post', checkIsPostOwner)]
+    preHandler: [requirePermission('manage_post', checkIsPostOwner)]
   }, (req) => {
     return updatePostById({
       postRepo: fastify.repos.postRepo,
@@ -68,7 +68,7 @@ const routes: FastifyPluginAsync = async function (f) {
         })
       }
     },
-    preHandler: [requirePermission('delete_post', checkIsPostOwner)]
+    preHandler: [requirePermission('manage_post', checkIsPostOwner)]
   }, (req) => {
     return deletePost({
       postRepo: fastify.repos.postRepo,
