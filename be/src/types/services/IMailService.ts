@@ -1,3 +1,5 @@
 export interface IMailService {
-  send(to: string, from: string, templateId: string, vars: Record<string, string>): Promise<void>;
+  send(
+    params: { to: string, from: string, templateId: string, vars: Record<string, string> }
+  ): Promise<void>;
 }
