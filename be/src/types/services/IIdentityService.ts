@@ -2,6 +2,7 @@ import { TIdentityUser } from '../IdentityUser';
 
 export interface IIdentityService {
   getUserByAccessToken(token: string): Promise<TIdentityUser>;
+  getUserByEmail(email: string): Promise<TIdentityUser>;
   createNewUser(params: {
     email: string, 
     password: string, 

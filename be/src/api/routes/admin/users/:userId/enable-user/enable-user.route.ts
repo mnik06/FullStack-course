@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
-import { disableUser } from 'src/controllers/admin/users/disable-user';
+import { enableUser } from 'src/controllers/admin/users/enable-user';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -15,16 +15,16 @@ const routes: FastifyPluginAsync = async function (f) {
           success: z.boolean()
         })
       },
-      body: z.object({
-        id: z.string()
+      params: z.object({
+        userId: z.string()
       })
     },
     preHandler: [requirePermission('manage_users')]
   }, (req) => {
-    return disableUser({
+    return enableUser({
       identityService: fastify.identityService,
       userProfileRepo: fastify.repos.userProfileRepo,
-      id: req.body.id
+      id: req.params.userId
     });
   });
 };

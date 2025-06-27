@@ -7,14 +7,13 @@ export async function disableUser(params: {
   userProfileRepo: IUserProfileRepo,
   id: string
 }) {
-  try {
-    const { user } = await params.userProfileRepo.getUserProfileById(params.id);
+  const user = await params.userProfileRepo.getUserProfileById(params.id);
 
-    await params.identityService.disableUser(user.email);
-    await params.userProfileRepo.updateUserProfileById(params.id, { isActive: false });
-  } catch (error) {
-    throw new HttpError(400, 'Failed to disable user', error);
+  if (!user) {
+    throw new HttpError(404, 'User not found');
   }
+
+  await params.identityService.disableUser(user.email);
 
   return { success: true };
 }

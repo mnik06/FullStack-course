@@ -9,8 +9,13 @@ export const UserProfileSchema = IdentityUserSchema.extend({
   name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  isActive: z.boolean(),
   role: UserRoleSchema
 });
 
 export type TUserProfile = z.infer<typeof UserProfileSchema>;
+
+export const UserProfileSchemaWithActiveField = UserProfileSchema.extend({
+  isActive: z.boolean()
+});
+
+export type TUserProfileWithActiveField = z.infer<typeof UserProfileSchemaWithActiveField>;

@@ -2,6 +2,7 @@ import {
   AdminCreateUserCommand, 
   AdminDisableUserCommand, 
   AdminEnableUserCommand, 
+  AdminGetUserCommand, 
   AdminSetUserPasswordCommand,
   AttributeType,
   CognitoIdentityProviderClient, 
@@ -13,17 +14,26 @@ import { HttpError } from 'src/api/errors/HttpError';
 import { TIdentityUser } from 'src/types/IdentityUser';
 import { IIdentityService } from 'src/types/services/IIdentityService';
 
-function getIdentityUserByAttributes(attributes: AttributeType[]): TIdentityUser {
+function getIdentityUserByAttributes(
+  attributes: AttributeType[], 
+  isActive?: boolean
+): TIdentityUser {
   const transformedAttributes = attributes.reduce((acc, attribute) => {
     if (attribute.Name) {acc[attribute.Name] = attribute.Value as string;}
 
     return acc;
   }, {} as Record<string, string>);
 
-  return {
+  const res: TIdentityUser = {
     email: transformedAttributes.email,
     subId: transformedAttributes.sub
   };
+
+  if (isActive !== undefined) {
+    res.isActive = isActive;
+  }
+
+  return res;
 }
 
 export function getCognitoService(): IIdentityService {
@@ -85,6 +95,17 @@ export function getCognitoService(): IIdentityService {
       return getIdentityUserByAttributes(res.UserAttributes ?? []);
     },
 
+    async getUserByEmail(email: string) {
+      const adminGetUserRes = await client.send(new AdminGetUserCommand({
+        Username: email,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID!
+      }));
+
+      return getIdentityUserByAttributes(
+        adminGetUserRes.UserAttributes ?? [], 
+        adminGetUserRes.Enabled
+      );
+    },
     async disableUser(email: string) {
       await client.send(new AdminDisableUserCommand({
         Username: email,

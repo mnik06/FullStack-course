@@ -6,11 +6,11 @@ class UsersService {
   }
 
   disableUser (id: string) {
-    return useApiClient.post('/api/admin/users/disable-user/', { id })
+    return useApiClient.post('/api/admin/users/{userId}/disable-user/', undefined, { dynamicKeys: { userId: id } })
   }
 
   enableUser (id: string) {
-    return useApiClient.post('/api/admin/users/enable-user/', { id })
+    return useApiClient.post('/api/admin/users/{userId}/enable-user/', undefined, { dynamicKeys: { userId: id } })
   }
 }
 

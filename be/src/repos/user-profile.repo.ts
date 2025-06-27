@@ -9,23 +9,38 @@ import { getSearchService } from 'src/services/search/search.service';
 export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
   return {
     async createUserProfile(data) {
-      const user = await db.insert(userTable).values(data as TUserProfile).returning();
-      return { user: UserProfileSchema.parse(user[0]) };
+      const [user] = await db.insert(userTable).values(data as TUserProfile).returning();
+      return UserProfileSchema.parse(user);
     },
 
     async updateUserProfileById(id, data) {
       const [user] = await db.update(userTable).set(data).where(eq(userTable.id, id)).returning();
-      return { user: UserProfileSchema.parse(user) };
+
+      if (!user) {
+        return null;
+      }
+
+      return UserProfileSchema.parse(user);
     },
 
     async getUserProfileById(id) {
       const [user] = await db.select().from(userTable).where(eq(userTable.id, id));
-      return { user: UserProfileSchema.parse(user) };
+
+      if (!user) {
+        return null;
+      }
+
+      return UserProfileSchema.parse(user);
     },
 
     async getUserProfileBySubId(subId) {
-      const user = await db.select().from(userTable).where(eq(userTable.subId, subId));
-      return { user: UserProfileSchema.parse(user[0]) };
+      const [user] = await db.select().from(userTable).where(eq(userTable.subId, subId));
+
+      if (!user) {
+        return null;
+      }
+
+      return UserProfileSchema.parse(user);
     },
 
     async getAllUserProfiles(filters = {}) {

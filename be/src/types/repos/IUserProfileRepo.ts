@@ -3,9 +3,9 @@ import { TUserProfileFilters } from 'src/types/user-profile/UserProfileFilters';
 import { TPaginationResponse } from 'src/types/Pagination';
 
 export interface IUserProfileRepo {
-  createUserProfile(data: Partial<TUserProfile>): Promise<{ user: TUserProfile }>;
-  updateUserProfileById(id: string, data: Partial<TUserProfile>): Promise<{ user: TUserProfile }>;
-  getUserProfileById(id: string): Promise<{ user: TUserProfile }>;
-  getUserProfileBySubId(subId: string): Promise<{ user: TUserProfile }>;
+  createUserProfile(data: Partial<TUserProfile>): Promise<TUserProfile>;
+  updateUserProfileById(id: string, data: Partial<TUserProfile>): Promise<TUserProfile | null>;
+  getUserProfileById(id: string): Promise<TUserProfile | null>;
+  getUserProfileBySubId(subId: string): Promise<TUserProfile | null>;
   getAllUserProfiles(filters: TUserProfileFilters): Promise<TPaginationResponse<TUserProfile[]>>;
 }

@@ -20,7 +20,8 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return getUsers({ 
       userProfileRepo: fastify.repos.userProfileRepo ,
-      query: req.query
+      query: req.query,
+      identityService: fastify.identityService
     });
   });
 };

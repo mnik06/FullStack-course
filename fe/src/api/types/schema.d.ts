@@ -32,13 +32,13 @@ export interface paths {
               data: ({
                   subId: string;
                   email: string;
+                  isActive: boolean;
                   id: string;
                   name: string;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
-                  isActive: boolean;
                   /** @enum {string} */
                   role: "admin" | "user";
                 })[];
@@ -55,13 +55,11 @@ export interface paths {
       };
     };
   };
-  "/api/admin/users/disable-user/": {
+  "/api/admin/users/{userId}/disable-user/": {
     post: {
-      requestBody: {
-        content: {
-          "application/json": {
-            id: string;
-          };
+      parameters: {
+        path: {
+          userId: string;
         };
       };
       responses: {
@@ -76,13 +74,11 @@ export interface paths {
       };
     };
   };
-  "/api/admin/users/enable-user/": {
+  "/api/admin/users/{userId}/enable-user/": {
     post: {
-      requestBody: {
-        content: {
-          "application/json": {
-            id: string;
-          };
+      parameters: {
+        path: {
+          userId: string;
         };
       };
       responses: {
@@ -149,13 +145,13 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
-                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -201,13 +197,13 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
-                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -226,13 +222,13 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
-                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -269,13 +265,13 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
-                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -294,13 +290,13 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
-                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -360,13 +356,13 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
-                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -385,13 +381,13 @@ export interface paths {
                   user: {
                     subId: string;
                     email: string;
+                    isActive?: boolean;
                     id: string;
                     name: string;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
-                    isActive: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -428,13 +424,13 @@ export interface paths {
                 user: {
                   subId: string;
                   email: string;
+                  isActive?: boolean;
                   id: string;
                   name: string;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
-                  isActive: boolean;
                   /** @enum {string} */
                   role: "admin" | "user";
                 };
@@ -475,13 +471,13 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
-                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -543,13 +539,13 @@ export interface paths {
               user: {
                 subId: string;
                 email: string;
+                isActive?: boolean;
                 id: string;
                 name: string;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
-                isActive: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -568,13 +564,13 @@ export interface paths {
             "application/json": {
               subId: string;
               email: string;
+              isActive?: boolean;
               id: string;
               name: string;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
-              isActive: boolean;
               /** @enum {string} */
               role: "admin" | "user";
             };
