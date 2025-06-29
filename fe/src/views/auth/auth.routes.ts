@@ -4,6 +4,7 @@ export const authRouteNames = {
   auth: 'auth',
   signup: 'signup',
   signin: 'signin',
+  activateAccount: 'activateAccount',
   resetPassword: 'resetPassword',
   resetPasswordSend: 'resetPasswordSend',
   resetPasswordConfirm: 'resetPasswordConfirm'
@@ -27,6 +28,11 @@ export const authRoutes: RouteRecordRaw[] = [
         path: 'signin',
         name: authRouteNames.signin,
         component: () => import('@/views/auth/Signin.vue')
+      },
+      {
+        path: 'activate-account',
+        name: authRouteNames.activateAccount,
+        component: () => import('@/views/auth/ActivateAccount.vue')
       },
       {
         path: 'reset-password',

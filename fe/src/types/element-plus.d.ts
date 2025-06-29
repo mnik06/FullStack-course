@@ -21,6 +21,8 @@ type TElementPlus = {
   TranslatePair: import('element-plus/es/locale').TranslatePair
 
   TableColumnProps: import('element-plus').TableColumnInstance['$props']
+
+  TagProps: import('element-plus').TagProps
 }
 
 type TElEpPropMergeType<Type, Value, Validator> = import('element-plus/es/utils/index.mjs').EpPropMergeType<Type, Value, Validator>

@@ -34,11 +34,12 @@ export interface paths {
                   email: string;
                   isActive: boolean;
                   id: string;
-                  name: string;
+                  name: string | null;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
+                  isPending: boolean;
                   /** @enum {string} */
                   role: "admin" | "user";
                 })[];
@@ -89,6 +90,77 @@ export interface paths {
               success: boolean;
             };
           };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/resend-invite/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            redirectUrl: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/invite-user/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            /** Format: email */
+            email: string;
+            redirectUrl: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/auth/accept-invite/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            /** Format: email */
+            email: string;
+            password: string;
+            name: string;
+            signature: string;
+            expireAt: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
         };
       };
     };
@@ -147,11 +219,12 @@ export interface paths {
                     email: string;
                     isActive?: boolean;
                     id: string;
-                    name: string;
+                    name: string | null;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isPending: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -199,11 +272,12 @@ export interface paths {
                 email: string;
                 isActive?: boolean;
                 id: string;
-                name: string;
+                name: string | null;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isPending: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -224,11 +298,12 @@ export interface paths {
                     email: string;
                     isActive?: boolean;
                     id: string;
-                    name: string;
+                    name: string | null;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isPending: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -267,11 +342,12 @@ export interface paths {
                 email: string;
                 isActive?: boolean;
                 id: string;
-                name: string;
+                name: string | null;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isPending: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -292,11 +368,12 @@ export interface paths {
                     email: string;
                     isActive?: boolean;
                     id: string;
-                    name: string;
+                    name: string | null;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isPending: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -358,11 +435,12 @@ export interface paths {
                 email: string;
                 isActive?: boolean;
                 id: string;
-                name: string;
+                name: string | null;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isPending: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -383,11 +461,12 @@ export interface paths {
                     email: string;
                     isActive?: boolean;
                     id: string;
-                    name: string;
+                    name: string | null;
                     /** Format: date-time */
                     createdAt: string;
                     /** Format: date-time */
                     updatedAt: string;
+                    isPending: boolean;
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
@@ -426,11 +505,12 @@ export interface paths {
                   email: string;
                   isActive?: boolean;
                   id: string;
-                  name: string;
+                  name: string | null;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
+                  isPending: boolean;
                   /** @enum {string} */
                   role: "admin" | "user";
                 };
@@ -473,11 +553,12 @@ export interface paths {
                 email: string;
                 isActive?: boolean;
                 id: string;
-                name: string;
+                name: string | null;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isPending: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -541,11 +622,12 @@ export interface paths {
                 email: string;
                 isActive?: boolean;
                 id: string;
-                name: string;
+                name: string | null;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
+                isPending: boolean;
                 /** @enum {string} */
                 role: "admin" | "user";
               };
@@ -566,11 +648,12 @@ export interface paths {
               email: string;
               isActive?: boolean;
               id: string;
-              name: string;
+              name: string | null;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              isPending: boolean;
               /** @enum {string} */
               role: "admin" | "user";
             };
@@ -589,9 +672,11 @@ export interface components {
      * @description - GENERAL_ERROR -> 1000
      * - USER_ALREADY_EXISTS -> 1001
      * - PERMISSION_DENIED -> 1002
+     * - INVALID_SIGNATURE -> 1003
+     * - INVITE_EXPIRED -> 1004
      * @enum {integer}
      */
-    ErrorCodes: 1000 | 1001 | 1002;
+    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004;
   };
   responses: never;
   parameters: never;

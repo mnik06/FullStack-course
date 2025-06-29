@@ -17,7 +17,7 @@
 
         <template #default="{ row }">
           <slot :name="header.property" :row="(row as T)">
-            {{ row[header.property] }}
+            {{ row[header.property] || '-' }}
           </slot>
         </template>
       </el-table-column>
