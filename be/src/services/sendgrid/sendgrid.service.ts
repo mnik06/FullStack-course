@@ -2,9 +2,9 @@ import { IMailService } from 'src/types/services/IMailService';
 import sgMail from '@sendgrid/mail';
 import { HttpError } from 'src/api/errors/HttpError';
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
 export function getSendgridService(): IMailService {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
   return {
     async send({ to, from, templateId, vars }) {
       try {

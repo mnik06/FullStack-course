@@ -27,7 +27,8 @@ const routes: FastifyPluginAsync = async function (f) {
       userProfileRepo: fastify.repos.userProfileRepo,
       data: { ...req.body, userId: req.params.userId },
       identityService: fastify.identityService,
-      mailService: fastify.mailService
+      mailService: fastify.mailService,
+      signatureService: fastify.signatureService
     });
   });
 };

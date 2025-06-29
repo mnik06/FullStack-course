@@ -19,7 +19,7 @@ export async function acceptInvite(params: {
     throw new HttpError(404, 'User not found');
   }
 
-  const newSignature = await params.signatureService.sign({ email, expireAt });
+  const newSignature = await params.signatureService.sign([email, expireAt]);
 
   if (newSignature !== signature) {
     throw new HttpError(400, 'Invalid signature', EErrorCodes.INVALID_SIGNATURE);

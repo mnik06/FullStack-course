@@ -6,7 +6,7 @@ export type TUserRole = z.infer<typeof UserRoleSchema>;
 
 export const UserProfileSchema = IdentityUserSchema.extend({
   id: z.string(),
-  name: z.string().optional(),
+  name: z.string().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
   isPending: z.boolean(),
