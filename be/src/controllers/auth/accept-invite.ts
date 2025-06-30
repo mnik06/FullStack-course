@@ -11,7 +11,7 @@ export async function acceptInvite(params: {
   signatureService: ISignatureService;
   data: TAcceptInviteReq;
 }) {
-  const { email, password, signature, expireAt } = params.data;
+  const { email, name, password, signature, expireAt } = params.data;
 
   const userProfile = await params.userProfileRepo.getUserProfileByEmail(email);
 
@@ -19,20 +19,28 @@ export async function acceptInvite(params: {
     throw new HttpError(404, 'User not found');
   }
 
-  const newSignature = await params.signatureService.sign([email, expireAt]);
-
-  if (newSignature !== signature) {
-    throw new HttpError(400, 'Invalid signature', EErrorCodes.INVALID_SIGNATURE);
+  if (!userProfile.isPending) {
+    throw new HttpError(400, 'User already activated', EErrorCodes.USER_ALREADY_ACTIVATED);
   }
 
   if (Number(expireAt) < Date.now()) {
     throw new HttpError(400, 'Invite expired', EErrorCodes.INVITE_EXPIRED);
   }
 
+  const isSignatureValid = await params.signatureService.verify(
+    signature, 
+    [email, expireAt]
+  );
+
+  if (!isSignatureValid) {
+    throw new HttpError(400, 'Invalid signature', EErrorCodes.INVALID_SIGNATURE);
+  }
+
   await Promise.all([
     params.identityService.setUserPassword({ email, password }),
     params.userProfileRepo.updateUserProfileById(userProfile.id, {
       ...userProfile,
+      name,
       isPending: false
     })
   ]);

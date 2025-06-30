@@ -8,7 +8,7 @@ export function kmsService(): ISignatureService {
 
   return {
     createMessage (keys) {
-      return Buffer.from(keys.join(''));
+      return Buffer.from(keys.sort().join(':'));
     },
 
     async sign (keys) {
@@ -20,20 +20,24 @@ export function kmsService(): ISignatureService {
 
       if (!res.Mac) {
         throw new Error('Failed to generate MAC');
-      }     
+      }
 
-      return Buffer.from(res.Mac).toString('base64');
+      return Buffer.from(res.Mac).toString('base64url');
     },
     
     async verify (signature, keys) {
-      const res = await kms.send(new VerifyMacCommand({
-        KeyId: KEY_ID,
-        Message: this.createMessage(keys),
-        Mac: Buffer.from(signature, 'base64'),
-        MacAlgorithm: MAC_ALGORITHM
-      }));
-
-      return !!res.MacValid;
+      try {
+        const res = await kms.send(new VerifyMacCommand({
+          KeyId: KEY_ID,
+          Message: this.createMessage(keys),
+          Mac: Buffer.from(signature, 'base64url'),
+          MacAlgorithm: MAC_ALGORITHM
+        }));
+    
+        return !!res.MacValid;
+      } catch {
+        return false;
+      }
     }
   };
 }

@@ -4,6 +4,7 @@ export enum EErrorCodes {
   PERMISSION_DENIED = 1002,
   INVALID_SIGNATURE = 1003,
   INVITE_EXPIRED = 1004,
+  USER_ALREADY_ACTIVATED = 1005
 }
 
 export function getErrorCodesDescription() {
