@@ -76,6 +76,7 @@ function handleSubmit () {
         notificationHandler({ text: 'Signin successful', type: 'success' })
         router.push('/')
       })
+      .catch(notificationHandler)
       .finally(() => {
         isLoading.value = false
       })

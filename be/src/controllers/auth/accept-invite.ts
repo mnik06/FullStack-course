@@ -52,14 +52,12 @@ export async function acceptInvite(params: {
     });
   }
 
-  await Promise.all([
-    params.identityService.setUserPassword({ email, password }),
-    params.userProfileRepo.updateUserProfileById(userProfile.id, {
-      ...userProfile,
-      name,
-      isPending: false
-    })
-  ]);
+  await params.identityService.setUserPassword({ email, password });
+  await params.userProfileRepo.updateUserProfileById(userProfile.id, {
+    ...userProfile,
+    name,
+    isPending: false
+  });
 
   return { success: true };
 }

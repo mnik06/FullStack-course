@@ -4,7 +4,6 @@ import { ISignatureService } from 'src/types/services/ISignatureService';
 export function kmsService(): ISignatureService {
   const kms = new KMSClient({ region: process.env.AWS_REGION });
   const MAC_ALGORITHM = 'HMAC_SHA_512';
-  const KEY_ID = 'c2a79305-148e-4936-8a53-1409a3ae89c0';
 
   return {
     createMessage (keys) {
@@ -13,7 +12,7 @@ export function kmsService(): ISignatureService {
 
     async sign (keys) {
       const res = await kms.send(new GenerateMacCommand({
-        KeyId: KEY_ID,
+        KeyId: process.env.HMAC_KEY_ID,
         Message: this.createMessage(keys),
         MacAlgorithm: MAC_ALGORITHM
       }));
@@ -28,7 +27,7 @@ export function kmsService(): ISignatureService {
     async verify (signature, keys) {
       try {
         const res = await kms.send(new VerifyMacCommand({
-          KeyId: KEY_ID,
+          KeyId: process.env.HMAC_KEY_ID,
           Message: this.createMessage(keys),
           Mac: Buffer.from(signature, 'base64url'),
           MacAlgorithm: MAC_ALGORITHM

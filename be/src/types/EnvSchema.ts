@@ -16,7 +16,10 @@ export const EnvSchema = z.object({
   SWAGGER_PWD: z.string().min(10),
   AWS_REGION: z.string(),
   COGNITO_USER_POOL_ID: z.string(),
-  SENDGRID_API_KEY: z.string()
+  SENDGRID_API_KEY: z.string(),
+
+  HMAC_KEY_ID: z.string(),
+  INVITES_EMAIL_TEMPLATE_ID: z.string()
 });
 
 export type TEnv = z.infer<typeof EnvSchema>;

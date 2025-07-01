@@ -27,6 +27,10 @@ class ErrorService {
       USER_NOT_FOUND: {
         message: 'User not found',
         code: 1006
+      },
+      USER_ALREADY_INVITED: {
+        message: 'User with this email is already invited',
+        code: 1007
       }
     }
   }
