@@ -15,7 +15,7 @@
         v-model="formData[item.prop]"
         :type="item.type"
         :show-password="item.type === 'password'"
-        :disabled="item.prop in prefilledData"
+        :disabled="prefilledData?.[item.prop]"
       />
     </el-form-item>
 

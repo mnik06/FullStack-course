@@ -1,5 +1,5 @@
-import { IMailService } from 'src/types/services/IMailService';
 import sgMail from '@sendgrid/mail';
+import { IMailService } from 'src/types/services/IMailService';
 import { HttpError } from 'src/api/errors/HttpError';
 
 export function getSendgridService(): IMailService {
