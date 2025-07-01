@@ -8,7 +8,10 @@ export async function deletePost(params: {
   const isPostFound = await params.postRepo.deletePost(params.postId);
 
   if (!isPostFound) {
-    throw new HttpError(404, 'Post not found');
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Post not found'
+    });
   }
 
   return { success: true };

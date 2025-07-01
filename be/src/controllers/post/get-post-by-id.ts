@@ -8,7 +8,10 @@ export async function getPostById(params: {
   const post = await params.postRepo.getPostById(params.postId);
   
   if (!post) {
-    throw new HttpError(404, 'Post not found');
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Post not found'
+    });
   }
 
   return post;

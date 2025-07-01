@@ -24,12 +24,14 @@ export const errorHandler = function (
   let message = 'Bad Request';
 
   if (error instanceof HttpError) {
-    if (error.errorCode) {
-      errorCode = error.errorCode;
+    const { params } = error;
+
+    if (params.errorCode) {
+      errorCode = params.errorCode;
     }
 
-    statusCode = error.statusCode;
-    message = error.message;
+    statusCode = params.statusCode;
+    message = params.message;
   }
 
   // handle fastify errors

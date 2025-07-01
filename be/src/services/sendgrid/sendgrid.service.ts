@@ -15,7 +15,11 @@ export function getSendgridService(): IMailService {
           dynamicTemplateData: vars
         });
       } catch (error) {
-        throw new HttpError(400, 'Failed to send email', error);
+        throw new HttpError({
+          statusCode: 400,
+          message: 'Failed to send email',
+          cause: error
+        });
       }
     }
   };

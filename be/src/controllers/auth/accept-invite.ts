@@ -16,15 +16,27 @@ export async function acceptInvite(params: {
   const userProfile = await params.userProfileRepo.getUserProfileByEmail(email);
 
   if (!userProfile) {
-    throw new HttpError(404, 'User not found');
+    throw new HttpError({
+      statusCode: 404,
+      message: 'User not found',
+      errorCode: EErrorCodes.USER_NOT_FOUND
+    });
   }
 
   if (!userProfile.isPending) {
-    throw new HttpError(400, 'User already activated', EErrorCodes.USER_ALREADY_ACTIVATED);
+    throw new HttpError({
+      statusCode: 400,
+      message: 'User already activated',
+      errorCode: EErrorCodes.USER_ALREADY_ACTIVATED
+    });
   }
 
   if (Number(expireAt) < Date.now()) {
-    throw new HttpError(400, 'Invite expired', EErrorCodes.INVITE_EXPIRED);
+    throw new HttpError({
+      statusCode: 400,
+      message: 'Invite expired',
+      errorCode: EErrorCodes.INVITE_EXPIRED
+    });
   }
 
   const isSignatureValid = await params.signatureService.verify(
@@ -33,7 +45,11 @@ export async function acceptInvite(params: {
   );
 
   if (!isSignatureValid) {
-    throw new HttpError(400, 'Invalid signature', EErrorCodes.INVALID_SIGNATURE);
+    throw new HttpError({
+      statusCode: 400,
+      message: 'Invalid signature',
+      errorCode: EErrorCodes.INVALID_SIGNATURE
+    });
   }
 
   await Promise.all([

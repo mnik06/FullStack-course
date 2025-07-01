@@ -674,9 +674,11 @@ export interface components {
      * - PERMISSION_DENIED -> 1002
      * - INVALID_SIGNATURE -> 1003
      * - INVITE_EXPIRED -> 1004
+     * - USER_ALREADY_ACTIVATED -> 1005
+     * - USER_NOT_FOUND -> 1006
      * @enum {integer}
      */
-    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004;
+    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006;
   };
   responses: never;
   parameters: never;

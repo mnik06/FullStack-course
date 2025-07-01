@@ -18,7 +18,7 @@ type TTableHeadings<T = Record<string, any>> = Array<{
 
 type TLayoutName = 'Blank' | 'Default'
 
-type TAppAxiosError = import('axios').AxiosError<{ error: { code: number } }>
+type TAppAxiosError = { code: number }
 
 type TSortOrder = 'asc' | 'desc'
 

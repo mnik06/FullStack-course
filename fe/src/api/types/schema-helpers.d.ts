@@ -1,4 +1,5 @@
 type TApiPaths = import('./schema').paths
+type TApiComponents = import('./schema').components
 
 type TPathKeys = keyof TApiPaths
 

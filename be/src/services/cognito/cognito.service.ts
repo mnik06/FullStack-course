@@ -73,10 +73,18 @@ export function getCognitoService(): IIdentityService {
         return getIdentityUserByAttributes(res.User?.Attributes ?? []);
       } catch (error) {
         if (error instanceof UsernameExistsException) {
-          throw new HttpError(400, 'User already exists', error, EErrorCodes.USER_ALREADY_EXISTS);
+          throw new HttpError({
+            statusCode: 400,
+            message: 'User already exists',
+            cause: error,
+            errorCode: EErrorCodes.USER_ALREADY_EXISTS
+          });
         }
 
-        throw new HttpError(400, 'Failed to create user in cognito');
+        throw new HttpError({
+          statusCode: 400,
+          message: 'Failed to create user in cognito'
+        });
       }
     },
 

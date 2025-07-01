@@ -21,6 +21,10 @@ export async function getUsers(params: {
       ...rest
     };
   } catch (error) {
-    throw new HttpError(400, 'Failed to get users from identity service', error);
+    throw new HttpError({
+      statusCode: 400,
+      message: 'Failed to get users from identity service',
+      cause: error
+    });
   }
 }

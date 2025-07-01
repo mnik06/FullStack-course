@@ -13,7 +13,10 @@ export async function updateCommentById(params: {
   );
   
   if (!comment) {
-    throw new HttpError(404, 'Comment not found');
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Comment not found'
+    });
   }
 
   return comment;

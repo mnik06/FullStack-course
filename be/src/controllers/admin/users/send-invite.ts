@@ -1,3 +1,4 @@
+import { EErrorCodes } from 'src/api/errors/EErrorCodes';
 import { HttpError } from 'src/api/errors/HttpError';
 import { TInviteUserReq } from 'src/api/routes/schemas/admin/users/InviteUserReqSchema';
 import { TResendInviteReq } from 'src/api/routes/schemas/admin/users/ResendInviteReqSchema';
@@ -29,11 +30,15 @@ export async function sendInvite(params: {
     const existingUser = await params.userProfileRepo.getUserProfileById(params.data.userId);
 
     if (!existingUser) {
-      throw new HttpError(404, 'User not found');
+      throw new HttpError({
+        statusCode: 404,
+        message: 'User not found',
+        errorCode: EErrorCodes.USER_NOT_FOUND
+      });
     }
 
     if (!existingUser.isPending) {
-      throw new HttpError(400, 'User is not pending');
+      throw new HttpError({ statusCode: 400, message: 'User is not pending' });
     }
 
     userToInvite = existingUser;

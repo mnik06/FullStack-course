@@ -16,7 +16,10 @@ export async function signup(params: {
   });
 
   if (!identityUser) {
-    throw new HttpError(400, 'Failed to create user in identity platform');
+    throw new HttpError({
+      statusCode: 400,
+      message: 'Failed to create user in identity platform'
+    });
   }
 
   await params.userProfileRepo.createUserProfile({
