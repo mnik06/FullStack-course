@@ -1,4 +1,3 @@
- 
 import { preHandlerAsyncHookHandler } from 'fastify';
 import { HttpError } from 'src/api/errors/HttpError';
 
@@ -8,13 +7,19 @@ export const userProfileHook: preHandlerAsyncHookHandler = async function (reque
   if (request.routeOptions?.config?.skipAuth) {
     return;
   } else if (!token) {
-    throw new HttpError(401, 'Unauthorized');
+    throw new HttpError({
+      statusCode: 401,
+      message: 'Unauthorized'
+    });
   }
   
   const identityUser = await request.server.identityService.getUserByAccessToken(token);
 
   if (!identityUser) {
-    throw new HttpError(401, 'Unauthorized');
+    throw new HttpError({
+      statusCode: 401,
+      message: 'Unauthorized'
+    });
   }
 
   const user = await request.server.repos.userProfileRepo.getUserProfileBySubId(
@@ -22,7 +27,10 @@ export const userProfileHook: preHandlerAsyncHookHandler = async function (reque
   );
 
   if (!user) {
-    throw new HttpError(401, 'Unauthorized');
+    throw new HttpError({
+      statusCode: 401,
+      message: 'Unauthorized'
+    });
   }
 
   request.user = user;

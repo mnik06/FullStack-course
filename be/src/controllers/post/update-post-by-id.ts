@@ -19,7 +19,10 @@ export async function updatePostById(params: {
   );
 
   if (!post) {
-    throw new HttpError(404, 'Post not found');
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Post not found'
+    });
   }
 
   return post;

@@ -8,7 +8,10 @@ export async function deleteComment(params: {
   const isCommentFound = await params.commentRepo.deleteComment(params.commentId);
 
   if (!isCommentFound) {
-    throw new HttpError(404, 'Comment not found');
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Comment not found'
+    });
   }
 
   return { success: true };

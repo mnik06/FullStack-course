@@ -1,6 +1,35 @@
 import { ElNotification } from 'element-plus'
 import cloneDeep from 'lodash/cloneDeep'
 import capitalize from 'lodash/capitalize'
+import get from 'lodash/get'
+
+export const createHashedObject = <
+  T extends TIndexedObject,
+  Prop extends keyof T,
+  ValueArray extends boolean = false
+>(
+  array: T[] = [],
+  prop: Prop = 'id' as Prop,
+  isValueArray?: ValueArray,
+  shouldRemoveKeyField?: boolean
+): Record<T[Prop], ValueArray extends true ? T[] : T> => {
+  return array.reduce((acc, current) => {
+    const key = get(current, prop as string) as unknown as T[Prop]
+
+    if (shouldRemoveKeyField) {
+      delete current[prop]
+    }
+
+    if (isValueArray) {
+      const existingValue = acc[key] as T[] | undefined
+      acc[key] = [...(Array.isArray(existingValue) ? existingValue : []), current] as ValueArray extends true ? T[] : T
+    } else {
+      acc[key] = current as ValueArray extends true ? T[] : T
+    }
+
+    return acc
+  }, {} as Record<T[Prop], ValueArray extends true ? T[] : T>)
+}
 
 export const notificationHandler = (
   notification?: string | ICustomNotification | TAppAxiosError,
@@ -11,20 +40,10 @@ export const notificationHandler = (
     ? notification
     : (notification as ICustomNotification)?.text
 
-  // TODO: uncomment for custom error codes
-  // const apiErrorCode = (notification as TAppAxiosError)?.response?.data?.error?.code
-  // const customErrorCode = (notification as ICustomNotification)?.errorCode
-
-  // const apiErrorNotificationConfig = errorService.hashedCodes[apiErrorCode]
-  // const customErrorNotificationConfig = errorService.codes[customErrorCode]
-
-  // const {
-  //   options: errorCodeNotificationOptions,
-  //   message: errorCodeMessage
-  // } = apiErrorNotificationConfig || customErrorNotificationConfig || {}
+  const apiErrorMessage = errorService.hashedCodes[(notification as TAppAxiosError)?.code]?.message
 
   return ElNotification[type]({
-    message: `${customMessage || 'Something went wrong, please try again later.'}`,
+    message: `${customMessage || apiErrorMessage || 'Something went wrong, please try again later.'}`,
     title: capitalize(type),
     duration: 4500,
     offset: 50,
@@ -46,5 +65,7 @@ export const stringifyParams = (obj: TIndexedObject = {}, removeEmpty = true): T
 }
 
 export const getInitials = (name: string) => {
+  if (!name) return ''
+
   return name.split(' ').map(n => n[0]).join('')
 }

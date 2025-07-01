@@ -1,4 +1,4 @@
-import { uuid, pgTable, varchar, timestamp, index, integer } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, varchar, timestamp, index, integer, boolean } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
 export const postTable = pgTable('posts', {
@@ -40,10 +40,11 @@ export const commentRelations = relations(commentTable, ({ one }) => ({
 
 export const userTable = pgTable('users', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
-  name: varchar({ length: 255 }).notNull(),
+  name: varchar({ length: 255 }),
   email: varchar({ length: 255 }).notNull(),
   subId: varchar({ length: 255 }).notNull(),
   role: varchar({ length: 20 }).default('user').notNull(),
+  isPending: boolean().default(false),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });

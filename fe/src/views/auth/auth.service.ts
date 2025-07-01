@@ -4,6 +4,10 @@ import { routeNames } from '@/router/route-names'
 import { signIn, fetchAuthSession, signOut, resetPassword, confirmResetPassword } from 'aws-amplify/auth'
 
 class AuthService {
+  get activateAccountUrl () {
+    return new URL(router.resolve({ name: routeNames.activateAccount }).path, window.location.origin).href
+  }
+
   signup (data: TSignupData) {
     return useApiClient.post('/api/auth/signup/', data)
   }
@@ -26,6 +30,10 @@ class AuthService {
     return signOut().then(() => {
       window.location.href = router.resolve({ name: routeNames.signin }).fullPath
     })
+  }
+
+  activateAccount (data: TAcceptInviteData) {
+    return useApiClient.post('/api/auth/accept-invite/', data)
   }
 
   sendResetPasswordCode (email: string) {

@@ -40,11 +40,20 @@ export function getCognitoService(): IIdentityService {
   const client = new CognitoIdentityProviderClient();
 
   return {
-    async createNewUser({ email, password, userAttributes }) {
+    async createNewUser({ email, password }) {
+      const res = await this.createNewPendingUser({ email });
+  
+      if (res) {
+        await this.setUserPassword({ email, password });
+      }
+        
+      return res;
+    },
+
+    async createNewPendingUser({ email }) {
       const createUserCommand = new AdminCreateUserCommand({
         UserPoolId: process.env.COGNITO_USER_POOL_ID!,
         Username: email,
-        TemporaryPassword: password,
         MessageAction: 'SUPPRESS',
         UserAttributes: [
           {
@@ -52,39 +61,42 @@ export function getCognitoService(): IIdentityService {
             Value: email
           },
           {
-            Name: 'email_verified', 
+            Name: 'email_verified',
             Value: 'true'
-          },
-          ...Object.entries(userAttributes ?? {}).map(([key, value]) => ({
-            Name: key,
-            Value: value
-          }))
+          }
         ]
       });
+
+      try {
+        const res = await client.send(createUserCommand);
+
+        return getIdentityUserByAttributes(res.User?.Attributes ?? []);
+      } catch (error) {
+        if (error instanceof UsernameExistsException) {
+          throw new HttpError({
+            statusCode: 400,
+            message: 'User already exists',
+            cause: error,
+            errorCode: EErrorCodes.USER_ALREADY_EXISTS
+          });
+        }
+
+        throw new HttpError({
+          statusCode: 400,
+          message: 'Failed to create user in cognito'
+        });
+      }
+    },
+
+    async setUserPassword({ email, password }) {
       const setUserPasswordCommand = new AdminSetUserPasswordCommand({
         UserPoolId: process.env.COGNITO_USER_POOL_ID!,
         Username: email,
         Password: password,
         Permanent: true
-      });
+      }); 
 
-      try {
-        const res = await client.send(createUserCommand);
-  
-        if (res.User) {
-          await client.send(setUserPasswordCommand);
-        }
-        
-        return getIdentityUserByAttributes(res.User?.Attributes ?? []);
-
-      } catch (error) {
-        if (error instanceof UsernameExistsException) {
-          throw new HttpError(400, 'User already exists', error, EErrorCodes.USER_ALREADY_EXISTS);
-        } 
-
-        throw new HttpError(400, 'Failed to create user in cognito');
-      }
-
+      await client.send(setUserPasswordCommand);
     },
 
     async getUserByAccessToken(token: string) {

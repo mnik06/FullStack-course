@@ -1,10 +1,12 @@
 export class HttpError extends Error {
   constructor(
-    readonly statusCode: number,
-    readonly message: string,
-    readonly cause?: Error | unknown,
-    readonly errorCode?: number
+    readonly params: {
+      statusCode: number,
+      message: string,
+      cause?: Error | unknown,
+      errorCode?: number
+    }
   ) {
-    super(message);
+    super(params.message);
   }
 }

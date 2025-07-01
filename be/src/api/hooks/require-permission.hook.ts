@@ -42,7 +42,11 @@ export function requirePermission(
       : true;
 
     if (!permissionEntry || !isPermissionValid || !isResourceCheckValid) {
-      throw new HttpError(403, 'Permission denied', undefined, EErrorCodes.PERMISSION_DENIED);
+      throw new HttpError({
+        statusCode: 403,
+        message: 'Permission denied',
+        errorCode: EErrorCodes.PERMISSION_DENIED
+      });
     }
   };
 }

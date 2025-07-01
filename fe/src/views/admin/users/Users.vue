@@ -5,10 +5,13 @@
   >
     <h2 class="text-2xl font-bold">Users</h2>
 
-    <SearchInput
-      v-model="search"
-      class="mt-5"
-    />
+    <div class="flex items-center justify-between mt-5">
+      <SearchInput v-model="search" />
+
+      <el-button type="primary" @click="openInviteUserModal">
+        Invite User
+      </el-button>
+    </div>
 
     <AppTable
       class="mt-5"
@@ -19,19 +22,33 @@
         {{ $filters.dateFilter(row.createdAt) }}
       </template>
 
-      <template #isActive="{ row }">
-        {{ $filters.yesOrNo(row.isActive) }}
+      <template #status="{ row }">
+        <Compute #default="{ data }" :data="getUserStatus(row)">
+          <el-tag :type="getUserStatusTagType(data)" effect="dark">
+            {{ data }}
+          </el-tag>
+        </Compute>
       </template>
 
       <template #actions="{ row }">
+        <el-button
+          v-if="row.isPending"
+          type="primary"
+          class="w-full"
+          size="small"
+          @click="handleResendInvite(row.id)"
+        >
+          Resend invite
+        </el-button>
+
         <el-popconfirm
-          v-if="row.isActive"
+          v-else-if="row.isActive"
           title="Are you sure to deactivate this user?"
           width="200"
           @confirm="handleDisableUser(row.id)"
         >
           <template #reference>
-            <el-button type="danger" class="w-full">Deactivate</el-button>
+            <el-button type="danger" size="small" class="w-full">Deactivate</el-button>
           </template>
         </el-popconfirm>
 
@@ -44,7 +61,7 @@
           @confirm="handleActivateUser(row.id)"
         >
           <template #reference>
-            <el-button type="success" class="w-full">Activate</el-button>
+            <el-button type="success" size="small" class="w-full">Activate</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -70,8 +87,8 @@ const headers: IAppTableHeader[] = [
     label: 'Name'
   },
   {
-    property: 'isActive',
-    label: 'Active'
+    property: 'status',
+    label: 'Status'
   },
   {
     property: 'createdAt',
@@ -84,6 +101,7 @@ const headers: IAppTableHeader[] = [
 ]
 
 const authStore = useAuthStore()
+const { openModal } = useModals()
 
 const loading = ref(false)
 const users = ref<TUsers>([])
@@ -105,7 +123,7 @@ const filteredUsers = computed(() => {
 function fetchUsers () {
   loading.value = true
 
-  usersService.getUsers({ search: search.value, ...pagination.value })
+  return usersService.getUsers({ search: search.value, ...pagination.value })
     .then((res) => {
       users.value = res.data
       paginationMeta.value = res.meta
@@ -133,6 +151,45 @@ function handleActivateUser (id: string) {
     .then(() => {
       notificationHandler({ text: 'User activated successfully', type: 'success' })
     })
+}
+
+function handleResendInvite (id: string) {
+  loading.value = true
+
+  usersService.resendInvite({ userId: id, redirectUrl: authService.activateAccountUrl })
+    .then(fetchUsers)
+    .then(() => {
+      notificationHandler({ text: 'Invite resent successfully', type: 'success' })
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+function getUserStatus (row: TUser) {
+  if (row.isPending) {
+    return 'Pending'
+  }
+
+  if (!row.isActive) {
+    return 'Disabled'
+  }
+
+  return 'Active'
+}
+
+function getUserStatusTagType (status: string) {
+  const statusMap: Record<string, TElementPlus['TagProps']['type']> = {
+    Pending: 'warning',
+    Disabled: 'danger',
+    Active: 'success'
+  }
+
+  return statusMap[status]
+}
+
+function openInviteUserModal () {
+  openModal('UserInviteModal', { onSave: fetchUsers })
 }
 
 const debouncedFetchUsers = debounce(fetchUsers, 200)
