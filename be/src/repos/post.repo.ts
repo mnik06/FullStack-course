@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, getTableColumns, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, getTableColumns, inArray } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable, postToTagTable, tagTable, userTable } from 'src/services/drizzle/schema';
@@ -10,7 +10,7 @@ import { TPost } from 'src/types/post/schemas/Post';
 import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 import { getSearchService } from 'src/services/search/search.service';
-import { jsonAggBuildObject } from './common/helpers';
+import { jsonAggBuildObject, totalCountOver } from './common/helpers';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -46,14 +46,17 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         trgmSearchColumns: [postTable.title],
         tsVectorSearchColumns: [postTable.description]
       });
+      const tagFilters = params.tagIds?.length
+        ? inArray(postToTagTable.tagId, params.tagIds)
+        : undefined;
 
       const postsQb = db
         .select({
           ...querySelection, 
-          totalCount: sql<number>`cast(count(*) over() as int)` 
+          totalCount: totalCountOver()
         })
         .from(postTable)
-        .where(and(searchFilters,...numericFilters.whereFilters))
+        .where(and(searchFilters, tagFilters, ...numericFilters.whereFilters))
         .leftJoin(userTable, eq(postTable.userId, userTable.id))
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))

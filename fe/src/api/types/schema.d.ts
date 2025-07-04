@@ -15,6 +15,42 @@ export interface paths {
       };
     };
   };
+  "/api/admin/tags/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/admin/tags/{tagId}/": {
+    delete: {
+      parameters: {
+        path: {
+          tagId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/admin/users/": {
     get: {
       parameters: {
@@ -195,6 +231,7 @@ export interface paths {
           sortBy?: "createdAt" | "title" | "commentsCount";
           sortOrder?: "asc" | "desc";
           numericFilters?: string[] | string;
+          tagIds?: string[];
         };
       };
       responses: {
@@ -228,6 +265,14 @@ export interface paths {
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
+                  tags: {
+                      id: string;
+                      name: string;
+                      /** Format: date-time */
+                      createdAt: string;
+                      /** Format: date-time */
+                      updatedAt: string;
+                    }[];
                   commentsCount: number;
                 })[];
               meta: {
@@ -281,6 +326,14 @@ export interface paths {
                 /** @enum {string} */
                 role: "admin" | "user";
               };
+              tags: {
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                }[];
               comments: ({
                   /** Format: uuid */
                   id: string;
@@ -351,6 +404,14 @@ export interface paths {
                 /** @enum {string} */
                 role: "admin" | "user";
               };
+              tags: {
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                }[];
               comments: ({
                   /** Format: uuid */
                   id: string;
@@ -444,6 +505,14 @@ export interface paths {
                 /** @enum {string} */
                 role: "admin" | "user";
               };
+              tags: {
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                }[];
               comments: ({
                   /** Format: uuid */
                   id: string;
@@ -676,9 +745,10 @@ export interface components {
      * - INVITE_EXPIRED -> 1004
      * - USER_ALREADY_ACTIVATED -> 1005
      * - USER_NOT_FOUND -> 1006
+     * - USER_ALREADY_INVITED -> 1007
      * @enum {integer}
      */
-    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006;
+    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007;
   };
   responses: never;
   parameters: never;

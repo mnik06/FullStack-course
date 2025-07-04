@@ -1,4 +1,4 @@
-import { BinaryOperator, eq, getTableColumns, gt, gte, lt, lte, SQL, SQLWrapper } from 'drizzle-orm';
+import { BinaryOperator, eq, getTableColumns, gt, gte, lt, lte, SelectedFields, SQL, SQLWrapper } from 'drizzle-orm';
 import { PgTable } from 'drizzle-orm/pg-core';
 
 export interface IFiltersService {
@@ -8,7 +8,7 @@ export interface IFiltersService {
   ): { operatorFunc: BinaryOperator; value: number; filterName: string };
   getNumericFilters<TTable extends PgTable>(
     table: TTable, 
-    selection: Record<string, SQLWrapper>, 
+    selection: SelectedFields<any, any>, 
     filters: string[]
   ): { whereFilters: SQLWrapper[]; havingFilters: SQLWrapper[] };
 }
@@ -23,7 +23,7 @@ export function getFiltersService(): IFiltersService {
       '=': eq
     },
 
-    parseNumericFilter(filter: string) {
+    parseNumericFilter(filter) {
       const [filterName, operator, value] = filter.split('_');
 
       return {
@@ -33,11 +33,7 @@ export function getFiltersService(): IFiltersService {
       };
     },
 
-    getNumericFilters<TTable extends PgTable>(
-      table: TTable,
-      selection: Record<string, SQLWrapper>,
-      filters: string[]
-    ) {
+    getNumericFilters(table, selection, filters) {
       return filters.reduce((acc, filter) => {
         const { operatorFunc, value, filterName } = this.parseNumericFilter(filter);
         const tableColumns = getTableColumns(table);

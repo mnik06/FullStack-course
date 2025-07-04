@@ -33,3 +33,7 @@ export function jsonAggBuildObject<
   )})
     ,'${sql`[]`}')`;
 }
+
+export const totalCountOver = () => {
+  return sql<number>`cast(count(*) over() as int)`; 
+};
