@@ -1,7 +1,7 @@
 import { and, asc, count, desc, eq, getTableColumns, sql } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-import { commentTable, postTable, userTable } from 'src/services/drizzle/schema';
+import { commentTable, postTable, postToTagTable, tagTable, userTable } from 'src/services/drizzle/schema';
 import { getPaginationService } from 'src/services/pagination/pagination.service';
 import { getFiltersService } from 'src/services/filters/filters.service';
 
@@ -10,6 +10,7 @@ import { TPost } from 'src/types/post/schemas/Post';
 import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 import { getSearchService } from 'src/services/search/search.service';
+import { jsonAggBuildObject } from './common/helpers';
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -19,7 +20,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .values(data as TPost)
         .returning();
 
-      return PostSchemaWithComments.parse({ ...post, user, comments: [] });
+      return PostSchemaWithComments.parse({ ...post, user, tags: [], comments: [] });
     },
 
     async getPosts(params = {}) {
@@ -30,7 +31,8 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       const querySelection = {
         ...getTableColumns(postTable),
         user: userTable,
-        commentsCount: count(commentTable.id)
+        commentsCount: count(commentTable.id),
+        tags: jsonAggBuildObject(getTableColumns(tagTable))
       };
       const sortByColumn = querySelection[params.sortBy || 'createdAt'];
 
@@ -45,7 +47,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         tsVectorSearchColumns: [postTable.description]
       });
 
-      const qb = db
+      const postsQb = db
         .select({
           ...querySelection, 
           totalCount: sql<number>`cast(count(*) over() as int)` 
@@ -54,13 +56,15 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .where(and(searchFilters,...numericFilters.whereFilters))
         .leftJoin(userTable, eq(postTable.userId, userTable.id))
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
+        .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
+        .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
         .groupBy(postTable.id, userTable.id)
         .having(and(...numericFilters.havingFilters))
         .orderBy(params.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn))
         .$dynamic();
-
+        
       const posts = await paginationService.withPagination(
-        qb, 
+        postsQb, 
         params
       );
 
@@ -78,10 +82,14 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         db
           .select({
             ...getTableColumns(postTable),
-            user: userTable
+            user: userTable,
+            tags: jsonAggBuildObject(getTableColumns(tagTable))
           })
           .from(postTable)
           .leftJoin(userTable, eq(postTable.userId, userTable.id))
+          .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
+          .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
+          .groupBy(postTable.id, userTable.id, tagTable.id)
           .where(eq(postTable.id, id)),
         db
           .select({
@@ -114,7 +122,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         return null;
       }
 
-      const [[user], comments] = await Promise.all([
+      const [[user], comments, tags] = await Promise.all([
         db
           .select({
             ...getTableColumns(userTable)
@@ -128,13 +136,21 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           })
           .from(commentTable)
           .where(eq(commentTable.postId, id))
-          .leftJoin(userTable, eq(commentTable.userId, userTable.id))
+          .leftJoin(userTable, eq(commentTable.userId, userTable.id)),
+        db
+          .select({
+            ...getTableColumns(tagTable)
+          })
+          .from(tagTable)
+          .leftJoin(postToTagTable, eq(tagTable.id, postToTagTable.tagId))
+          .where(eq(postToTagTable.postId, id))
       ]);
 
       return PostSchemaWithComments.parse({
         ...post,
         comments,
-        user
+        user,
+        tags
       });
     },
 
