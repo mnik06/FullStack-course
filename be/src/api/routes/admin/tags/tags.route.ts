@@ -4,9 +4,18 @@ import { requirePermission } from 'src/api/hooks/require-permission.hook';
 
 import { CreateTagReqSchema } from 'src/api/routes/schemas/admin/tags/CreateTagReqSchema';
 import { createTag } from 'src/controllers/admin/tags/create-tag';
+import { getTags } from 'src/controllers/admin/tags/get-tags';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
+
+  fastify.get('/', {
+    preHandler: [requirePermission('manage_tags')]
+  }, () => {
+    return getTags({
+      tagRepo: fastify.repos.tagRepo
+    });
+  });
 
   fastify.post('/', {
     schema: {
