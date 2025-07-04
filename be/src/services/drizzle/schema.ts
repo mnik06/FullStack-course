@@ -1,5 +1,5 @@
 import { uuid, pgTable, varchar, timestamp, index, integer, boolean } from 'drizzle-orm/pg-core';
-import { relations, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 export const postTable = pgTable('posts', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
@@ -16,11 +16,6 @@ export const postTable = pgTable('posts', {
   ];
 });
 
-// TODO: check if needed
-export const postRelations = relations(postTable, ({ many }) => ({
-  comments: many(commentTable)
-}));
-
 export const commentTable = pgTable('comments', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
   userId: uuid().references(() => userTable.id, { onDelete: 'cascade' }).notNull(),
@@ -30,14 +25,6 @@ export const commentTable = pgTable('comments', {
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
 
-// TODO: check if needed
-export const commentRelations = relations(commentTable, ({ one }) => ({
-  post: one(postTable, {
-    fields: [commentTable.id],
-    references: [postTable.id]
-  })
-}));
-
 export const userTable = pgTable('users', {
   id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
   name: varchar({ length: 255 }),
@@ -45,6 +32,21 @@ export const userTable = pgTable('users', {
   subId: varchar({ length: 255 }).notNull(),
   role: varchar({ length: 20 }).default('user').notNull(),
   isPending: boolean().default(false),
+  createdAt: timestamp().defaultNow(),
+  updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
+});
+
+export const tagTable = pgTable('tags', {
+  id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
+  name: varchar({ length: 255 }).notNull(),
+  createdAt: timestamp().defaultNow(),
+  updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
+});
+
+export const postToTagTable = pgTable('posts_to_tags', {
+  id: uuid().primaryKey().default(sql`uuid_generate_v4()`),
+  postId: uuid().references(() => postTable.id, { onDelete: 'cascade' }).notNull(),
+  tagId: uuid().references(() => tagTable.id, { onDelete: 'cascade' }).notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
