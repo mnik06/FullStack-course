@@ -5,11 +5,22 @@ import { tagTable } from 'src/services/drizzle/schema';
 import { ITagRepo } from 'src/types/repos/ITagRepo';
 import { TTag } from 'src/types/tag/schemas/Tag';
 import { TagSchema } from 'src/types/tag/schemas/Tag';
+import { getSearchService } from 'src/services/search/search.service';
 
 export function getTagRepo(db: NodePgDatabase): ITagRepo {
   return {
-    async getTags() {
-      const tags = await db.select().from(tagTable);
+    async getTags(filters) {
+      const searchService = getSearchService();
+
+      const searchFilters = searchService.getSearchFilters({
+        searchQuery: filters.search,
+        trgmSearchColumns: [tagTable.name]
+      });
+
+      const tags = await db
+        .select()
+        .from(tagTable)
+        .where(searchFilters);
 
       return TagSchema.array().parse(tags);
     },
