@@ -1,0 +1,1 @@
+export type TTagPermission = 'manage_tags';

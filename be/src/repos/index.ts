@@ -3,7 +3,7 @@ import { getPostRepo } from './post.repo';
 import { getCommentRepo } from './comment.repo';
 import { getUserProfileRepo } from './user-profile.repo';
 import { getTagRepo } from './tag.repo';
-import { getPostToTagRepo } from './tag-to-post.repo';
+import { getPostToTagRepo } from './post-to-tag.repo';
 
 export function getRepos(db: NodePgDatabase) {
   return {

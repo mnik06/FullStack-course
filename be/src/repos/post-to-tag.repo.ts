@@ -20,6 +20,32 @@ export function getPostToTagRepo(db: NodePgDatabase): IPostToTagRepo {
         .returning();
       
       return !!postToTag;
+    },
+
+    async getPostToTagByPostId(postId) {
+      const [postToTag] = await db
+        .select()
+        .from(postToTagTable)
+        .where(eq(postToTagTable.postId, postId));
+
+      if (!postToTag) {
+        return null;
+      }
+
+      return PostToTagSchema.parse(postToTag);
+    },
+
+    async getPostToTagByTagId(tagId) {
+      const [postToTag] = await db
+        .select()
+        .from(postToTagTable)
+        .where(eq(postToTagTable.tagId, tagId));
+
+      if (!postToTag) {
+        return null;
+      }
+
+      return PostToTagSchema.parse(postToTag);
     }
   };
 }

@@ -14,7 +14,7 @@ export function getTagRepo(db: NodePgDatabase): ITagRepo {
       return TagSchema.parse(tag);
     },
 
-    async deleteTag(id) {
+    async deleteTagById(id) {
       const [tag] = await db.delete(tagTable).where(eq(tagTable.id, id)).returning();
 
       return !!tag;
