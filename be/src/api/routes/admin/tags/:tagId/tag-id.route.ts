@@ -3,9 +3,30 @@ import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
 import { deleteTag } from 'src/controllers/admin/tags/delete-tag';
+import { GetTagByIdRespSchema } from 'src/api/routes/schemas/admin/tags/GetTagByIdRespSchema';
+import { UpdateTagReqSchema } from 'src/api/routes/schemas/admin/tags/UpdateTagReqSchema';
+import { updateTag } from 'src/controllers/admin/tags/update-tag-by-id';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
+
+  fastify.patch('/', {
+    schema: {
+      params: z.object({
+        tagId: z.string()
+      }),
+      body: UpdateTagReqSchema,
+      response: {
+        200: GetTagByIdRespSchema
+      }
+    }
+  }, req => {
+    return updateTag({
+      tagId: req.params.tagId,
+      data: req.body,
+      tagRepo: fastify.repos.tagRepo
+    });
+  });
 
   fastify.delete('/', {
     schema: {
