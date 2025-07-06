@@ -5,10 +5,10 @@ import { createPost } from 'src/controllers/post/create-post';
 import { getPosts } from 'src/controllers/post/get-posts';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
-import { CreatePostReqSchema } from 'src/api/routes/schemas/post/CreatePostReqSchema';
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
 import { GetPostsRespSchema } from 'src/api/routes/schemas/post/GetPostsRespSchema';
 import { PostFiltersSchema } from 'src/types/post/schemas/PostFilters';
+import { UpsertPostReqSchema } from '../schemas/post/UpsertPostReqSchema';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -32,15 +32,13 @@ const routes: FastifyPluginAsync = async function (f) {
       response: {
         200: GetPostByIdRespSchema
       },
-      body: CreatePostReqSchema
+      body: UpsertPostReqSchema
     }
   }, (req) => {
     return createPost({
       postRepo: fastify.repos.postRepo,
-      data: {
-        ...req.body,
-        userId: req.user?.id as string
-      },
+      postToTagRepo: fastify.repos.postToTagRepo,
+      data: req.body,
       user: req.user as TUserProfile
     });
   });

@@ -17,7 +17,10 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     async createPost(data, user) {
       const [post] = await db
         .insert(postTable)
-        .values(data as TPost)
+        .values({
+          ...data as TPost,
+          userId: user.id
+        })
         .returning();
 
       return PostSchemaWithComments.parse({ ...post, user, tags: [], comments: [] });

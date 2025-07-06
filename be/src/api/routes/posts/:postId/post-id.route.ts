@@ -9,7 +9,7 @@ import { getPostById } from 'src/controllers/post/get-post-by-id';
 import { deletePost } from 'src/controllers/post/delete-post';
 
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
-import { UpdatePostReqSchema } from 'src/api/routes/schemas/post/UpdatePostReqSchema';
+import { UpsertPostReqSchema } from 'src/api/routes/schemas/post/UpsertPostReqSchema';
 
 const PostByIdParamsSchema = z.object({
   postId: z.string().uuid()
@@ -48,12 +48,13 @@ const routes: FastifyPluginAsync = async function (f) {
       response: {
         200: GetPostByIdRespSchema
       },
-      body: UpdatePostReqSchema
+      body: UpsertPostReqSchema
     },
     preHandler: [requirePermission('manage_post', checkIsPostOwner)]
   }, (req) => {
     return updatePostById({
       postRepo: fastify.repos.postRepo,
+      postToTagRepo: fastify.repos.postToTagRepo,
       postId: req.params.postId,
       data: req.body
     });

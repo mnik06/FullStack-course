@@ -1,20 +1,23 @@
 import { HttpError } from 'src/api/errors/HttpError';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
-import { TPost } from 'src/types/post/schemas/Post';
 import { getPostService } from 'src/services/post/post.service';
+import { TUpsertPostReq } from 'src/api/routes/schemas/post/UpsertPostReqSchema';
+import { IPostToTagRepo } from 'src/types/repos/IPostToTagRepo';
 
 export async function updatePostById(params: {
   postRepo: IPostRepo;
+  postToTagRepo: IPostToTagRepo;
   postId: string;
-  data: Partial<TPost>;
+  data: TUpsertPostReq;
 }) {
   const postService = getPostService();
+  const { tagIds, ...postData } = params.data;
 
   const post = await params.postRepo.updatePostById(
     params.postId,
     {
-      ...params.data,
-      readingTime: postService.calculateReadingTime(params.data)
+      ...postData,
+      readingTime: postService.calculateReadingTime(postData)
     }
   );
 
@@ -23,6 +26,12 @@ export async function updatePostById(params: {
       statusCode: 404,
       message: 'Post not found'
     });
+  }
+
+  if (tagIds) {
+    const tags = await params.postToTagRepo.updateTagsForPost(params.postId, tagIds);
+
+    post.tags = tags;
   }
 
   return post;

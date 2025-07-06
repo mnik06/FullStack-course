@@ -1,51 +1,38 @@
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { TPostToTag } from 'src/types/post-to-tag/schemas/PostToTag';
-import { postToTagTable } from 'src/services/drizzle/schema';
-import { PostToTagSchema } from 'src/types/post-to-tag/schemas/PostToTag';
+import { postToTagTable, tagTable } from 'src/services/drizzle/schema';
 import { IPostToTagRepo } from 'src/types/repos/IPostToTagRepo';
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray, notInArray } from 'drizzle-orm';
+import { TagSchema } from 'src/types/tag/schemas/Tag';
 
 export function getPostToTagRepo(db: NodePgDatabase): IPostToTagRepo {
   return {
-    async createPostToTag(data) {
-      const [postToTag] = await db.insert(postToTagTable).values(data as TPostToTag).returning();
-      
-      return PostToTagSchema.parse(postToTag);
-    },
+    async updateTagsForPost(postId, tagIds = []) {
+      if (!tagIds.length) {
+        await db
+          .delete(postToTagTable)
+          .where(eq(postToTagTable.postId, postId));
 
-    async deletePostToTag(id) {
-      const [postToTag] = await db
-        .delete(postToTagTable)
-        .where(eq(postToTagTable.id, id))
-        .returning();
-      
-      return !!postToTag;
-    },
-
-    async getPostToTagByPostId(postId) {
-      const [postToTag] = await db
-        .select()
-        .from(postToTagTable)
-        .where(eq(postToTagTable.postId, postId));
-
-      if (!postToTag) {
-        return null;
+        return [];
       }
 
-      return PostToTagSchema.parse(postToTag);
-    },
+      await db.transaction(async (tx) => {
+        await tx
+          .delete(postToTagTable)
+          .where(and(
+            eq(postToTagTable.postId, postId),
+            notInArray(postToTagTable.tagId, tagIds)
+          ));
 
-    async getPostToTagByTagId(tagId) {
-      const [postToTag] = await db
-        .select()
-        .from(postToTagTable)
-        .where(eq(postToTagTable.tagId, tagId));
+        await tx.insert(postToTagTable)
+          .values(tagIds.map((tagId) => ({ postId, tagId })))
+          .onConflictDoNothing();
+      });
 
-      if (!postToTag) {
-        return null;
-      }
+      const tags = await db.select()
+        .from(tagTable)
+        .where(inArray(tagTable.id, tagIds));
 
-      return PostToTagSchema.parse(postToTag);
+      return TagSchema.array().parse(tags);
     }
   };
 }

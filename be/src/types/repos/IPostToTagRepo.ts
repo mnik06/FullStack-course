@@ -1,8 +1,5 @@
-import { TPostToTag } from 'src/types/post-to-tag/schemas/PostToTag';
+import { TTag } from 'src/types/tag/schemas/Tag';
 
 export interface IPostToTagRepo {
-  createPostToTag(postToTag: Partial<TPostToTag>): Promise<TPostToTag>;
-  deletePostToTag(id: string): Promise<boolean>;
-  getPostToTagByPostId(postId: string): Promise<TPostToTag | null>;
-  getPostToTagByTagId(tagId: string): Promise<TPostToTag | null>;
+  updateTagsForPost(postId: string, tagIds: string[]): Promise<TTag[]>;
 }
