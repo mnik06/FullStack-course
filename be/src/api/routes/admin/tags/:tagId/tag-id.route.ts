@@ -2,10 +2,10 @@ import { z } from 'zod';
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
-import { deleteTag } from 'src/controllers/admin/tags/delete-tag';
-import { GetTagByIdRespSchema } from 'src/api/routes/schemas/admin/tags/GetTagByIdRespSchema';
-import { UpdateTagReqSchema } from 'src/api/routes/schemas/admin/tags/UpdateTagReqSchema';
-import { updateTag } from 'src/controllers/admin/tags/update-tag-by-id';
+import { deleteTag } from 'src/controllers/tags/delete-tag';
+import { GetTagByIdRespSchema } from 'src/api/routes/schemas/tags/GetTagByIdRespSchema';
+import { UpdateTagReqSchema } from 'src/api/routes/schemas/tags/UpdateTagReqSchema';
+import { updateTag } from 'src/controllers/tags/update-tag-by-id';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();

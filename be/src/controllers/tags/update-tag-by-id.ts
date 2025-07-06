@@ -1,5 +1,5 @@
 import { HttpError } from 'src/api/errors/HttpError';
-import { TUpdateTagReq } from 'src/api/routes/schemas/admin/tags/UpdateTagReqSchema';
+import { TUpdateTagReq } from 'src/api/routes/schemas/tags/UpdateTagReqSchema';
 import { ITagRepo } from 'src/types/repos/ITagRepo';
 
 export async function updateTag(params: {

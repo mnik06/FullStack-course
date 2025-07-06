@@ -1,4 +1,4 @@
-import { TCreateTagReq } from 'src/api/routes/schemas/admin/tags/CreateTagReqSchema';
+import { TCreateTagReq } from 'src/api/routes/schemas/tags/CreateTagReqSchema';
 import { ITagRepo } from 'src/types/repos/ITagRepo';
 
 export function createTag(params: {
