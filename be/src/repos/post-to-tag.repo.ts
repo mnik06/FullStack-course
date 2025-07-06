@@ -25,7 +25,7 @@ export function getPostToTagRepo(db: NodePgDatabase): IPostToTagRepo {
 
         await tx.insert(postToTagTable)
           .values(tagIds.map((tagId) => ({ postId, tagId })))
-          .onConflictDoNothing();
+          .onConflictDoNothing({ target:  [postToTagTable.postId, postToTagTable.tagId] });
       });
 
       const tags = await db.select()

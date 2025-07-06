@@ -1,4 +1,4 @@
-import { uuid, pgTable, varchar, timestamp, index, integer, boolean } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, varchar, timestamp, index, integer, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const postTable = pgTable('posts', {
@@ -49,4 +49,8 @@ export const postToTagTable = pgTable('posts_to_tags', {
   tagId: uuid().references(() => tagTable.id, { onDelete: 'cascade' }).notNull(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
+}, (table) => {
+  return [
+    uniqueIndex('post_tag_unique').on(table.postId, table.tagId)
+  ];
 });

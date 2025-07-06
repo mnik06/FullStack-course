@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, getTableColumns, inArray } from 'drizzle-orm';
+import { and, asc, count, desc, eq, exists, getTableColumns, inArray } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable, postToTagTable, tagTable, userTable } from 'src/services/drizzle/schema';
@@ -10,7 +10,18 @@ import { TPost } from 'src/types/post/schemas/Post';
 import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments';
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 import { getSearchService } from 'src/services/search/search.service';
-import { jsonAggBuildObject, totalCountOver } from './common/helpers';
+import { jsonAggBuildObject, totalCountOver } from 'src/repos/common/helpers';
+
+const getTagFilters = (db: NodePgDatabase, tagIds: string[]) => {
+  return tagIds?.length
+    ? exists(
+      db
+        .select({ id: postToTagTable.id })
+        .from(postToTagTable)
+        .where(and(inArray(postToTagTable.tagId, tagIds), eq(postToTagTable.postId, postTable.id)))
+    )
+    : undefined;
+};
 
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
@@ -49,9 +60,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         trgmSearchColumns: [postTable.title],
         tsVectorSearchColumns: [postTable.description]
       });
-      const tagFilters = params.tagIds?.length
-        ? inArray(postToTagTable.tagId, params.tagIds)
-        : undefined;
+      const tagFilters = getTagFilters(db, params.tagIds || []);
 
       const postsQb = db
         .select({
@@ -59,7 +68,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           totalCount: totalCountOver()
         })
         .from(postTable)
-        .where(and(searchFilters, tagFilters, ...numericFilters.whereFilters))
+        .where(and(searchFilters, ...numericFilters.whereFilters, tagFilters))
         .leftJoin(userTable, eq(postTable.userId, userTable.id))
         .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
         .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
