@@ -39,14 +39,18 @@
     </template>
 
     <div class="flex flex-col">
-      <div class="flex items-center mb-2 gap-1">
-        <el-avatar class="bg-cream-can" size="small">
-          {{ $filters.getInitials(post.user.name) }}
-        </el-avatar>
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-1">
+          <el-avatar class="bg-cream-can" size="small">
+            {{ $filters.getInitials(post.user.name) }}
+          </el-avatar>
 
-        <span class="font-medium text-xs">
-          {{ post.user.id === authStore.user.id ? 'You' : post.user.name }}
-        </span>
+          <span class="font-medium text-xs">
+            {{ post.user.id === authStore.user.id ? 'You' : post.user.name }}
+          </span>
+        </div>
+
+        <PostsTags :tags="post.tags" />
       </div>
 
       <p v-if="showFull">{{ post.description }}</p>

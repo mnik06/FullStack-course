@@ -352,7 +352,8 @@ export interface paths {
         content: {
           "application/json": {
             title: string;
-            description?: string | null;
+            description?: string;
+            tagIds?: string[];
           };
         };
       };
@@ -527,11 +528,12 @@ export interface paths {
           postId: string;
         };
       };
-      requestBody?: {
+      requestBody: {
         content: {
           "application/json": {
-            title?: string;
+            title: string;
             description?: string;
+            tagIds?: string[];
           };
         };
       };

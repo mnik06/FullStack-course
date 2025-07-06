@@ -3,6 +3,7 @@ type TPaginationMeta = TPostsResponse['meta']
 
 type TPosts = TPostsResponse['data']
 type TPost = TResponse<'/api/posts/{postId}/', 'get'>
+
 type TCreatePost = TRequestBody<'/api/posts/', 'post'>
 type TUpdatePost = TRequestBody<'/api/posts/{postId}/', 'patch'>
 

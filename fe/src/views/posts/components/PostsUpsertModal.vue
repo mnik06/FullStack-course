@@ -12,6 +12,10 @@
       :rules="formRules"
       @submit.prevent="handleSubmit"
     >
+      <el-form-item label="Tags" prop="tagIds">
+        <PostsTagsSelect v-model="formData.tagIds" />
+      </el-form-item>
+
       <el-form-item label="Title" prop="title">
         <el-input v-model="formData.title" />
       </el-form-item>
@@ -69,7 +73,8 @@ const formRules = useElFormRules({
 const submitLoading = ref(false)
 const formData = ref<TCreatePost>({
   title: '',
-  description: ''
+  description: '',
+  tagIds: []
 })
 
 function handleSubmit () {
@@ -99,6 +104,7 @@ watch(props.postToEdit, (newVal) => {
   if (newVal) {
     formData.value.title = newVal.title
     formData.value.description = newVal.description
+    formData.value.tagIds = newVal.tags.map((tag) => tag.id)
   }
 }, { immediate: true })
 </script>
