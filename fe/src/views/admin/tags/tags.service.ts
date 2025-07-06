@@ -1,6 +1,6 @@
 class TagsService {
   getTags (filters?: TTagFilters) {
-    return useApiClient.get('/api/admin/tags/', { params: filters })
+    return useApiClient.get('/api/tags/', { params: filters })
   }
 
   createTag (data: TCreateTag) {

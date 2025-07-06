@@ -16,28 +16,6 @@ export interface paths {
     };
   };
   "/api/admin/tags/": {
-    get: {
-      parameters: {
-        query?: {
-          search?: string;
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": {
-                id: string;
-                name: string;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                updatedAt: string;
-              }[];
-          };
-        };
-      };
-    };
     post: {
       requestBody: {
         content: {
@@ -763,6 +741,30 @@ export interface paths {
                 role: "admin" | "user";
               };
             };
+          };
+        };
+      };
+    };
+  };
+  "/api/tags/": {
+    get: {
+      parameters: {
+        query?: {
+          search?: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              }[];
           };
         };
       };
