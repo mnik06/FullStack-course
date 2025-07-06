@@ -95,7 +95,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           .leftJoin(userTable, eq(postTable.userId, userTable.id))
           .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
           .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
-          .groupBy(postTable.id, userTable.id, tagTable.id)
+          .groupBy(postTable.id, userTable.id)
           .where(eq(postTable.id, id)),
         db
           .select({
