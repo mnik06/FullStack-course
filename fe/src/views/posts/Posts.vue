@@ -5,7 +5,7 @@
 
       <div class="flex items-center gap-2">
         <PostsSortingSelect v-model="sorting" />
-        <PostsFilters v-model="numericFilters" />
+        <PostsFilters v-model="filters" />
       </div>
     </div>
 
@@ -64,7 +64,10 @@ const pagination = ref<IPagination>({
   limit: localStorageService.getItem('lastPaginationPageSize') || 10
 })
 
-const numericFilters = ref<string[]>([route.query.numericFilters].flat(Infinity).filter(Boolean) as string[])
+const filters = ref<IPostFilters>({
+  tagIds: [route.query.tagIds].flat(Infinity).filter(Boolean) as string[],
+  numericFilters: [route.query.numericFilters].flat(Infinity).filter(Boolean) as string[]
+})
 
 function fetchPosts () {
   loading.value = true
@@ -74,7 +77,8 @@ function fetchPosts () {
     search: search.value,
     offset: pagination.value.offset,
     limit: pagination.value.limit,
-    numericFilters: numericFilters.value
+    numericFilters: filters.value.numericFilters,
+    tagIds: filters.value.tagIds
   })
     .then((res) => {
       posts.value = res.data
@@ -100,6 +104,6 @@ function handleOpenUpsertModal (postToEdit?: TPost) {
   })
 }
 
-watch([sorting, pagination, numericFilters], fetchPosts, { deep: true, immediate: true })
+watch([sorting, pagination, filters], fetchPosts, { deep: true, immediate: true })
 watch(search, debouncedFetchPosts)
 </script>

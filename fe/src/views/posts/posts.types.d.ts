@@ -13,3 +13,7 @@ type TPostComment = TPost['comments'][number]
 type TPostComments = TResponse<'/api/posts/{postId}/comments/', 'get'>
 type TCreatePostComment = TRequestBody<'/api/posts/{postId}/comments/', 'post'>
 
+interface IPostFilters {
+  numericFilters: string[]
+  tagIds: string[]
+}

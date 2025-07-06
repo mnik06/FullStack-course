@@ -7,6 +7,8 @@
     placeholder="Select tags"
     loading-text="Loading tags..."
     :loading="tagsLoading"
+    collapse-tags
+    :max-collapse-tags="2"
     :remote-method="fetchTags"
   >
     <el-option
