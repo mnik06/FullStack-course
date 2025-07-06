@@ -18,7 +18,7 @@
           class="flex items-center gap-1 link text-lg"
           active-class="active"
         >
-          <component :is="item.icon" class="w-5 h-5" />
+          <component :is="item.icon" class="w-4 h-4" />
           <span>{{ item.label }}</span>
         </router-link>
       </AppAccess>
@@ -38,6 +38,7 @@
 
 <script lang="ts" setup>
 import IconPost from '~icons/icon/post'
+import IconTag from '~icons/icon/tag'
 import IconUser from '~icons/icon/user'
 
 interface INavigationItem {
@@ -57,6 +58,12 @@ const navigationItems: INavigationItem[] = [
     label: 'Users',
     routeName: 'users',
     icon: IconUser,
+    roles: ['admin']
+  },
+  {
+    label: 'Tags',
+    routeName: 'tags',
+    icon: IconTag,
     roles: ['admin']
   }
 ]

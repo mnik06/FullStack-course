@@ -33,7 +33,7 @@
 
 
   .container {
-    @apply mx-auto px-4 max-w-[1280px] #{!important};
+    @apply mx-auto px-8 max-w-[1280px] #{!important};
 
     &--small {
       @apply max-w-[800px] #{!important};

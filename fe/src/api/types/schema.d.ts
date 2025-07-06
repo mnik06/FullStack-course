@@ -16,6 +16,28 @@ export interface paths {
     };
   };
   "/api/admin/tags/": {
+    get: {
+      parameters: {
+        query?: {
+          search?: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              }[];
+          };
+        };
+      };
+    };
     post: {
       requestBody: {
         content: {
@@ -27,7 +49,16 @@ export interface paths {
       responses: {
         /** @description Default Response */
         200: {
-          content: never;
+          content: {
+            "application/json": {
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
         };
       };
     };
@@ -45,6 +76,35 @@ export interface paths {
           content: {
             "application/json": {
               success: boolean;
+            };
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          tagId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
             };
           };
         };
@@ -231,7 +291,7 @@ export interface paths {
           sortBy?: "createdAt" | "title" | "commentsCount";
           sortOrder?: "asc" | "desc";
           numericFilters?: string[] | string;
-          tagIds?: string[];
+          tagIds?: string[] | string;
         };
       };
       responses: {

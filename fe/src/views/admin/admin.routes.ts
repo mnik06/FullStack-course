@@ -1,9 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { usersRouteNames, usersRoutes } from '@/views/admin/users/users.routes'
+import { tagsRouteNames, tagsRoutes } from '@/views/admin/tags/tags.routes'
 
 export const adminRouteNames = {
   admin: 'admin',
-  ...usersRouteNames
+  ...usersRouteNames,
+  ...tagsRouteNames
 }
 
 export const adminRoutes: RouteRecordRaw[] = [
@@ -15,7 +17,8 @@ export const adminRoutes: RouteRecordRaw[] = [
       roles: ['admin']
     },
     children: [
-      ...usersRoutes
+      ...usersRoutes,
+      ...tagsRoutes
     ]
   }
 ]
