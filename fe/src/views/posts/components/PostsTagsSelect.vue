@@ -1,15 +1,15 @@
 <template>
   <el-select
     v-model="selectedTags"
-    multiple
-    filterable
-    remote
     placeholder="Select tags"
     loading-text="Loading tags..."
     :loading="tagsLoading"
-    collapse-tags
     :max-collapse-tags="2"
-    :remote-method="fetchTags"
+    class="!max-w-[280px]"
+    collapse-tags
+    multiple
+    filterable
+    fit-input-width
   >
     <el-option
       v-for="tag in tags"

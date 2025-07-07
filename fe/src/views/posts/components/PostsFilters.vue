@@ -32,6 +32,8 @@
             </el-button>
           </div>
 
+          <PostsFiltersNumeric v-model="localModel.numericFilters" />
+
           <div class="flex flex-col mt-2">
             <span class="font-medium text-slate-600">Tags:</span>
             <PostsTagsSelect
@@ -41,8 +43,6 @@
               :teleported="false"
             />
           </div>
-
-          <PostsFiltersNumeric v-model="localModel.numericFilters" />
 
           <div class="flex items-center justify-end mt-auto w-full pt-3">
             <el-button

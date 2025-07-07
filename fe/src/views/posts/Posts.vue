@@ -65,8 +65,8 @@ const pagination = ref<IPagination>({
 })
 
 const filters = ref<IPostFilters>({
-  tagIds: [route.query.tagIds].flat(Infinity).filter(Boolean) as string[],
-  numericFilters: [route.query.numericFilters].flat(Infinity).filter(Boolean) as string[]
+  tagIds: ((route.query.tagIds || '') as string)?.split(',').filter(Boolean) as string[],
+  numericFilters: ((route.query.numericFilters || '') as string)?.split(',').filter(Boolean) as string[]
 })
 
 function fetchPosts () {

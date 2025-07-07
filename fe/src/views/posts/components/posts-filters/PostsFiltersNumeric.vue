@@ -6,6 +6,7 @@
       <NumericOperatorSelect
         v-model="localModel[option.key].operator"
         class="flex-1"
+        @change="setModelValue"
       />
 
       <el-input-number
@@ -14,6 +15,7 @@
         size="small"
         placeholder="Value"
         :controls="false"
+        @change="setModelValue"
       />
     </div>
   </div>
@@ -42,24 +44,32 @@ const parsedModelValue = computed(() => {
   )
 })
 
-const localModel = ref(createLocalModel())
+const localModel = ref<Record<string, { operator: string; value: number }>>({})
+createLocalModel()
 
-watch(localModel, () => {
-  modelValue.value = convertParsedFiltersToString(localModel.value)
+watch(parsedModelValue, () => {
+  createLocalModel()
 }, { deep: true })
 
 function createLocalModel () {
-  return options.reduce((acc, option) => {
-    acc[option.key] = {
-      operator: parsedModelValue.value[option.key]?.operator,
-      value: parsedModelValue.value[option.key]?.value
-    }
-    return acc
-  }, {} as Record<string, { operator: string; value: number }>)
+  const notFinalizedFilters = Object.fromEntries(
+    Object.entries(localModel.value).filter(([_, { value, operator }]) => value === undefined || operator === undefined)
+  )
+
+  localModel.value = {
+    ...options.reduce((acc, option) => {
+      acc[option.key] = {
+        operator: parsedModelValue.value[option.key]?.operator,
+        value: parsedModelValue.value[option.key]?.value
+      }
+      return acc
+    }, {}),
+    ...notFinalizedFilters
+  }
 }
 
-function convertParsedFiltersToString (filters: Record<string, { operator: string; value: number }>) {
-  return Object.entries(filters)
+function setModelValue () {
+  modelValue.value = Object.entries(localModel.value)
     .filter(([_, { value, operator }]) => value !== undefined && operator !== undefined)
     .map(([key, { value, operator }]) => `${key}_${operator}_${value}`)
 }

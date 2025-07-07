@@ -1,4 +1,4 @@
-import { BinaryOperator, eq, getTableColumns, gt, gte, lt, lte, SelectedFields, SQL, SQLWrapper } from 'drizzle-orm';
+import { BinaryOperator, eq, getTableColumns, gt, gte, lt, lte, ne, SelectedFields, SQL, SQLWrapper } from 'drizzle-orm';
 import { PgTable } from 'drizzle-orm/pg-core';
 
 export interface IFiltersService {
@@ -20,7 +20,8 @@ export function getFiltersService(): IFiltersService {
       '>': gt,
       '<': lt,
       '<=': lte,
-      '=': eq
+      '=': eq,
+      '!=': ne
     },
 
     parseNumericFilter(filter) {
