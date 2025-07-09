@@ -483,23 +483,6 @@ export interface paths {
         };
       };
     };
-    delete: {
-      parameters: {
-        path: {
-          postId: string;
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": {
-              success: boolean;
-            };
-          };
-        };
-      };
-    };
     patch: {
       parameters: {
         path: {
@@ -678,24 +661,6 @@ export interface paths {
     };
   };
   "/api/posts/{postId}/comments/{commentId}/": {
-    delete: {
-      parameters: {
-        path: {
-          postId: string;
-          commentId: string;
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": {
-              success: boolean;
-            };
-          };
-        };
-      };
-    };
     patch: {
       parameters: {
         path: {
@@ -742,6 +707,76 @@ export interface paths {
               };
             };
           };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/comments/{commentId}/delete-hard/": {
+    delete: {
+      parameters: {
+        path: {
+          commentId: string;
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/comments/{commentId}/delete-soft/": {
+    delete: {
+      parameters: {
+        path: {
+          commentId: string;
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/delete-hard/": {
+    delete: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/delete-soft/": {
+    delete: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
         };
       };
     };

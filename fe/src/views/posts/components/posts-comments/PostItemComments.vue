@@ -42,17 +42,9 @@
           :force-allow="comment.user.id === authStore.user.id"
           :allowed-roles="['admin']"
         >
-          <el-popconfirm
-            title="Are you sure to delete this comment?"
-            width="200"
-            @confirm="handleDeleteComment(comment.id)"
-          >
-            <template #reference>
-              <el-button size="small" type="danger" link>
-                <IconDelete class="w-4 h-4" />
-              </el-button>
-            </template>
-          </el-popconfirm>
+          <el-button size="small" type="danger" link @click="handleDeleteComment(comment.id)">
+            <IconDelete class="w-4 h-4" />
+          </el-button>
         </AppAccess>
       </div>
 
@@ -68,6 +60,7 @@ const props = defineProps<{
 
 const comments = defineModel<TPostComment[]>('comments')
 
+const { openModal } = useModals()
 const authStore = useAuthStore()
 
 const newComment = ref('')
@@ -80,10 +73,13 @@ const sortedComments = computed(() => {
 })
 
 function handleDeleteComment (commentId: string) {
-  postsService.deleteComment(props.postId, commentId)
-    .then(() => {
+  openModal('PostsCommentsDeleteOptionsModal', {
+    postId: props.postId,
+    commentId,
+    onDelete: () => {
       comments.value = comments.value.filter((comment) => comment.id !== commentId)
-    })
+    }
+  })
 }
 
 function saveComment () {

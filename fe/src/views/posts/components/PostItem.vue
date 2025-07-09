@@ -22,17 +22,9 @@
               <IconEdit class="w-4 h-4" />
             </el-button>
 
-            <el-popconfirm
-              title="Are you sure to delete this post?"
-              width="200"
-              @confirm="handleDeletePost"
-            >
-              <template #reference>
-                <el-button type="danger" size="small" class="w-7 h-7">
-                  <IconDelete class="w-4 h-4" />
-                </el-button>
-              </template>
-            </el-popconfirm>
+            <el-button type="danger" size="small" class="w-7 h-7" @click="handleDeletePost">
+              <IconDelete class="w-4 h-4" />
+            </el-button>
           </div>
         </AppAccess>
       </div>
@@ -107,14 +99,13 @@
 </template>
 
 <script lang="ts" setup>
-import { notificationHandler } from '@/core/helpers'
-
 const emit = defineEmits(['editPost', 'postDeleted'])
 const props = defineProps<{
   post: TPost | TPosts[number]
   showFull?: boolean
 }>()
 
+const { openModal } = useModals()
 const authStore = useAuthStore()
 
 const postComments = ref<TPostComment[]>((props.post as TPost).comments || [])
@@ -135,11 +126,12 @@ async function toggleComments () {
 }
 
 function handleDeletePost () {
-  postsService.deletePost(props.post.id)
-    .then(() => {
-      notificationHandler({ text: 'Post deleted successfully', type: 'success' })
+  openModal('PostsDeleteOptionsModal', {
+    postId: props.post.id,
+    onDelete: () => {
       emit('postDeleted', props.post)
-    })
+    }
+  })
 }
 
 function fetchPostComments () {
