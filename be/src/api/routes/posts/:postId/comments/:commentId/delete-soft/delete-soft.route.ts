@@ -1,38 +1,31 @@
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
-import { z } from 'zod';
-
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
-
-import { updateCommentById } from 'src/controllers/comment/update-comment-by-id';
-
-import { GetCommentByIdRespSchema } from 'src/api/routes/schemas/comment/GetCommentByIdRespSchema';
-import { UpdateCommentReqSchema } from 'src/api/routes/schemas/comment/UpdateCommentsReqSchema';
+import { deleteCommentSoft } from 'src/controllers/comment/delete-comment-soft';
 import { getPostService } from 'src/services/post/post.service';
-
-const CommentByIdParamsSchema = z.object({
-  postId: z.string().uuid(),
-  commentId: z.string().uuid()
-});
+import { z } from 'zod';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
   const postService = getPostService();
 
-  fastify.patch('/', {
+  fastify.delete('/', {
     schema: {
-      params: CommentByIdParamsSchema,
+      params: z.object({
+        commentId: z.string(),
+        postId: z.string()
+      }),
       response: {
-        200: GetCommentByIdRespSchema
-      },
-      body: UpdateCommentReqSchema
+        200: z.object({
+          success: z.boolean()
+        })
+      }
     },
     preHandler: [requirePermission('manage_comment', (req) => postService.checkIsCommentOwner(fastify, req))]
   }, (req) => {
-    return updateCommentById({
+    return deleteCommentSoft({
       commentRepo: fastify.repos.commentRepo,
-      commentId: req.params.commentId,
-      data: req.body
+      commentId: req.params.commentId
     });
   });
 };

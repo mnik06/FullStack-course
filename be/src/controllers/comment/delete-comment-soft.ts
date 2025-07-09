@@ -1,11 +1,11 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { HttpError } from 'src/api/errors/HttpError';
 
-export async function deleteComment(params: {
+export async function deleteCommentSoft(params: {
   commentRepo: ICommentRepo,
   commentId: string
 }) {
-  const isCommentFound = await params.commentRepo.deleteComment(params.commentId);
+  const isCommentFound = await params.commentRepo.deleteCommentSoft(params.commentId);
 
   if (!isCommentFound) {
     throw new HttpError({

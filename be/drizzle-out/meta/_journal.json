@@ -127,6 +127,13 @@
       "when": 1751819452494,
       "tag": "0017_cool_scream",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1752073543358,
+      "tag": "0018_cuddly_rictor",
+      "breakpoints": true
     }
   ]
 }

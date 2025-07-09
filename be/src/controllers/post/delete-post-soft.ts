@@ -1,11 +1,11 @@
 import { HttpError } from 'src/api/errors/HttpError';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 
-export async function deletePost(params: {
+export async function deletePostSoft(params: {
   postRepo: IPostRepo;
   postId: string;
 }) {
-  const isPostFound = await params.postRepo.deletePost(params.postId);
+  const isPostFound = await params.postRepo.deletePostSoft(params.postId);
 
   if (!isPostFound) {
     throw new HttpError({

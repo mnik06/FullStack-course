@@ -9,5 +9,6 @@ export interface ICommentRepo {
     id: string, 
     data: Partial<TComment>, 
   ): Promise<TComment | null>;
-  deleteComment(id: string): Promise<boolean>;
+  deleteCommentSoft(id: string): Promise<boolean>;
+  deleteCommentHard(id: string): Promise<boolean>;
 } 

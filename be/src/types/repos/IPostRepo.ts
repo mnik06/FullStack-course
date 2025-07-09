@@ -13,5 +13,6 @@ export interface IPostRepo {
     id: string, 
     data: Partial<TPost>
   ): Promise<TPostWithComments | null>;
-  deletePost(id: string): Promise<boolean>;
+  deletePostHard(id: string): Promise<boolean>;
+  deletePostSoft(id: string): Promise<boolean>;
 } 

@@ -1,4 +1,4 @@
-import { eq, getTableColumns } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, userTable } from 'src/services/drizzle/schema';
@@ -19,7 +19,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
           user: userTable
         })
         .from(commentTable)
-        .where(eq(commentTable.id, id))
+        .where(and(eq(commentTable.id, id), eq(commentTable.isDeleted, false)))
         .leftJoin(userTable, eq(commentTable.userId, userTable.id));
 
       return CommentSchema.parse(comment);
@@ -32,7 +32,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
           user: userTable
         })
         .from(commentTable)
-        .where(eq(commentTable.postId, postId))
+        .where(and(eq(commentTable.postId, postId), eq(commentTable.isDeleted, false)))
         .leftJoin(userTable, eq(commentTable.userId, userTable.id));
 
       return CommentSchema.array().parse(comments);
@@ -42,7 +42,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
       const [comment] = await db
         .update(commentTable)
         .set(data as TComment)
-        .where(eq(commentTable.id, id))
+        .where(and(eq(commentTable.id, id), eq(commentTable.isDeleted, false)))
         .returning();
 
       const [user] = await db
@@ -55,8 +55,18 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
       return comment ? CommentSchema.parse({ ...comment, user }) : null;
     },
 
-    async deleteComment(id) {
+    async deleteCommentHard(id) {
       const [comment] = await db.delete(commentTable).where(eq(commentTable.id, id)).returning();
+      return !!comment;
+    },
+
+    async deleteCommentSoft(id) {
+      const [comment] = await db
+        .update(commentTable)
+        .set({ isDeleted: true })
+        .where(eq(commentTable.id, id))
+        .returning();
+
       return !!comment;
     }
   };

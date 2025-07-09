@@ -61,6 +61,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         tsVectorSearchColumns: [postTable.description]
       });
       const tagFilters = getTagFilters(db, params.tagIds || []);
+      const isNotDeletedFilter = eq(postTable.isDeleted, false);
 
       const postsQb = db
         .select({
@@ -68,9 +69,17 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           totalCount: totalCountOver()
         })
         .from(postTable)
-        .where(and(searchFilters, ...numericFilters.whereFilters, tagFilters))
+        .where(and(
+          searchFilters,
+          tagFilters,
+          isNotDeletedFilter,
+          ...numericFilters.whereFilters
+        ))
         .leftJoin(userTable, eq(postTable.userId, userTable.id))
-        .leftJoin(commentTable, eq(postTable.id, commentTable.postId))
+        .leftJoin(
+          commentTable, 
+          and(eq(postTable.id, commentTable.postId), eq(commentTable.isDeleted, false))
+        )
         .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
         .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
         .groupBy(postTable.id, userTable.id)
@@ -105,14 +114,14 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
           .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
           .groupBy(postTable.id, userTable.id)
-          .where(eq(postTable.id, id)),
+          .where(and(eq(postTable.id, id), eq(postTable.isDeleted, false))),
         db
           .select({
             ...getTableColumns(commentTable),
             user: userTable
           })
           .from(commentTable)
-          .where(eq(commentTable.postId, id))
+          .where(and(eq(commentTable.postId, id), eq(commentTable.isDeleted, false)))
           .leftJoin(userTable, eq(commentTable.userId, userTable.id))
       ]);
 
@@ -130,7 +139,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       const [post] = await db
         .update(postTable)
         .set(data as TPost)
-        .where(eq(postTable.id, id))
+        .where(and(eq(postTable.id, id), eq(postTable.isDeleted, false)))
         .returning();
 
       if (!post) {
@@ -169,8 +178,22 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       });
     },
 
-    async deletePost(id) {
+    async deletePostHard(id) {
       const [post] = await db.delete(postTable).where(eq(postTable.id, id)).returning();
+      return !!post;
+    },
+
+    async deletePostSoft(id) {
+      const [post] = await db
+        .update(postTable)
+        .set({ isDeleted: true })
+        .where(eq(postTable.id, id))
+        .returning();
+
+      await db.update(commentTable)
+        .set({ isDeleted: true })
+        .where(eq(commentTable.postId, id));
+
       return !!post;
     }
   };
