@@ -29,16 +29,36 @@
         </el-tag>
       </div>
     </el-popover>
+
+    <AppAccess
+      :roles="['admin']"
+      :force-allow="props.isOwner"
+    >
+      <el-button
+        type="primary"
+        size="small"
+        link
+        @click="openEditModal"
+      >
+        Edit Tags
+      </el-button>
+    </AppAccess>
   </div>
 </template>
 
 <script lang="ts" setup>
+const emit = defineEmits<(e: 'tagsUpdated', tags: TTag[]) => void>()
+
 const props = withDefaults(defineProps<{
+  postId: string
   tags: TTag[]
   trim?: boolean
+  isOwner: boolean
 }>(), {
   trim: true
 })
+
+const { openModal } = useModals()
 
 const visibleTags = computed(() => {
   if (props.trim) {
@@ -55,5 +75,15 @@ const remainingTags = computed(() => {
 
   return []
 })
+
+function openEditModal () {
+  openModal('PostsTagsEditModal', {
+    postId: props.postId,
+    tags: props.tags,
+    onSave: (tags) => {
+      emit('tagsUpdated', tags)
+    }
+  })
+}
 </script>
 

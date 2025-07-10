@@ -2,6 +2,7 @@ const Components = {
   PostsUpsertModal: () => defineAsyncComponent(() => import('@/views/posts/components/PostsUpsertModal.vue')),
   UserInviteModal: () => defineAsyncComponent(() => import('@/views/admin/users/components/UsersInviteModal.vue')),
   TagsUpsertModal: () => defineAsyncComponent(() => import('@/views/admin/tags/components/TagsUpsertModal.vue')),
+  PostsTagsEditModal: () => defineAsyncComponent(() => import('@/views/posts/components/posts-tags/PostsTagsEditModal.vue')),
   PostsDeleteOptionsModal: () => defineAsyncComponent(() => import('@/views/posts/components/PostsDeleteOptionsModal.vue')),
   PostsCommentsDeleteOptionsModal: () => defineAsyncComponent(() => import('@/views/posts/components/posts-comments/PostsCommentsDeleteOptionsModal.vue'))
 }

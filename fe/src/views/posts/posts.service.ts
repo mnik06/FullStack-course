@@ -38,6 +38,10 @@ class PostsService {
   deleteCommentSoft (postId: string, commentId: string) {
     return useApiClient.delete('/api/posts/{postId}/comments/{commentId}/delete-soft/', { dynamicKeys: { postId, commentId } })
   }
+
+  editPostTags (postId: string, tagIds: string[]) {
+    return useApiClient.post('/api/posts/{postId}/edit-tags/', { tagIds }, { dynamicKeys: { postId } })
+  }
 }
 
 export const postsService = new PostsService()
