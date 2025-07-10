@@ -1,9 +1,10 @@
-import { TArchive, TArchiveEntityType } from 'src/types/archive/schemas/Archive';
+import { TArchive } from 'src/types/archive/schemas/Archive';
+import { TArchiveFilters } from 'src/types/archive/ArchiveFilters';
 
 export interface IArchiveRepo {
   createArchive(data: Partial<TArchive>): Promise<TArchive>;
   getArchiveById(id: string): Promise<TArchive | null>;
-  getArchivesByEntityType(entityType: TArchiveEntityType): Promise<TArchive[]>;
+  getArchives(filters?: TArchiveFilters): Promise<TArchive[]>;
   getArchiveByEntityId(entityId: string): Promise<TArchive | null>;
   deleteArchiveById(id: string): Promise<boolean>;
 }

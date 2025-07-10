@@ -22,11 +22,15 @@ export function getArchiveRepo(db: NodePgDatabase): IArchiveRepo {
       return ArchiveSchema.parse(archive);
     },
 
-    async getArchivesByEntityType(entityType) {
+    async getArchives(filters = {}) {
+      const entityTypeFilters = filters.entityType 
+        ? eq(archiveTable.entityType, filters.entityType) 
+        : undefined;
+
       const archives = await db
         .select()
         .from(archiveTable)
-        .where(eq(archiveTable.entityType, entityType));
+        .where(entityTypeFilters);
 
       return ArchiveSchema.array().parse(archives);
     },
