@@ -130,6 +130,44 @@ export interface paths {
       };
     };
   };
+  "/api/admin/users/{userId}/delete-hard/": {
+    delete: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/delete-soft/": {
+    delete: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/admin/users/{userId}/disable-user/": {
     post: {
       parameters: {
@@ -761,7 +799,11 @@ export interface paths {
       responses: {
         /** @description Default Response */
         200: {
-          content: never;
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
         };
       };
     };
@@ -776,7 +818,11 @@ export interface paths {
       responses: {
         /** @description Default Response */
         200: {
-          content: never;
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
         };
       };
     };

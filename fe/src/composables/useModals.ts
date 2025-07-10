@@ -3,8 +3,7 @@ const Components = {
   UserInviteModal: () => defineAsyncComponent(() => import('@/views/admin/users/components/UsersInviteModal.vue')),
   TagsUpsertModal: () => defineAsyncComponent(() => import('@/views/admin/tags/components/TagsUpsertModal.vue')),
   PostsTagsEditModal: () => defineAsyncComponent(() => import('@/views/posts/components/posts-tags/PostsTagsEditModal.vue')),
-  PostsDeleteOptionsModal: () => defineAsyncComponent(() => import('@/views/posts/components/PostsDeleteOptionsModal.vue')),
-  PostsCommentsDeleteOptionsModal: () => defineAsyncComponent(() => import('@/views/posts/components/posts-comments/PostsCommentsDeleteOptionsModal.vue'))
+  AppDeleteOptionsModal: () => defineAsyncComponent(() => import('@/components/AppDeleteOptionsModal.vue'))
 }
 
 type TComponentsType = typeof Components

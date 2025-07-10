@@ -73,10 +73,10 @@ const sortedComments = computed(() => {
 })
 
 function handleDeleteComment (commentId: string) {
-  openModal('PostsCommentsDeleteOptionsModal', {
-    postId: props.postId,
-    commentId,
-    onDelete: () => {
+  openModal('AppDeleteOptionsModal', {
+    deleteSoftHandler: () => postsService.deleteCommentSoft(props.postId, commentId),
+    deleteHardHandler: () => postsService.deleteCommentHard(props.postId, commentId),
+    onDeleted: () => {
       comments.value = comments.value.filter((comment) => comment.id !== commentId)
     }
   })

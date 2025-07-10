@@ -1,19 +1,19 @@
 <template>
   <el-dialog
-    v-model="isOpen.PostsDeleteOptionsModal"
+    v-model="isOpen.AppDeleteOptionsModal"
     title="Choose delete option:"
     width="400"
   >
     <div>
-      <p><b>Hard delete</b> - delete post from database</p>
-      <p><b>Soft delete</b> - keep post in database but set deletedAt field</p>
+      <p><b>Hard delete</b> - delete item from database</p>
+      <p><b>Soft delete</b> - keep item in database but set deletedAt field as current date</p>
     </div>
 
     <div class="flex items-center justify-center gap-2 mt-5">
       <el-button
         type="danger"
         :loading="isDeleting"
-        @click="handleDeletePost('hard')"
+        @click="handleDelete('hard')"
       >
         Hard delete
       </el-button>
@@ -21,7 +21,7 @@
       <el-button
         type="danger"
         :loading="isDeleting"
-        @click="handleDeletePost('soft')"
+        @click="handleDelete('soft')"
       >
         Soft delete
       </el-button>
@@ -33,27 +33,28 @@
 import { notificationHandler } from '@/core/helpers'
 
 const props = defineProps<{
-  postId: string
-  onDelete: () => void
+  deleteSoftHandler: () => Promise<any>
+  deleteHardHandler: () => Promise<any>
+  onDeleted: () => void
 }>()
 
 const { isOpen, closeModal } = useModals()
 
 const isDeleting = ref(false)
 
-function handleDeletePost (option: 'hard' | 'soft') {
+function handleDelete (option: 'hard' | 'soft') {
   const methodByOption = {
-    hard: postsService.deletePostHard,
-    soft: postsService.deletePostSoft
+    hard: props.deleteHardHandler,
+    soft: props.deleteSoftHandler
   }
 
   isDeleting.value = true
 
-  methodByOption[option](props.postId)
+  methodByOption[option]()
     .then(() => {
-      notificationHandler({ text: 'Post deleted successfully', type: 'success' })
-      closeModal('PostsDeleteOptionsModal')
-      props.onDelete()
+      notificationHandler({ text: 'Deleted successfully', type: 'success' })
+      closeModal('AppDeleteOptionsModal')
+      props.onDeleted()
     })
     .finally(() => {
       isDeleting.value = false

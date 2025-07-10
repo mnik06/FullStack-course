@@ -131,9 +131,10 @@ async function toggleComments () {
 }
 
 function handleDeletePost () {
-  openModal('PostsDeleteOptionsModal', {
-    postId: props.post.id,
-    onDelete: () => {
+  openModal('AppDeleteOptionsModal', {
+    deleteSoftHandler: () => postsService.deletePostSoft(props.post.id),
+    deleteHardHandler: () => postsService.deletePostHard(props.post.id),
+    onDeleted: () => {
       emit('postDeleted', props.post)
     }
   })
