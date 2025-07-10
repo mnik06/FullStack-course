@@ -40,6 +40,7 @@
 import IconPost from '~icons/icon/post'
 import IconTag from '~icons/icon/tag'
 import IconUser from '~icons/icon/user'
+import IconArchive from '~icons/icon/archive'
 
 interface INavigationItem {
   label: string
@@ -64,6 +65,12 @@ const navigationItems: INavigationItem[] = [
     label: 'Tags',
     routeName: 'tags',
     icon: IconTag,
+    roles: ['admin']
+  },
+  {
+    label: 'Archives',
+    routeName: 'archives',
+    icon: IconArchive,
     roles: ['admin']
   }
 ]

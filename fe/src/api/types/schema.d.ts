@@ -15,6 +15,32 @@ export interface paths {
       };
     };
   };
+  "/api/admin/archives/": {
+    get: {
+      parameters: {
+        query?: {
+          entityType?: "post" | "comment" | "user";
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                id: string;
+                /** Format: date-time */
+                deletedAt: string;
+                deletedBy: string;
+                entityId: string;
+                /** @enum {string} */
+                entityType: "post" | "comment" | "user";
+                data: Record<string, never>;
+              })[];
+          };
+        };
+      };
+    };
+  };
   "/api/admin/tags/": {
     post: {
       requestBody: {
