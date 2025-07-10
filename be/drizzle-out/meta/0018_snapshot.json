@@ -1,5 +1,5 @@
 {
-  "id": "32e22ded-d119-4886-8797-7962b2dd427a",
+  "id": "6fbb00a2-ca71-4df1-8730-09a6a3a18b67",
   "prevId": "48f523b4-8e52-4608-8b8f-cfce30557aa8",
   "version": "7",
   "dialect": "postgresql",
@@ -33,12 +33,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "is_deleted": {
-          "name": "is_deleted",
-          "type": "boolean",
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
-          "default": false
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -125,12 +124,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "is_deleted": {
-          "name": "is_deleted",
-          "type": "boolean",
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
-          "default": false
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -378,12 +376,11 @@
           "notNull": false,
           "default": false
         },
-        "is_deleted": {
-          "name": "is_deleted",
-          "type": "boolean",
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
-          "default": false
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

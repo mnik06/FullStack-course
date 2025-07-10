@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, exists, getTableColumns, inArray } from 'drizzle-orm';
+import { and, asc, count, desc, eq, exists, getTableColumns, inArray, isNull } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable, postToTagTable, tagTable, userTable } from 'src/services/drizzle/schema';
@@ -11,6 +11,14 @@ import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments'
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 import { getSearchService } from 'src/services/search/search.service';
 import { jsonAggBuildObject, totalCountOver } from 'src/repos/common/helpers';
+
+const getIsPostNotDeletedFilter = () => {
+  return isNull(postTable.deletedAt);
+};
+
+const getIsCommentNotDeletedFilter = () => {
+  return isNull(commentTable.deletedAt);
+};
 
 const getTagFilters = (db: NodePgDatabase, tagIds: string[]) => {
   return tagIds?.length
@@ -61,7 +69,8 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         tsVectorSearchColumns: [postTable.description]
       });
       const tagFilters = getTagFilters(db, params.tagIds || []);
-      const isNotDeletedFilter = eq(postTable.isDeleted, false);
+      const isPostNotDeletedFilter = getIsPostNotDeletedFilter();
+      const isCommentNotDeletedFilter = getIsCommentNotDeletedFilter();
 
       const postsQb = db
         .select({
@@ -72,13 +81,13 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .where(and(
           searchFilters,
           tagFilters,
-          isNotDeletedFilter,
+          isPostNotDeletedFilter,
           ...numericFilters.whereFilters
         ))
         .leftJoin(userTable, eq(postTable.userId, userTable.id))
         .leftJoin(
           commentTable, 
-          and(eq(postTable.id, commentTable.postId), eq(commentTable.isDeleted, false))
+          and(eq(postTable.id, commentTable.postId), isCommentNotDeletedFilter)
         )
         .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
         .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
@@ -102,6 +111,9 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async getPostById(id) {
+      const isPostNotDeletedFilter = getIsPostNotDeletedFilter();
+      const isCommentNotDeletedFilter = getIsCommentNotDeletedFilter();
+
       const [[post], comments] = await Promise.all([
         db
           .select({
@@ -114,14 +126,14 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
           .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
           .groupBy(postTable.id, userTable.id)
-          .where(and(eq(postTable.id, id), eq(postTable.isDeleted, false))),
+          .where(and(eq(postTable.id, id), isPostNotDeletedFilter)),
         db
           .select({
             ...getTableColumns(commentTable),
             user: userTable
           })
           .from(commentTable)
-          .where(and(eq(commentTable.postId, id), eq(commentTable.isDeleted, false)))
+          .where(and(eq(commentTable.postId, id), isCommentNotDeletedFilter))
           .leftJoin(userTable, eq(commentTable.userId, userTable.id))
       ]);
 
@@ -136,10 +148,12 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async updatePostById(id, data) {
+      const isPostNotDeletedFilter = getIsPostNotDeletedFilter();
+
       const [post] = await db
         .update(postTable)
         .set(data as TPost)
-        .where(and(eq(postTable.id, id), eq(postTable.isDeleted, false)))
+        .where(and(eq(postTable.id, id), isPostNotDeletedFilter))
         .returning();
 
       if (!post) {
@@ -186,12 +200,12 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     async deletePostSoft(id) {
       const [post] = await db
         .update(postTable)
-        .set({ isDeleted: true })
+        .set({ deletedAt: new Date() })
         .where(eq(postTable.id, id))
         .returning();
 
       await db.update(commentTable)
-        .set({ isDeleted: true })
+        .set({ deletedAt: new Date() })
         .where(eq(commentTable.postId, id));
 
       return !!post;

@@ -6,7 +6,7 @@
   >
     <div>
       <p><b>Hard delete</b> - delete post from database</p>
-      <p><b>Soft delete</b> - keep post in database but set isDeleted flag to true</p>
+      <p><b>Soft delete</b> - keep post in database but set deletedAt field</p>
     </div>
 
     <div class="flex items-center justify-center gap-2 mt-5">

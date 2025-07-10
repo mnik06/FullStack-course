@@ -7,7 +7,7 @@ export const postTable = pgTable('posts', {
   title: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 1000 }),
   readingTime: integer().notNull(),
-  isDeleted: boolean().default(false),
+  deletedAt: timestamp(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 }, (table) => {
@@ -22,7 +22,7 @@ export const commentTable = pgTable('comments', {
   userId: uuid().references(() => userTable.id, { onDelete: 'cascade' }).notNull(),
   postId: uuid().references(() => postTable.id, { onDelete: 'cascade' }).notNull(),
   text: varchar({ length: 255 }).notNull(),
-  isDeleted: boolean().default(false),
+  deletedAt: timestamp(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
@@ -34,7 +34,7 @@ export const userTable = pgTable('users', {
   subId: varchar({ length: 255 }).notNull(),
   role: varchar({ length: 20 }).default('user').notNull(),
   isPending: boolean().default(false),
-  isDeleted: boolean().default(false),
+  deletedAt: timestamp(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow().$onUpdate(() => new Date())
 });
