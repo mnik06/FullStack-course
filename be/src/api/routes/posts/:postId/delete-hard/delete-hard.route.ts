@@ -5,6 +5,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { deletePostHard } from 'src/controllers/post/delete-post-hard';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
 import { getPostService } from 'src/services/post/post.service';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -25,7 +26,9 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return deletePostHard({
       postRepo: fastify.repos.postRepo,
-      postId: req.params.postId
+      postId: req.params.postId,
+      archiveRepo: fastify.repos.archiveRepo,
+      user: req.user as TUserProfile
     });
   });
 };

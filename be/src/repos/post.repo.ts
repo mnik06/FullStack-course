@@ -194,6 +194,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
 
     async deletePostHard(id) {
       const [post] = await db.delete(postTable).where(eq(postTable.id, id)).returning();
+
       return !!post;
     },
 

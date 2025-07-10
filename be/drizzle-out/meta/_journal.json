@@ -134,6 +134,13 @@
       "when": 1752138928813,
       "tag": "0018_light_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1752150116571,
+      "tag": "0019_pale_shen",
+      "breakpoints": true
     }
   ]
 }
