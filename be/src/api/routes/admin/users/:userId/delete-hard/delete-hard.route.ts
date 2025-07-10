@@ -1,33 +1,32 @@
 import { z } from 'zod';
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
-
-import { deletePostSoft } from 'src/controllers/post/delete-post-soft';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
-import { getPostService } from 'src/services/post/post.service';
+
+import { deleteUserHard } from 'src/controllers/admin/users/delete-user-hard';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
-  const postService = getPostService();
-  
+
   fastify.delete('/', {
     schema: {
-      params: z.object({
-        postId: z.string()
-      }),
       response: {
         200: z.object({
           success: z.boolean()
         })
-      }
+      },
+      params: z.object({
+        userId: z.string()
+      })
     },
-    preHandler: [requirePermission('manage_post', (req) => postService.checkIsPostOwner(fastify, req))]
+    preHandler: [requirePermission('manage_users')]
   }, (req) => {
-    return deletePostSoft({
-      postRepo: fastify.repos.postRepo,
-      postId: req.params.postId
+    return deleteUserHard({ 
+      userProfileRepo: fastify.repos.userProfileRepo,
+      identityService: fastify.identityService,
+      userId: req.params.userId
     });
   });
 };
 
-export default routes;
+export default routes; 

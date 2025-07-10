@@ -87,6 +87,21 @@ export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
       });
 
       return { data: UserProfileSchema.array().parse(users), meta: paginationMeta };
+    },
+
+    async deleteUserSoft(id) {
+      const [user] = await db
+        .update(userTable)
+        .set({ deletedAt: new Date() })
+        .where(eq(userTable.id, id))
+        .returning();
+
+      return !!user;
+    },
+
+    async deleteUserHard(id) {
+      const [user] = await db.delete(userTable).where(eq(userTable.id, id)).returning();
+      return !!user;
     }
   };
 } 

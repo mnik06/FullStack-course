@@ -14,7 +14,12 @@ const routes: FastifyPluginAsync = async function (f) {
     schema: {
       params: z.object({
         postId: z.string()
-      })
+      }),
+      response: {
+        200: z.object({
+          success: z.boolean()
+        })
+      }
     },
     preHandler: [requirePermission('manage_post', (req) => postService.checkIsPostOwner(fastify, req))]
   }, (req) => {

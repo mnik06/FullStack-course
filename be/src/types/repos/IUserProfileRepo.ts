@@ -9,4 +9,6 @@ export interface IUserProfileRepo {
   getUserProfileBySubId(subId: string): Promise<TUserProfile | null>;
   getUserProfileByEmail(email: string): Promise<TUserProfile | null>;
   getAllUserProfiles(filters: TUserProfileFilters): Promise<TPaginationResponse<TUserProfile[]>>;
+  deleteUserSoft(id: string): Promise<boolean>;
+  deleteUserHard(id: string): Promise<boolean>;
 }
