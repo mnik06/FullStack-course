@@ -50,7 +50,12 @@
           </span>
         </div>
 
-        <PostsTags :tags="post.tags" />
+        <PostsTags
+          :post-id="post.id"
+          :tags="post.tags"
+          :is-owner="post.user.id === authStore.user.id"
+          @tags-updated="handleTagsUpdated"
+        />
       </div>
 
       <p v-if="showFull">{{ post.description }}</p>
@@ -109,7 +114,7 @@
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
 
-const emit = defineEmits(['editPost', 'postDeleted'])
+const emit = defineEmits(['editPost', 'postDeleted', 'updatePost'])
 const props = defineProps<{
   post: TPost | TPosts[number]
   showFull?: boolean
@@ -140,6 +145,13 @@ function handleDeletePost () {
       notificationHandler({ text: 'Post deleted successfully', type: 'success' })
       emit('postDeleted', props.post)
     })
+}
+
+function handleTagsUpdated (tags: TTag[]) {
+  emit('updatePost', {
+    ...props.post,
+    tags
+  })
 }
 
 function fetchPostComments () {

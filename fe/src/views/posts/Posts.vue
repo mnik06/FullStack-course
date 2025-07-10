@@ -13,12 +13,13 @@
       <div class="flex flex-col flex-1 container container--small">
         <div v-if="posts.length" class="flex-1 flex flex-col items-center gap-5 !pr-0">
           <PostItem
-            v-for="(post) in posts"
+            v-for="(post, idx) in posts"
             :key="post.id"
             :post="post"
             class="w-full"
             @edit-post="handleOpenUpsertModal"
             @post-deleted="fetchPosts"
+            @update-post="posts[idx] = $event"
           />
         </div>
 
@@ -49,6 +50,7 @@ import { localStorageService } from '@/services/local-storage.service'
 const route = useRoute()
 
 const { openModal } = useModals()
+const postsStore = usePostsStore()
 
 const loading = ref(false)
 const posts = ref<TPosts>([])
@@ -106,4 +108,8 @@ function handleOpenUpsertModal (postToEdit?: TPost) {
 
 watch([sorting, pagination, filters], fetchPosts, { deep: true, immediate: true })
 watch(search, debouncedFetchPosts)
+
+onMounted(() => {
+  postsStore.fetchAvailableTags()
+})
 </script>

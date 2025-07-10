@@ -3,16 +3,17 @@
     v-model="selectedTags"
     placeholder="Select tags"
     loading-text="Loading tags..."
-    :loading="tagsLoading"
+    :loading="postsStore.availableTagsLoading"
     :max-collapse-tags="2"
     class="!max-w-[280px]"
     collapse-tags
+    collapse-tags-tooltip
     multiple
     filterable
     fit-input-width
   >
     <el-option
-      v-for="tag in tags"
+      v-for="tag in postsStore.availableTags"
       :key="tag.id"
       :label="tag.name"
       :value="tag.id"
@@ -21,20 +22,6 @@
 </template>
 
 <script lang="ts" setup>
-const selectedTags = defineModel<string[]>()
-
-const tags = ref<TTag[]>([])
-const tagsLoading = ref(false)
-
-function fetchTags (search?: string) {
-  tagsLoading.value = true
-
-  tagsService.getTags({ search })
-    .then((res) => { tags.value = res })
-    .finally(() => { tagsLoading.value = false })
-}
-
-onMounted(() => {
-  fetchTags()
-})
+const selectedTags = defineModel<string[]>({ required: true })
+const postsStore = usePostsStore()
 </script>

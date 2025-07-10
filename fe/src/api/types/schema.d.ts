@@ -746,6 +746,37 @@ export interface paths {
       };
     };
   };
+  "/api/posts/{postId}/edit-tags/": {
+    post: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            tagIds: string[];
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              }[];
+          };
+        };
+      };
+    };
+  };
   "/api/tags/": {
     get: {
       parameters: {
