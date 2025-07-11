@@ -42,10 +42,6 @@ class PostsService {
   editPostTags (postId: string, tagIds: string[]) {
     return useApiClient.post('/api/posts/{postId}/edit-tags/', { tagIds }, { dynamicKeys: { postId } })
   }
-
-  restorePostFromArchive (postId: string) {
-    return useApiClient.post('/api/posts/{postId}/restore-from-archive/', undefined, { dynamicKeys: { postId } })
-  }
 }
 
 export const postsService = new PostsService()

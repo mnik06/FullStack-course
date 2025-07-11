@@ -65,9 +65,8 @@
 import { notificationHandler } from '@/core/helpers'
 
 const emit = defineEmits(['updated'])
-const props = defineProps<{
+defineProps<{
   archives: TArchive[]
-  restoreArchive: (id: string) => Promise<any>
 }>()
 
 const { openModal } = useModals()
@@ -84,6 +83,13 @@ const headers: IAppTableHeader[] = [
   { property: 'actions', width: 300, align: 'right' }
 ]
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const restoreHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
+  post: (id) => archivesService.restorePostFromArchive(id),
+  comment: (id) => archivesService.restoreCommentFromArchive(id)
+}
+
 function prettifyEntityName (entity: TArchiveEntity) {
   const titleByType: Record<TArchiveEntity, string> = {
     post: 'Post',
@@ -97,7 +103,7 @@ function prettifyEntityName (entity: TArchiveEntity) {
 function handleRestore (row: TArchive) {
   loading.value.restore = true
 
-  return props.restoreArchive(row.entityId)
+  return restoreHandlerByType[row.entityType](row.id)
     .then(() => {
       notificationHandler({ text: 'Archive restored successfully', type: 'success' })
       emit('updated')

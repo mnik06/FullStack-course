@@ -62,6 +62,44 @@ export interface paths {
       };
     };
   };
+  "/api/admin/archives/{archiveId}/restore-comment/": {
+    post: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/{archiveId}/restore-post/": {
+    post: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/admin/tags/": {
     post: {
       requestBody: {
@@ -366,7 +404,7 @@ export interface paths {
                   /** Format: uuid */
                   id: string;
                   title: string;
-                  description?: string | null;
+                  description: string;
                   readingTime: number;
                   /** Format: date-time */
                   updatedAt: string;
@@ -411,11 +449,15 @@ export interface paths {
       };
     };
     post: {
-      requestBody: {
+      requestBody?: {
         content: {
           "application/json": {
-            title: string;
+            title?: string;
             description?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
             tagIds?: string[];
           };
         };
@@ -428,7 +470,7 @@ export interface paths {
               /** Format: uuid */
               id: string;
               title: string;
-              description?: string | null;
+              description: string;
               readingTime: number;
               /** Format: date-time */
               updatedAt: string;
@@ -506,7 +548,7 @@ export interface paths {
               /** Format: uuid */
               id: string;
               title: string;
-              description?: string | null;
+              description: string;
               readingTime: number;
               /** Format: date-time */
               updatedAt: string;
@@ -574,11 +616,15 @@ export interface paths {
           postId: string;
         };
       };
-      requestBody: {
+      requestBody?: {
         content: {
           "application/json": {
-            title: string;
+            title?: string;
             description?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
             tagIds?: string[];
           };
         };
@@ -591,7 +637,7 @@ export interface paths {
               /** Format: uuid */
               id: string;
               title: string;
-              description?: string | null;
+              description: string;
               readingTime: number;
               /** Format: date-time */
               updatedAt: string;
@@ -702,10 +748,14 @@ export interface paths {
           postId: string;
         };
       };
-      requestBody: {
+      requestBody?: {
         content: {
           "application/json": {
-            text: string;
+            text?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
           };
         };
       };
@@ -905,30 +955,12 @@ export interface paths {
       };
     };
   };
-  "/api/posts/{postId}/restore-from-archive/": {
-    post: {
-      parameters: {
-        path: {
-          postId: string;
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": {
-              success: boolean;
-            };
-          };
-        };
-      };
-    };
-  };
   "/api/tags/": {
     get: {
       parameters: {
         query?: {
           search?: string;
+          tagIds?: string[];
         };
       };
       responses: {

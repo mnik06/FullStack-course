@@ -18,7 +18,6 @@
       >
         <ArchiveTable
           :archives="archives"
-          :restore-archive="restoreHandlerByType[tab.value]"
           @updated="fetchArchives"
         />
       </el-tab-pane>
@@ -39,14 +38,6 @@ const tabs: ITab[] = [
   { label: 'Comments', value: 'comment' },
   { label: 'Users', value: 'user' }
 ]
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const restoreHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
-  post: (id) => postsService.restorePostFromArchive(id)
-  // comment: (id) => commentsService.restoreCommentFromArchive(id),
-  // user: (id) => usersService.restoreUserFromArchive(id)
-}
 
 const route = useRoute()
 
