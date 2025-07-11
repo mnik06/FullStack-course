@@ -1,6 +1,5 @@
 <template>
   <div
-    v-loading.fullscreen="loading"
     class="container py-10"
   >
     <h2 class="text-2xl font-bold">Archives</h2>
@@ -17,6 +16,7 @@
         :label="tab.label"
       >
         <ArchiveTable
+          v-loading="loading"
           :archives="archives"
           @updated="fetchArchives"
         />
