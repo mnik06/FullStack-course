@@ -34,8 +34,29 @@ export interface paths {
                 entityId: string;
                 /** @enum {string} */
                 entityType: "post" | "comment" | "user";
-                data: Record<string, never>;
+                data: {
+                  [key: string]: unknown;
+                };
               })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/{archiveId}/": {
+    delete: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
           };
         };
       };
@@ -879,6 +900,25 @@ export interface paths {
                 /** Format: date-time */
                 updatedAt: string;
               }[];
+          };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/restore-from-archive/": {
+    post: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
           };
         };
       };

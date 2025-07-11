@@ -1,6 +1,6 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { HttpError } from 'src/api/errors/HttpError';
-import { createNewArchive } from '../common/create-new-archive';
+import { createNewArchive } from 'src/controllers/common/create-new-archive';
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 

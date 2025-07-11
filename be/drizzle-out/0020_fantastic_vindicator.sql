@@ -1,0 +1,1 @@
+ALTER TABLE "archives" ADD CONSTRAINT "archives_entityId_unique" UNIQUE("entity_id");

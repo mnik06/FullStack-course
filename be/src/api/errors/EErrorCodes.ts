@@ -6,7 +6,8 @@ export enum EErrorCodes {
   INVITE_EXPIRED = 1004,
   USER_ALREADY_ACTIVATED = 1005,
   USER_NOT_FOUND = 1006,
-  USER_ALREADY_INVITED = 1007
+  USER_ALREADY_INVITED = 1007,
+  POST_OWNER_NOT_FOUND = 1008
 }
 
 export function getErrorCodesDescription() {

@@ -1,14 +1,14 @@
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
-import { createPost } from 'src/controllers/post/create-post';
+import { createPostWithTags } from 'src/controllers/post/create-post-with-tags';
 import { getPosts } from 'src/controllers/post/get-posts';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 import { GetPostByIdRespSchema } from 'src/api/routes/schemas/post/GetPostByIdRespSchema';
 import { GetPostsRespSchema } from 'src/api/routes/schemas/post/GetPostsRespSchema';
 import { PostFiltersSchema } from 'src/types/post/schemas/PostFilters';
-import { UpsertPostReqSchema } from '../schemas/post/UpsertPostReqSchema';
+import { UpsertPostReqSchema } from 'src/api/routes/schemas/post/UpsertPostReqSchema';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -35,7 +35,7 @@ const routes: FastifyPluginAsync = async function (f) {
       body: UpsertPostReqSchema
     }
   }, (req) => {
-    return createPost({
+    return createPostWithTags({
       postRepo: fastify.repos.postRepo,
       postToTagRepo: fastify.repos.postToTagRepo,
       data: req.body,

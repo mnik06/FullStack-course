@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
-import { createComment } from 'src/controllers/comment/create-comment';
+import { createNewComment } from 'src/controllers/comment/create-comment';
 import { getCommentsByPostId } from 'src/controllers/comment/get-comments-by-post-id';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
@@ -40,13 +40,10 @@ const routes: FastifyPluginAsync = async function (f) {
       }
     }
   }, (req) => {
-    return createComment({
+    return createNewComment({
       commentRepo: fastify.repos.commentRepo,
-      data: {
-        ...req.body,
-        postId: req.params.postId,
-        userId: req.user?.id as string
-      },
+      data: req.body,
+      postId: req.params.postId,
       user: req.user as TUserProfile
     });
   });

@@ -16,7 +16,11 @@
         :name="tab.value"
         :label="tab.label"
       >
-        <ArchiveTable :archives="archives" />
+        <ArchiveTable
+          :archives="archives"
+          :restore-archive="restoreHandlerByType[tab.value]"
+          @restored="fetchArchives"
+        />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -30,17 +34,25 @@ interface ITab {
   value: TArchiveEntity
 }
 
-const route = useRoute()
-
-const loading = ref(false)
-const archives = ref<TArchive[]>([])
-const activeTab = ref<TArchiveEntity>(route.query.activeTab as TArchiveEntity || 'post')
-
 const tabs: ITab[] = [
   { label: 'Posts', value: 'post' },
   { label: 'Comments', value: 'comment' },
   { label: 'Users', value: 'user' }
 ]
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const restoreHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
+  post: (id) => postsService.restorePostFromArchive(id)
+  // comment: (id) => commentsService.restoreCommentFromArchive(id),
+  // user: (id) => usersService.restoreUserFromArchive(id)
+}
+
+const route = useRoute()
+
+const loading = ref(false)
+const archives = ref<TArchive[]>([])
+const activeTab = ref<TArchiveEntity>(route.query.activeTab as TArchiveEntity || tabs[0].value)
 
 function onTabChange () {
   archives.value = []

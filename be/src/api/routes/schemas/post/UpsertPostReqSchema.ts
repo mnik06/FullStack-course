@@ -1,9 +1,6 @@
 import { z } from 'zod';
+import { PostUpsertData } from 'src/types/post/schemas/PostUpsertData';
 
-export const UpsertPostReqSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
-  tagIds: z.array(z.string()).optional()
-}); 
+export const UpsertPostReqSchema = PostUpsertData.extend({});
 
 export type TUpsertPostReq = z.infer<typeof UpsertPostReqSchema>;

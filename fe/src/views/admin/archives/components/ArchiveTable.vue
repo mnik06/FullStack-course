@@ -25,37 +25,62 @@
     </template>
 
     <template #actions="{ row }">
-      <el-button
-        type="primary"
-        size="small"
-        @click="handleRestore(row)"
+      <el-popconfirm
+        title="Are you sure you want to restore this archive?"
+        width="250"
+        :icon="false"
+        @confirm="handleRestore(row)"
       >
-        Restore
-      </el-button>
+        <template #reference>
+          <el-button
+            type="primary"
+            size="small"
+            :loading="loading.restore"
+          >
+            Restore
+          </el-button>
+        </template>
+      </el-popconfirm>
 
-      <el-button
-        type="danger"
-        size="small"
-        @click="handleDelete(row)"
+      <el-popconfirm
+        title="Are you sure you want to delete this archive?"
+        @confirm="handleDelete(row)"
       >
-        Delete permanently
-      </el-button>
+        <template #reference>
+          <el-button
+            type="danger"
+            size="small"
+            :loading="loading.delete"
+          >
+            Delete permanently
+          </el-button>
+        </template>
+      </el-popconfirm>
     </template>
   </AppTable>
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+import { notificationHandler } from '@/core/helpers'
+
+const emit = defineEmits(['restored'])
+const props = defineProps<{
   archives: TArchive[]
+  restoreArchive: (id: string) => Promise<any>
 }>()
 
 const { openModal } = useModals()
+
+const loading = ref({
+  restore: false,
+  delete: false
+})
 
 const headers: IAppTableHeader[] = [
   { label: 'Entity', property: 'entity' },
   { label: 'Deleted At', property: 'deletedAt' },
   { label: 'Data', property: 'data' },
-  { property: 'actions', width: 250, align: 'right' }
+  { property: 'actions', width: 300, align: 'right' }
 ]
 
 function prettifyEntityName (entity: TArchiveEntity) {
@@ -68,12 +93,25 @@ function prettifyEntityName (entity: TArchiveEntity) {
   return titleByType[entity]
 }
 
-async function handleRestore (row: TArchive) {
-  console.log(row)
+function handleRestore (row: TArchive) {
+  loading.value.restore = true
+
+  return props.restoreArchive(row.entityId)
+    .then(() => {
+      notificationHandler({ text: 'Archive restored successfully', type: 'success' })
+      emit('restored')
+    })
+    .finally(() => { loading.value.restore = false })
 }
 
-async function handleDelete (row: TArchive) {
-  console.log(row)
+function handleDelete (row: TArchive) {
+  loading.value.delete = true
+
+  return archivesService.deleteArchive(row.id)
+    .then(() => {
+      notificationHandler({ text: 'Archive deleted successfully', type: 'success' })
+    })
+    .finally(() => { loading.value.delete = false })
 }
 
 function handleViewData (row: TArchive) {

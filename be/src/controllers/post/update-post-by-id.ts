@@ -17,7 +17,12 @@ export async function updatePostById(params: {
     params.postId,
     {
       ...postData,
-      readingTime: postService.calculateReadingTime(postData)
+      createdAt: postData.createdAt ? new Date(postData.createdAt) : undefined,
+      updatedAt: postData.updatedAt ? new Date(postData.updatedAt) : undefined,
+      readingTime: postService.calculateReadingTime({
+        title: postData.title || '',
+        description: postData.description || ''
+      })
     }
   );
 

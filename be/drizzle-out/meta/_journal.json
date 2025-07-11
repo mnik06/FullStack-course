@@ -141,6 +141,13 @@
       "when": 1752150116571,
       "tag": "0019_pale_shen",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1752226389117,
+      "tag": "0020_fantastic_vindicator",
+      "breakpoints": true
     }
   ]
 }

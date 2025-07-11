@@ -1,13 +1,13 @@
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { getPostService } from 'src/services/post/post.service';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
-import { TUpsertPostReq } from 'src/api/routes/schemas/post/UpsertPostReqSchema';
 import { IPostToTagRepo } from 'src/types/repos/IPostToTagRepo';
+import { TPostUpsertData } from 'src/types/post/schemas/PostUpsertData';
 
-export async function createPost(params: {
+export async function createPostWithTagsHelper(params: {
   postRepo: IPostRepo;
   postToTagRepo: IPostToTagRepo;
-  data: TUpsertPostReq;
+  data: TPostUpsertData;
   user: TUserProfile;
 }) {
   const postService = getPostService();
@@ -15,8 +15,14 @@ export async function createPost(params: {
 
   const post = await params.postRepo.createPost({
     ...postData,
-    readingTime: postService.calculateReadingTime(postData)
-  }, params.user);
+    userId: params.user.id,
+    createdAt: postData.createdAt ? new Date(postData.createdAt) : undefined,
+    updatedAt: postData.updatedAt ? new Date(postData.updatedAt) : undefined,
+    readingTime: postService.calculateReadingTime({
+      title: postData.title || '',
+      description: postData.description || ''
+    })
+  });
 
   if (tagIds) {
     const tags = await params.postToTagRepo.updateTagsForPost(post.id, tagIds);

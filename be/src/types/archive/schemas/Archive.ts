@@ -9,6 +9,6 @@ export const ArchiveSchema = z.object({
   deletedBy: z.string(),
   entityId: z.string(),
   entityType: ArchiveEntityType,
-  data: z.object({})
+  data: z.record(z.string(), z.any())
 });
 export type TArchive = z.infer<typeof ArchiveSchema>;

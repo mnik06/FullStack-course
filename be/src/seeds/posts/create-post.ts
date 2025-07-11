@@ -1,7 +1,7 @@
 import { fakerEN as faker } from '@faker-js/faker';
 import { createReadlineInterface, getNumberInput, getDbConnection, executeSeed } from '../seeds.utils';
 import { getPostRepo } from 'src/repos/post.repo';
-import { createPost } from 'src/controllers/post/create-post';
+import { createPost } from 'src/controllers/post/create-post-with-tags';
 
 async function getInput(): Promise<number> {
   const rl = createReadlineInterface();

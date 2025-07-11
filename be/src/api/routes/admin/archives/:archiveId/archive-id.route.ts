@@ -1,25 +1,28 @@
+import { z } from 'zod';
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
-import { getArchives } from 'src/controllers/archive/get-archives';
-import { ArchiveFiltersSchema } from 'src/types/archive/ArchiveFilters';
-import { GetArchiveRespSchema } from 'src/api/routes/schemas/archive/GetArchiveRespSchema';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
+import { deleteArchive } from 'src/controllers/archive/delete-archive';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
 
-  fastify.get('/', {
+  fastify.delete('/', {
     schema: {
-      querystring: ArchiveFiltersSchema,
+      params: z.object({
+        archiveId: z.string()
+      }),
       response: {
-        200: GetArchiveRespSchema
+        200: z.object({
+          success: z.boolean()
+        })
       }
     },
     preHandler: [requirePermission('manage_archive')]
   }, (req) => {
-    return getArchives({
+    return deleteArchive({
       archiveRepo: fastify.repos.archiveRepo,
-      query: req.query
+      archiveId: req.params.archiveId
     });
   });
 };
