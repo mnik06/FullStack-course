@@ -1,0 +1,11 @@
+@use "element-plus/theme-chalk/src/dialog";
+
+.el-dialog {
+  &.full-height {
+    @apply flex flex-col h-[94vh] mt-[3vh] mb-[3vh] #{!important};
+
+    .el-dialog__body {
+      @apply flex-1 overflow-hidden;
+    }
+  }
+}

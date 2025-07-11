@@ -35,7 +35,7 @@
         </el-button>
 
         <el-popconfirm
-          title="Are you sure to delete this tag?"
+          title="Are you sure you want to delete this tag?"
           width="200"
           @confirm="deleteTag(row.id)"
         >
