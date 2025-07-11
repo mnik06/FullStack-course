@@ -24,6 +24,11 @@ export async function createPostWithTagsHelper(params: {
     })
   });
 
+  // Returns null if the post owner is not found
+  if (!post) {
+    return null;
+  }
+
   if (tagIds) {
     const tags = await params.postToTagRepo.updateTagsForPost(post.id, tagIds);
 

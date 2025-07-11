@@ -12,8 +12,15 @@ const getIsCommentNotDeletedFilter = () => {
 export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
   return {
     async createComment(data) {
+      const [user] = await db.select()
+        .from(userTable)
+        .where(eq(userTable.id, data.userId as string));
+
+      if (!user) {
+        return null;
+      }
+
       const [comment] = await db.insert(commentTable).values(data as TComment).returning();
-      const [user] = await db.select().from(userTable).where(eq(userTable.id, comment.userId));
 
       return CommentSchema.parse({ ...comment, user });
     },

@@ -2,13 +2,13 @@ import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 import { TCommentUpsertData } from 'src/types/comment/schemas/CommentUpsertData';
 
-export function createCommentHelper(params: {
+export async function createCommentHelper(params: {
   commentRepo: ICommentRepo;
   data: TCommentUpsertData;
   user: TUserProfile;
   postId: string;
 }) {
-  return params.commentRepo.createComment({
+  return await params.commentRepo.createComment({
     ...params.data,
     postId: params.postId,
     userId: params.user.id,

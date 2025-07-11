@@ -8,7 +8,7 @@ import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { createPostWithTagsHelper } from 'src/controllers/common/post/create-post-with-tags-helper';
 import { createCommentHelper } from 'src/controllers/common/comment/create-comment-helper';
 import { ITagRepo } from 'src/types/repos/ITagRepo';
-import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
+import { EErrorCodes } from 'src/api/errors/EErrorCodes';
 
 export async function restorePostFromArchive(params: {
   archiveId: string,
@@ -17,7 +17,6 @@ export async function restorePostFromArchive(params: {
   archiveRepo: IArchiveRepo,
   postToTagRepo: IPostToTagRepo,
   tagRepo: ITagRepo,
-  userProfileRepo: IUserProfileRepo
 }) {
   const postArchive = await params.archiveRepo.getArchiveById(params.archiveId);
 
@@ -25,15 +24,6 @@ export async function restorePostFromArchive(params: {
     throw new HttpError({
       statusCode: 404,
       message: 'Post archive not found'
-    });
-  }
-
-  const postOwner = await params.userProfileRepo.getUserProfileById(postArchive.data.userId);
-
-  if (!postOwner) {
-    throw new HttpError({
-      statusCode: 404,
-      message: 'Post owner not found'
     });
   }
 
@@ -54,6 +44,15 @@ export async function restorePostFromArchive(params: {
     postToTagRepo: params.postToTagRepo,
     user: archivedPostData.user
   });
+
+  // Returns null if the post owner is not found
+  if (!restoredPost) {
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Post owner not found',
+      errorCode: EErrorCodes.POST_OWNER_NOT_FOUND
+    });
+  }
 
   await Promise.all(comments.map(async (comment) => {
     await createCommentHelper({

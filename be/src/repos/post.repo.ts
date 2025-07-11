@@ -34,11 +34,19 @@ const getTagFilters = (db: NodePgDatabase, tagIds: string[]) => {
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
     async createPost(data) {
+      const [user] = await db
+        .select()
+        .from(userTable)
+        .where(eq(userTable.id, data.userId as string));
+
+      if (!user) {
+        return null;
+      }
+
       const [post] = await db
         .insert(postTable)
         .values(data as TPost)
         .returning();
-      const [user] = await db.select().from(userTable).where(eq(userTable.id, post.userId));
 
       return PostSchemaWithComments.parse({ ...post, user, tags: [], comments: [] });
     },

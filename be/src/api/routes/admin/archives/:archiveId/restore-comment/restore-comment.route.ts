@@ -23,8 +23,7 @@ const routes: FastifyPluginAsync = async function (f) {
     return restoreCommentFromArchive({
       archiveId: req.params.archiveId,
       commentRepo: fastify.repos.commentRepo,
-      archiveRepo: fastify.repos.archiveRepo,
-      userProfileRepo: fastify.repos.userProfileRepo
+      archiveRepo: fastify.repos.archiveRepo
     });
   });
 };
