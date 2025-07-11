@@ -12,9 +12,7 @@
     "lint:fix": "eslint --fix .",
     "db:migration:run": "npx drizzle-kit migrate",
     "db:migration:generate": "npx drizzle-kit generate",
-    "db:migration:studio": "npx drizzle-kit studio",
-    "db:seed:posts": "ts-node src/seeds/posts/create-post.ts",
-    "db:seed:comments": "ts-node src/seeds/comments/create-comments.ts"
+    "db:migration:studio": "npx drizzle-kit studio"
   },
   "keywords": [],
   "author": "",
