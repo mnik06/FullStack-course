@@ -8,6 +8,7 @@ import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { createPostWithTagsHelper } from 'src/controllers/common/post/create-post-with-tags-helper';
 import { createCommentHelper } from 'src/controllers/common/comment/create-comment-helper';
 import { ITagRepo } from 'src/types/repos/ITagRepo';
+import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 
 export async function restorePostFromArchive(params: {
   archiveId: string,
@@ -15,7 +16,8 @@ export async function restorePostFromArchive(params: {
   commentRepo: ICommentRepo,
   archiveRepo: IArchiveRepo,
   postToTagRepo: IPostToTagRepo,
-  tagRepo: ITagRepo
+  tagRepo: ITagRepo,
+  userProfileRepo: IUserProfileRepo
 }) {
   const postArchive = await params.archiveRepo.getArchiveById(params.archiveId);
 
@@ -23,6 +25,15 @@ export async function restorePostFromArchive(params: {
     throw new HttpError({
       statusCode: 404,
       message: 'Post archive not found'
+    });
+  }
+
+  const postOwner = await params.userProfileRepo.getUserProfileById(postArchive.data.userId);
+
+  if (!postOwner) {
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Post owner not found'
     });
   }
 

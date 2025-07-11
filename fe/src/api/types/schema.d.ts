@@ -1020,9 +1020,11 @@ export interface components {
      * - USER_ALREADY_ACTIVATED -> 1005
      * - USER_NOT_FOUND -> 1006
      * - USER_ALREADY_INVITED -> 1007
+     * - POST_OWNER_NOT_FOUND -> 1008
+     * - COMMENT_OWNER_NOT_FOUND -> 1009
      * @enum {integer}
      */
-    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007;
+    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 | 1009;
   };
   responses: never;
   parameters: never;
