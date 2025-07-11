@@ -19,7 +19,7 @@
         <ArchiveTable
           :archives="archives"
           :restore-archive="restoreHandlerByType[tab.value]"
-          @restored="fetchArchives"
+          @updated="fetchArchives"
         />
       </el-tab-pane>
     </el-tabs>

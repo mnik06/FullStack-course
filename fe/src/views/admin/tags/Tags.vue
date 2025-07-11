@@ -62,12 +62,12 @@ const tags = ref<TTags>([])
 
 const tableHeaders: IAppTableHeader[] = [
   {
-    label: 'Created at',
-    property: 'createdAt'
-  },
-  {
     label: 'Name',
     property: 'name'
+  },
+  {
+    label: 'Created at',
+    property: 'createdAt'
   },
   {
     label: 'Actions',

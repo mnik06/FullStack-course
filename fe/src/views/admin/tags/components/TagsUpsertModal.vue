@@ -3,7 +3,7 @@
     :model-value="isOpen.TagsUpsertModal"
     :before-close="() => closeModal('TagsUpsertModal')"
     :title="tagToEdit ? 'Edit Tag' : 'Add Tag'"
-    class="max-w-[700px]"
+    class="max-w-[350px]"
     destroy-on-close
   >
     <el-form

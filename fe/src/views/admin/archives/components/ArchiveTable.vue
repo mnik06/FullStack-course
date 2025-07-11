@@ -44,6 +44,7 @@
 
       <el-popconfirm
         title="Are you sure you want to delete this archive?"
+        width="250"
         @confirm="handleDelete(row)"
       >
         <template #reference>
@@ -63,7 +64,7 @@
 <script lang="ts" setup>
 import { notificationHandler } from '@/core/helpers'
 
-const emit = defineEmits(['restored'])
+const emit = defineEmits(['updated'])
 const props = defineProps<{
   archives: TArchive[]
   restoreArchive: (id: string) => Promise<any>
@@ -99,7 +100,7 @@ function handleRestore (row: TArchive) {
   return props.restoreArchive(row.entityId)
     .then(() => {
       notificationHandler({ text: 'Archive restored successfully', type: 'success' })
-      emit('restored')
+      emit('updated')
     })
     .finally(() => { loading.value.restore = false })
 }
@@ -110,6 +111,7 @@ function handleDelete (row: TArchive) {
   return archivesService.deleteArchive(row.id)
     .then(() => {
       notificationHandler({ text: 'Archive deleted successfully', type: 'success' })
+      emit('updated')
     })
     .finally(() => { loading.value.delete = false })
 }
