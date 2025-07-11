@@ -9,6 +9,7 @@ import { createPostWithTagsHelper } from 'src/controllers/common/post/create-pos
 import { createCommentHelper } from 'src/controllers/common/comment/create-comment-helper';
 import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 import { EErrorCodes } from 'src/api/errors/EErrorCodes';
+import { ITagRepo } from 'src/types/repos/ITagRepo';
 
 export async function restorePostFromArchive(params: {
   postId: string,
@@ -16,7 +17,8 @@ export async function restorePostFromArchive(params: {
   commentRepo: ICommentRepo,
   archiveRepo: IArchiveRepo,
   postToTagRepo: IPostToTagRepo,
-  userProfileRepo: IUserProfileRepo
+  userProfileRepo: IUserProfileRepo,
+  tagRepo: ITagRepo
 }) {
   const postArchive = await params.archiveRepo.getArchiveByEntityId(params.postId);
 
@@ -38,6 +40,9 @@ export async function restorePostFromArchive(params: {
   }
 
   const { comments = [], ...archivedPostData } = postArchive.data as TPostWithComments;
+  
+  const notDeletedTags = await params.tagRepo
+    .getTags({ tagIds: archivedPostData.tags.map(t => t.id) });
 
   const restoredPost = await createPostWithTagsHelper({
     data: {
@@ -45,7 +50,7 @@ export async function restorePostFromArchive(params: {
       description: archivedPostData.description,
       createdAt: archivedPostData.createdAt,
       updatedAt: archivedPostData.updatedAt,
-      tagIds: archivedPostData.tags.map((tag) => tag.id)
+      tagIds: notDeletedTags.map((tag) => tag.id)
     },
     postRepo: params.postRepo,
     postToTagRepo: params.postToTagRepo,

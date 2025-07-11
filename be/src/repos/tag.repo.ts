@@ -1,5 +1,5 @@
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eq } from 'drizzle-orm';
+import { eq, inArray, and } from 'drizzle-orm';
 
 import { tagTable } from 'src/services/drizzle/schema';
 import { ITagRepo } from 'src/types/repos/ITagRepo';
@@ -16,11 +16,12 @@ export function getTagRepo(db: NodePgDatabase): ITagRepo {
         searchQuery: filters.search,
         trgmSearchColumns: [tagTable.name]
       });
+      const tagIdsFilter = filters.tagIds ? inArray(tagTable.id, filters.tagIds) : undefined;
 
       const tags = await db
         .select()
         .from(tagTable)
-        .where(searchFilters);
+        .where(and(searchFilters, tagIdsFilter));
 
       return TagSchema.array().parse(tags);
     },

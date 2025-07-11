@@ -7,7 +7,7 @@ export async function deleteArchive(params: {
 }) {
   const { archiveRepo, archiveId } = params;
 
-  const isArchiveFound = await archiveRepo.getArchiveById(archiveId);
+  const isArchiveFound = await archiveRepo.deleteArchiveById(archiveId);
 
   if (!isArchiveFound) {
     throw new HttpError({ statusCode: 404, message: 'Archive not found' });

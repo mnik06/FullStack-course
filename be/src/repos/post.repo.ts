@@ -91,7 +91,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
         .groupBy(postTable.id, userTable.id)
         .having(and(...numericFilters.havingFilters))
-        .orderBy(params.sortOrder === 'desc' ? desc(sortByColumn) : asc(sortByColumn))
+        .orderBy(params.sortOrder === 'asc' ? asc(sortByColumn) : desc(sortByColumn))
         .$dynamic();
         
       const posts = await paginationService.withPagination(
