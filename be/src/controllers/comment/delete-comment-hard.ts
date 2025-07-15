@@ -1,6 +1,6 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { HttpError } from 'src/api/errors/HttpError';
-import { createNewArchive } from 'src/controllers/common/create-new-archive';
+import { createNewArchiveHelper } from 'src/controllers/common/create-new-archive-helper';
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
@@ -20,7 +20,7 @@ export async function deleteCommentHard(params: {
   }
 
   await params.commentRepo.deleteCommentHard(params.commentId);
-  await createNewArchive({
+  await createNewArchiveHelper({
     archiveRepo: params.archiveRepo,
     entityType: 'comment',
     entityId: params.commentId,

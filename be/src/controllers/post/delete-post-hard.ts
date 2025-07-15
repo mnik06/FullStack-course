@@ -1,7 +1,7 @@
 import { HttpError } from 'src/api/errors/HttpError';
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
-import { createNewArchive } from 'src/controllers/common/create-new-archive';
+import { createNewArchiveHelper } from 'src/controllers/common/create-new-archive-helper';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 export async function deletePostHard(params: {
@@ -20,7 +20,8 @@ export async function deletePostHard(params: {
   }
 
   await params.postRepo.deletePostHard(params.postId);
-  await createNewArchive({
+
+  await createNewArchiveHelper({
     archiveRepo: params.archiveRepo,
     entityType: 'post',
     entityId: params.postId,

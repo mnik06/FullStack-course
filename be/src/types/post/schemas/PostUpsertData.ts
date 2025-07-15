@@ -6,7 +6,8 @@ export const PostUpsertData = PostSchema
     title: true,
     description: true,
     createdAt: true,
-    updatedAt: true
+    updatedAt: true,
+    id: true
   })
   .extend({ tagIds: z.array(z.string()) })
   .partial();

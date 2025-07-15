@@ -14,6 +14,10 @@ class ArchivesService {
   restoreCommentFromArchive (archiveId: string) {
     return useApiClient.post('/api/admin/archives/{archiveId}/restore-comment/', undefined, { dynamicKeys: { archiveId } })
   }
+
+  restoreUserFromArchive (archiveId: string) {
+    return useApiClient.post('/api/admin/archives/{archiveId}/restore-user/', undefined, { dynamicKeys: { archiveId } })
+  }
 }
 
 export const archivesService = new ArchivesService()

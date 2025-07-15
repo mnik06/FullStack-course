@@ -1,13 +1,15 @@
 import { HttpError } from 'src/api/errors/HttpError';
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
-import { createCommentHelper } from 'src/controllers/common/comment/create-comment-helper';
-import { EErrorCodes } from 'src/api/errors/EErrorCodes';
+import { createCommentFromExistingData } from 'src/controllers/common/comment/create-comment-from-existing-data';
+import { TComment } from 'src/types/comment/schemas/Comment';
+import { IPostRepo } from 'src/types/repos/IPostRepo';
 
 export async function restoreCommentFromArchive(params: {
   archiveId: string;
   commentRepo: ICommentRepo;
   archiveRepo: IArchiveRepo;
+  postRepo: IPostRepo;
 }) {
   const commentArchive = await params.archiveRepo.getArchiveById(params.archiveId);
   
@@ -18,24 +20,14 @@ export async function restoreCommentFromArchive(params: {
     });
   }
 
-  const comment = await createCommentHelper({
+  await createCommentFromExistingData({
     commentRepo: params.commentRepo,
-    data: {
-      text: commentArchive.data.text,
-      createdAt: commentArchive.data.createdAt,
-      updatedAt: commentArchive.data.updatedAt
-    },
-    user: commentArchive.data.user,
-    postId: commentArchive.data.postId
+    comment: commentArchive.data as TComment,
+    postId: commentArchive.data.postId,
+    postRepo: params.postRepo,
+    throwErrorIfOwnerNotFound: true,
+    throwErrorIfPostNotFound: true
   });
-
-  if (!comment) {
-    throw new HttpError({
-      statusCode: 404,
-      message: 'Comment owner not found',
-      errorCode: EErrorCodes.COMMENT_OWNER_NOT_FOUND
-    });
-  }
 
   await params.archiveRepo.deleteArchiveById(commentArchive.id);
 

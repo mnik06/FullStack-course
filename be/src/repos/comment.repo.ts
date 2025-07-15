@@ -11,7 +11,7 @@ const getIsCommentNotDeletedFilter = () => {
 
 export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
   return {
-    async createComment(data) {
+    async createComment(data, skipDuplicate = false) {
       const [user] = await db.select()
         .from(userTable)
         .where(eq(userTable.id, data.userId as string));
@@ -20,9 +20,32 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
         return null;
       }
 
-      const [comment] = await db.insert(commentTable).values(data as TComment).returning();
+      let comment;
+      
+      if (skipDuplicate && data.id) {
+        // Use onConflict to handle duplicate key errors
+        const result = await db.insert(commentTable)
+          .values(data as TComment)
+          .onConflictDoNothing({ target: commentTable.id })
+          .returning();
+        
+        comment = result[0];
+        
+        // If no comment was inserted (due to conflict), fetch the existing one
+        if (!comment) {
+          const existingComment = await this.getCommentById(data.id);
+          
+          if (existingComment) {
+            return existingComment;
+          }
+        }
+      } else {
+        // Normal insert without conflict handling
+        const result = await db.insert(commentTable).values(data as TComment).returning();
+        comment = result[0];
+      }
 
-      return CommentSchema.parse({ ...comment, user });
+      return comment ? CommentSchema.parse({ ...comment, user }) : null;
     },
 
     async getCommentById(id) {
@@ -50,6 +73,22 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
         })
         .from(commentTable)
         .where(and(eq(commentTable.postId, postId), isCommentNotDeletedFilter))
+        .leftJoin(userTable, eq(commentTable.userId, userTable.id));
+
+      return CommentSchema.array().parse(comments);
+    },
+
+    async getComments({ userId } = {}) {
+      const isCommentNotDeletedFilter = getIsCommentNotDeletedFilter();
+      const userIdFilter = userId ? eq(commentTable.userId, userId) : undefined;
+
+      const comments = await db
+        .select({
+          ...getTableColumns(commentTable),
+          user: userTable
+        })
+        .from(commentTable)
+        .where(and(userIdFilter, isCommentNotDeletedFilter))
         .leftJoin(userTable, eq(commentTable.userId, userTable.id));
 
       return CommentSchema.array().parse(comments);

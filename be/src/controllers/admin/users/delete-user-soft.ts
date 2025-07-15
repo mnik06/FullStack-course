@@ -16,7 +16,7 @@ export async function deleteUserSoft(params: {
     });
   }
 
-  await params.identityService.deleteUser(user.email);
+  await params.identityService.disableUser(user.email);
   await params.userProfileRepo.deleteUserSoft(params.userId);
 
   return { success: true };

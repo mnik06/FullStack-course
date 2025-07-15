@@ -2,7 +2,7 @@ import { TArchiveEntityType } from 'src/types/archive/schemas/Archive';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 
-export async function createNewArchive(params: {
+export async function createNewArchiveHelper(params: {
   archiveRepo: IArchiveRepo;
   entityType: TArchiveEntityType;
   entityId: string;

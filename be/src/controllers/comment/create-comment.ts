@@ -1,8 +1,8 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
-import { createCommentHelper } from 'src/controllers/common/comment/create-comment-helper';
 import { TCommentUpsertData } from 'src/types/comment/schemas/CommentUpsertData';
 import { HttpError } from 'src/api/errors/HttpError';
+import { EErrorCodes } from 'src/api/errors/EErrorCodes';
 
 export async function createNewComment(params: {
   commentRepo: ICommentRepo;
@@ -10,17 +10,17 @@ export async function createNewComment(params: {
   user: TUserProfile;
   postId: string;
 }) {
-  const comment = await createCommentHelper({
-    commentRepo: params.commentRepo,
-    data: params.data,
+  const comment = await params.commentRepo.createComment({
+    ...params.data,
     postId: params.postId,
-    user: params.user
+    userId: params.user.id
   });
 
   if (!comment) {
     throw new HttpError({
       statusCode: 404,
-      message: 'User not found'
+      message: 'Comment owner not found',
+      errorCode: EErrorCodes.COMMENT_OWNER_NOT_FOUND
     });
   } 
 

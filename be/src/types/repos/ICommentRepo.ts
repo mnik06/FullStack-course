@@ -1,9 +1,10 @@
 import { TComment } from 'src/types/comment/schemas/Comment';
 
 export interface ICommentRepo {
-  createComment(data: Partial<TComment>): Promise<TComment | null>;
+  createComment(data: Partial<TComment>, skipDuplicate?: boolean): Promise<TComment | null>;
   getCommentById(id: string): Promise<TComment | null>;
   getCommentsByPostId(postId: string): Promise<TComment[]>;
+  getComments(params?: { userId?: string }): Promise<TComment[]>;
   updateCommentById(
     id: string, 
     data: Partial<TComment>, 

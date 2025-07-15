@@ -1,4 +1,4 @@
-import { sql, type SQL, SelectedFields, and } from 'drizzle-orm';
+import { sql, type SQL, SelectedFields } from 'drizzle-orm';
 import { type SelectResultFields } from 'node_modules/drizzle-orm/query-builders/select.types';
 
 export function jsonBuildObject<T extends SelectedFields<any, any>>(shape: T) {
@@ -13,7 +13,7 @@ export function jsonBuildObject<T extends SelectedFields<any, any>>(shape: T) {
     chunks.push(sql`${value}`);
   });
 
-  return sql<SelectResultFields<T>>`json_build_object(${sql.join(
+  return sql<SelectResultFields<T>>`jsonb_build_object(${sql.join(
     chunks
   )})`;
 }
@@ -21,16 +21,12 @@ export function jsonBuildObject<T extends SelectedFields<any, any>>(shape: T) {
 export function jsonAggBuildObject<
   T extends SelectedFields<any, any>,
 >(
-  shape: T
+  shape: T,
+  idColumn: keyof T = 'id' as keyof T
 ) {
   return sql<SelectResultFields<T>[]>`coalesce(
-    json_agg(${jsonBuildObject(shape)})
-    FILTER (WHERE ${and(
-    sql.join(
-      Object.values(shape).map((value) => sql`${sql`${value}`} IS NOT NULL`),
-      sql` AND `
-    )
-  )})
+    json_agg(DISTINCT ${jsonBuildObject(shape)})
+    FILTER (WHERE ${sql`${shape[idColumn]} IS NOT NULL`})
     ,'${sql`[]`}')`;
 }
 

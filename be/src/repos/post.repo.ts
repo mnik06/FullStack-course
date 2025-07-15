@@ -116,6 +116,49 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       };
     },
 
+    async getPostsWithCommentsByUserId(userId: string) {
+      const isPostNotDeletedFilter = getIsPostNotDeletedFilter();
+      const isCommentNotDeletedFilter = getIsCommentNotDeletedFilter();
+
+      const [posts, comments] = await Promise.all([
+        db
+          .select({
+            ...getTableColumns(postTable),
+            user: userTable,
+            tags: jsonAggBuildObject(getTableColumns(tagTable))
+          })
+          .from(postTable)
+          .where(and(eq(postTable.userId, userId), isPostNotDeletedFilter))
+          .leftJoin(userTable, eq(postTable.userId, userTable.id))
+          .leftJoin(postToTagTable, eq(postTable.id, postToTagTable.postId))
+          .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
+          .groupBy(postTable.id, userTable.id),
+        
+        db
+          .select({
+            ...getTableColumns(commentTable),
+            user: userTable
+          })
+          .from(commentTable)
+          .where(isCommentNotDeletedFilter)
+          .leftJoin(userTable, eq(commentTable.userId, userTable.id))
+      ]);
+
+      const commentsByPostId = comments.reduce((acc, comment) => {
+        if (!acc[comment.postId]) {
+          acc[comment.postId] = [];
+        }
+        
+        acc[comment.postId].push(comment);
+        return acc;
+      }, {} as Record<string, typeof comments>);
+
+      return PostSchemaWithComments.array().parse(posts.map((post) => ({
+        ...post,
+        comments: commentsByPostId[post.id] || []
+      })));
+    },
+
     async getPostById(id) {
       const isPostNotDeletedFilter = getIsPostNotDeletedFilter();
       const isCommentNotDeletedFilter = getIsCommentNotDeletedFilter();

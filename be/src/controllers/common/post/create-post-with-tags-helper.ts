@@ -16,15 +16,12 @@ export async function createPostWithTagsHelper(params: {
   const post = await params.postRepo.createPost({
     ...postData,
     userId: params.user.id,
-    createdAt: postData.createdAt ? new Date(postData.createdAt) : undefined,
-    updatedAt: postData.updatedAt ? new Date(postData.updatedAt) : undefined,
     readingTime: postService.calculateReadingTime({
       title: postData.title || '',
       description: postData.description || ''
     })
   });
 
-  // Returns null if the post owner is not found
   if (!post) {
     return null;
   }

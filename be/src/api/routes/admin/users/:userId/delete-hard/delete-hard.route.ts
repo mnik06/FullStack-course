@@ -4,6 +4,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
 
 import { deleteUserHard } from 'src/controllers/admin/users/delete-user-hard';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 const routes: FastifyPluginAsync = async function (f) {
   const fastify = f.withTypeProvider<ZodTypeProvider>();
@@ -24,7 +25,11 @@ const routes: FastifyPluginAsync = async function (f) {
     return deleteUserHard({ 
       userProfileRepo: fastify.repos.userProfileRepo,
       identityService: fastify.identityService,
-      userId: req.params.userId
+      postRepo: fastify.repos.postRepo,
+      commentRepo: fastify.repos.commentRepo,
+      archiveRepo: fastify.repos.archiveRepo,
+      userIdToDelete: req.params.userId,
+      user: req.user as TUserProfile
     });
   });
 };

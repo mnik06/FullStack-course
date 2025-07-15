@@ -1,5 +1,6 @@
 <template>
   <AppTable
+    v-loading.fullscreen="loading"
     :headers="headers"
     :data="archives"
   >
@@ -35,7 +36,6 @@
           <el-button
             type="primary"
             size="small"
-            :loading="loading.restore"
           >
             Restore
           </el-button>
@@ -51,7 +51,6 @@
           <el-button
             type="danger"
             size="small"
-            :loading="loading.delete"
           >
             Delete permanently
           </el-button>
@@ -71,10 +70,7 @@ defineProps<{
 
 const { openModal } = useModals()
 
-const loading = ref({
-  restore: false,
-  delete: false
-})
+const loading = ref(false)
 
 const headers: IAppTableHeader[] = [
   { label: 'Entity', property: 'entity' },
@@ -83,11 +79,10 @@ const headers: IAppTableHeader[] = [
   { property: 'actions', width: 300, align: 'right' }
 ]
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const restoreHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
   post: (id) => archivesService.restorePostFromArchive(id),
-  comment: (id) => archivesService.restoreCommentFromArchive(id)
+  comment: (id) => archivesService.restoreCommentFromArchive(id),
+  user: (id) => archivesService.restoreUserFromArchive(id)
 }
 
 function prettifyEntityName (entity: TArchiveEntity) {
@@ -101,25 +96,25 @@ function prettifyEntityName (entity: TArchiveEntity) {
 }
 
 function handleRestore (row: TArchive) {
-  loading.value.restore = true
+  // loading.value = true
 
   return restoreHandlerByType[row.entityType](row.id)
     .then(() => {
       notificationHandler({ text: 'Archive restored successfully', type: 'success' })
       emit('updated')
     })
-    .finally(() => { loading.value.restore = false })
+    .finally(() => { loading.value = false })
 }
 
 function handleDelete (row: TArchive) {
-  loading.value.delete = true
+  // loading.value = true
 
   return archivesService.deleteArchive(row.id)
     .then(() => {
       notificationHandler({ text: 'Archive deleted successfully', type: 'success' })
       emit('updated')
     })
-    .finally(() => { loading.value.delete = false })
+    .finally(() => { loading.value = false })
 }
 
 function handleViewData (row: TArchive) {
