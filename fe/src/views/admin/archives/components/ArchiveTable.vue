@@ -61,9 +61,10 @@
 </template>
 
 <script lang="ts" setup>
-import { notificationHandler } from '@/core/helpers'
-
-const emit = defineEmits(['updated'])
+const emit = defineEmits<{
+  (e: 'restore', row: TArchive): void
+  (e: 'delete', row: TArchive): void
+}>()
 defineProps<{
   archives: TArchive[]
 }>()
@@ -79,12 +80,6 @@ const headers: IAppTableHeader[] = [
   { property: 'actions', width: 300, align: 'right' }
 ]
 
-const restoreHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
-  post: (id) => archivesService.restorePostFromArchive(id),
-  comment: (id) => archivesService.restoreCommentFromArchive(id),
-  user: (id) => archivesService.restoreUserFromArchive(id)
-}
-
 function prettifyEntityName (entity: TArchiveEntity) {
   const titleByType: Record<TArchiveEntity, string> = {
     post: 'Post',
@@ -96,28 +91,14 @@ function prettifyEntityName (entity: TArchiveEntity) {
 }
 
 function handleRestore (row: TArchive) {
-  // loading.value = true
-
-  return restoreHandlerByType[row.entityType](row.id)
-    .then(() => {
-      notificationHandler({ text: 'Archive restored successfully', type: 'success' })
-      emit('updated')
-    })
-    .finally(() => { loading.value = false })
+  emit('restore', row)
 }
 
 function handleDelete (row: TArchive) {
-  // loading.value = true
-
-  return archivesService.deleteArchive(row.id)
-    .then(() => {
-      notificationHandler({ text: 'Archive deleted successfully', type: 'success' })
-      emit('updated')
-    })
-    .finally(() => { loading.value = false })
+  emit('delete', row)
 }
 
 function handleViewData (row: TArchive) {
-  openModal('ArchiveDataModal', { data: row.data, handleRestore: () => handleRestore(row) })
+  openModal('ArchiveDataModal', { data: row.data, handleRestore: () => emit('restore', row) })
 }
 </script>

@@ -18,7 +18,8 @@
         <ArchiveTable
           v-loading="loading"
           :archives="archives"
-          @updated="fetchArchives"
+          @restore="handleRestore"
+          @delete="handleDelete"
         />
       </el-tab-pane>
     </el-tabs>
@@ -26,6 +27,7 @@
 </template>
 
 <script lang="ts" setup>
+import { notificationHandler } from '@/core/helpers'
 import { replaceRouterQuery } from '@/router'
 
 interface ITab {
@@ -34,9 +36,9 @@ interface ITab {
 }
 
 const tabs: ITab[] = [
+  { label: 'Users', value: 'user' },
   { label: 'Posts', value: 'post' },
-  { label: 'Comments', value: 'comment' },
-  { label: 'Users', value: 'user' }
+  { label: 'Comments', value: 'comment' }
 ]
 
 const route = useRoute()
@@ -44,6 +46,12 @@ const route = useRoute()
 const loading = ref(false)
 const archives = ref<TArchive[]>([])
 const activeTab = ref<TArchiveEntity>(route.query.activeTab as TArchiveEntity || tabs[0].value)
+
+const restoreHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
+  post: (id) => archivesService.restorePostFromArchive(id),
+  comment: (id) => archivesService.restoreCommentFromArchive(id),
+  user: (id) => archivesService.restoreUserFromArchive(id)
+}
 
 function onTabChange () {
   archives.value = []
@@ -57,6 +65,28 @@ function fetchArchives () {
 
   return archivesService.getArchives({ entityType: activeTab.value })
     .then((res) => { archives.value = res })
+    .finally(() => { loading.value = false })
+}
+
+function handleRestore (row: TArchive) {
+  loading.value = true
+
+  return restoreHandlerByType[row.entityType](row.id)
+    .then(() => {
+      notificationHandler({ text: 'Archive restored successfully', type: 'success' })
+      return fetchArchives()
+    })
+    .finally(() => { loading.value = false })
+}
+
+function handleDelete (row: TArchive) {
+  loading.value = true
+
+  return archivesService.deleteArchive(row.id)
+    .then(() => {
+      notificationHandler({ text: 'Archive deleted successfully', type: 'success' })
+      return fetchArchives()
+    })
     .finally(() => { loading.value = false })
 }
 

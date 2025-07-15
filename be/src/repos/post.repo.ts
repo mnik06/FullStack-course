@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, exists, getTableColumns, inArray, isNull } from 'drizzle-orm';
+import { and, asc, countDistinct, desc, eq, exists, getTableColumns, inArray, isNull } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable, postToTagTable, tagTable, userTable } from 'src/services/drizzle/schema';
@@ -59,7 +59,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       const querySelection = {
         ...getTableColumns(postTable),
         user: userTable,
-        commentsCount: count(commentTable.id),
+        commentsCount: countDistinct(commentTable.id),
         tags: jsonAggBuildObject(getTableColumns(tagTable))
       };
       const sortByColumn = querySelection[params.sortBy || 'createdAt'];

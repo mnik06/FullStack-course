@@ -39,6 +39,10 @@ class ErrorService {
       COMMENT_OWNER_NOT_FOUND: {
         message: 'Comment owner not found',
         code: 1009
+      },
+      POST_NOT_FOUND: {
+        message: 'Post not found',
+        code: 1010
       }
     }
   }

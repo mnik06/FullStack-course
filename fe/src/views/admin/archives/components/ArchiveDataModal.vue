@@ -19,7 +19,6 @@
 
         <el-button
           type="primary"
-          :loading="isRestoreLoading"
           @click="restore"
         >
           Restore
@@ -32,17 +31,13 @@
 <script lang="ts" setup>
 const props = defineProps<{
   data: any
-  handleRestore: () => Promise<any>
+  handleRestore: () => void
 }>()
 
 const { isOpen, closeModal } = useModals()
-const isRestoreLoading = ref(false)
 
 function restore () {
-  isRestoreLoading.value = true
-
   props.handleRestore()
-    .then(() => { closeModal('ArchiveDataModal') })
-    .finally(() => { isRestoreLoading.value = false })
+  closeModal('ArchiveDataModal')
 }
 </script>
