@@ -118,8 +118,8 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async getPostsWithCommentsByUserId(userId: string, skipDeleted = true) {
-      const isPostNotDeletedFilter = skipDeleted ? undefined : getIsPostNotDeletedFilter();
-      const isCommentNotDeletedFilter = skipDeleted ? undefined : getIsCommentNotDeletedFilter();
+      const isPostNotDeletedFilter = skipDeleted ? getIsPostNotDeletedFilter() : undefined;
+      const isCommentNotDeletedFilter = skipDeleted ? getIsCommentNotDeletedFilter() : undefined;
 
       const [posts, comments] = await Promise.all([
         db
@@ -161,8 +161,8 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async getPostById(id, skipDeleted = true) {
-      const isPostNotDeletedFilter = skipDeleted ? undefined : getIsPostNotDeletedFilter();
-      const isCommentNotDeletedFilter = skipDeleted ? undefined : getIsCommentNotDeletedFilter();
+      const isPostNotDeletedFilter = skipDeleted ? getIsPostNotDeletedFilter() : undefined;
+      const isCommentNotDeletedFilter = skipDeleted ? getIsCommentNotDeletedFilter() : undefined;
 
       const [[post], comments] = await Promise.all([
         db

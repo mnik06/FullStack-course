@@ -31,7 +31,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
     },
 
     async getCommentById(id, skipDeleted = true) {
-      const isCommentNotDeletedFilter = skipDeleted ? undefined : getIsCommentNotDeletedFilter();
+      const isCommentNotDeletedFilter = skipDeleted ? getIsCommentNotDeletedFilter() : undefined;
 
       const [comment] = await db
         .select({
@@ -46,7 +46,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
     },
 
     async getCommentsByPostId(postId, skipDeleted = true) {
-      const isCommentNotDeletedFilter = skipDeleted ? undefined : getIsCommentNotDeletedFilter();
+      const isCommentNotDeletedFilter = skipDeleted ? getIsCommentNotDeletedFilter() : undefined;
 
       const comments = await db
         .select({
@@ -61,7 +61,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
     },
 
     async getCommentsByUserId(userId, skipDeleted = true) {
-      const isCommentNotDeletedFilter = skipDeleted ? undefined : getIsCommentNotDeletedFilter();
+      const isCommentNotDeletedFilter = skipDeleted ? getIsCommentNotDeletedFilter() : undefined;
 
       const comments = await db
         .select({
