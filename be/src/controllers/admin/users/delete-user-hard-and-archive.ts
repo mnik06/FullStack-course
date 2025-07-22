@@ -7,7 +7,7 @@ import { createNewArchiveHelper } from 'src/controllers/common/create-new-archiv
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
-export async function deleteUserHard(params: {
+export async function deleteUserHardAndArchive(params: {
   identityService: IIdentityService;
   userProfileRepo: IUserProfileRepo;
   postRepo: IPostRepo;

@@ -4,7 +4,7 @@ import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { createNewArchiveHelper } from 'src/controllers/common/create-new-archive-helper';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
-export async function deletePostHard(params: {
+export async function deletePostHardAndArchive(params: {
   postRepo: IPostRepo;
   postId: string;
   archiveRepo: IArchiveRepo;
@@ -20,7 +20,7 @@ export async function deletePostHard(params: {
   }
 
   await params.postRepo.deletePostHard(params.postId);
-
+  
   await createNewArchiveHelper({
     archiveRepo: params.archiveRepo,
     entityType: 'post',

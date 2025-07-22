@@ -1,8 +1,7 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 import { TCommentUpsertData } from 'src/types/comment/schemas/CommentUpsertData';
-import { HttpError } from 'src/api/errors/HttpError';
-import { EErrorCodes } from 'src/api/errors/EErrorCodes';
+import { TComment } from 'src/types/comment/schemas/Comment';
 
 export async function createNewComment(params: {
   commentRepo: ICommentRepo;
@@ -16,13 +15,5 @@ export async function createNewComment(params: {
     userId: params.user.id
   });
 
-  if (!comment) {
-    throw new HttpError({
-      statusCode: 404,
-      message: 'Comment owner not found',
-      errorCode: EErrorCodes.COMMENT_OWNER_NOT_FOUND
-    });
-  } 
-
-  return comment;
+  return comment as TComment;
 }

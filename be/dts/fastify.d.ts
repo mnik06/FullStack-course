@@ -6,6 +6,13 @@ import { IStorageService } from 'src/types/IStorageService';
 import { IIdentityService } from 'src/types/services/IIdentityService';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 import { ISignatureService } from 'src/types/services/ISignatureService';
+import { ITransactionManager } from 'src/types/ITransactionManager';
+
+type TTransactionContext = Parameters<ITransactionManager['execute']>[0] extends (
+  ctx: infer T
+) => any
+  ? T
+  : never;
 
 // set context type
 declare module 'fastify' {
@@ -16,7 +23,8 @@ declare module 'fastify' {
     identityService: IIdentityService,
     mailService: IMailService,
     storageService: IStorageService,
-    signatureService: ISignatureService
+    signatureService: ISignatureService,
+    transactionManager: ITransactionManager
   }
 
   interface FastifyRequest {

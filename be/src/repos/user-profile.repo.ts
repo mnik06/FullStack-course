@@ -8,8 +8,11 @@ import { getSearchService } from 'src/services/search/search.service';
 
 export function getUserProfileRepo(db: NodePgDatabase): IUserProfileRepo {
   return {
-    async createUserProfile(data) {
-      const [user] = await db.insert(userTable).values(data as TUserProfile).returning();
+    async createUserProfile(data, transaction) {
+      const dbToUse = transaction || db;
+
+      const [user] = await dbToUse.insert(userTable).values(data as TUserProfile).returning();
+
       return UserProfileSchema.parse(user);
     },
 

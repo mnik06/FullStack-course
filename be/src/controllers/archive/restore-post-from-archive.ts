@@ -7,7 +7,9 @@ import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { ITagRepo } from 'src/types/repos/ITagRepo';
 import { EErrorCodes } from 'src/api/errors/EErrorCodes';
-import { createPostFromExistingData } from 'src/controllers/common/post/create-post-from-existing-data';
+import { createPostsFromExistingData } from 'src/controllers/common/post/create-posts-from-existing-data';
+import { ITransactionManager } from 'src/types/ITransactionManager';
+import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 
 export async function restorePostFromArchive(params: {
   archiveId: string,
@@ -16,6 +18,8 @@ export async function restorePostFromArchive(params: {
   archiveRepo: IArchiveRepo,
   postToTagRepo: IPostToTagRepo,
   tagRepo: ITagRepo,
+  transactionManager: ITransactionManager,
+  userProfileRepo: IUserProfileRepo
 }) {
   const postArchive = await params.archiveRepo.getArchiveById(params.archiveId);
 
@@ -26,15 +30,9 @@ export async function restorePostFromArchive(params: {
     });
   }
 
-  const post = await createPostFromExistingData({
-    post: postArchive.data as TPostWithComments,
-    postRepo: params.postRepo,
-    postToTagRepo: params.postToTagRepo,
-    tagRepo: params.tagRepo,
-    commentRepo: params.commentRepo
-  });
+  const postOwner = await params.userProfileRepo.getUserProfileById(postArchive.data.user.id);
 
-  if (!post) {
+  if (!postOwner) {
     throw new HttpError({
       statusCode: 404,
       message: 'Post owner not found',
@@ -42,7 +40,18 @@ export async function restorePostFromArchive(params: {
     });
   }
 
-  await params.archiveRepo.deleteArchiveById(postArchive.id);
+  await params.transactionManager.execute(async ({ sharedTx }) => {
+    await createPostsFromExistingData({
+      posts: [postArchive.data] as TPostWithComments[],
+      postRepo: params.postRepo,
+      postToTagRepo: params.postToTagRepo,
+      tagRepo: params.tagRepo,
+      commentRepo: params.commentRepo,
+      transaction: sharedTx
+    });
+
+    await params.archiveRepo.deleteArchiveById(postArchive.id);
+  });
 
   return { success: true };
 }

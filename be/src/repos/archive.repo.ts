@@ -48,8 +48,13 @@ export function getArchiveRepo(db: NodePgDatabase): IArchiveRepo {
       return ArchiveSchema.parse(archive);
     },
 
-    async deleteArchiveById(id) {
-      const [archive] = await db.delete(archiveTable).where(eq(archiveTable.id, id)).returning();
+    async deleteArchiveById(id, transaction) {
+      const dbToUse = transaction || db;
+
+      const [archive] = await dbToUse
+        .delete(archiveTable)
+        .where(eq(archiveTable.id, id))
+        .returning();
 
       return !!archive;
     }

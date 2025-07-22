@@ -3,7 +3,7 @@ import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
 
-import { deleteUserHard } from 'src/controllers/admin/users/delete-user-hard';
+import { deleteUserHardAndArchive } from 'src/controllers/admin/users/delete-user-hard-and-archive';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 const routes: FastifyPluginAsync = async function (f) {
@@ -22,7 +22,7 @@ const routes: FastifyPluginAsync = async function (f) {
     },
     preHandler: [requirePermission('manage_users')]
   }, (req) => {
-    return deleteUserHard({ 
+    return deleteUserHardAndArchive({ 
       userProfileRepo: fastify.repos.userProfileRepo,
       identityService: fastify.identityService,
       postRepo: fastify.repos.postRepo,

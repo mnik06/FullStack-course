@@ -1,9 +1,10 @@
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 import { TUserProfileFilters } from 'src/types/user-profile/UserProfileFilters';
 import { TPaginationResponse } from 'src/types/Pagination';
+import { TTransaction } from 'src/types/ITransactionManager';
 
 export interface IUserProfileRepo {
-  createUserProfile(data: Partial<TUserProfile>): Promise<TUserProfile>;
+  createUserProfile(data: Partial<TUserProfile>, transaction?: TTransaction): Promise<TUserProfile>;
   updateUserProfileById(id: string, data: Partial<TUserProfile>): Promise<TUserProfile | null>;
   getUserProfileById(id: string): Promise<TUserProfile | null>;
   getUserProfileBySubId(subId: string): Promise<TUserProfile | null>;

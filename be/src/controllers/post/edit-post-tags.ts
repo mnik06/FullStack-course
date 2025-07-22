@@ -17,5 +17,5 @@ export async function editPostTags(params: {
     });
   }
 
-  return  await params.postToTagRepo.updateTagsForPost(params.postId, params.tagIds);
+  return await params.postToTagRepo.updateTagsForPost(params.postId, params.tagIds);
 }

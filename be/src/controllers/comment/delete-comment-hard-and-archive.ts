@@ -4,7 +4,7 @@ import { createNewArchiveHelper } from 'src/controllers/common/create-new-archiv
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
-export async function deleteCommentHard(params: {
+export async function deleteCommentHardAndArchive(params: {
   commentRepo: ICommentRepo,
   commentId: string,
   archiveRepo: IArchiveRepo,

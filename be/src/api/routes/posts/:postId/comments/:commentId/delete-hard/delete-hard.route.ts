@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { requirePermission } from 'src/api/hooks/require-permission.hook';
-import { deleteCommentHard } from 'src/controllers/comment/delete-comment-hard';
+import { deleteCommentHardAndArchive } from 'src/controllers/comment/delete-comment-hard-and-archive';
 import { getPostService } from 'src/services/post/post.service';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
@@ -24,7 +24,7 @@ const routes: FastifyPluginAsync = async function (f) {
     },
     preHandler: [requirePermission('manage_comment', (req) => postService.checkIsCommentOwner(fastify, req))]
   }, (req) => {
-    return deleteCommentHard({
+    return deleteCommentHardAndArchive({
       commentRepo: fastify.repos.commentRepo,
       commentId: req.params.commentId,
       archiveRepo: fastify.repos.archiveRepo,

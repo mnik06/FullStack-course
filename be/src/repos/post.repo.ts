@@ -34,21 +34,21 @@ const getTagFilters = (db: NodePgDatabase, tagIds: string[]) => {
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
     async createPost(data) {
-      const [user] = await db
-        .select()
-        .from(userTable)
-        .where(eq(userTable.id, data.userId as string));
-
-      if (!user) {
-        return null;
-      }
-
-      const [post] = await db
-        .insert(postTable)
-        .values(data as TPost)
-        .returning();
+      const [[post], [user]] = await Promise.all([
+        db
+          .insert(postTable)
+          .values(data as TPost)
+          .returning(),
+        db.select().from(userTable).where(eq(userTable.id, data.userId as string))
+      ]);
 
       return PostSchemaWithComments.parse({ ...post, user, tags: [], comments: [] });
+    },
+
+    async createMultiplePosts(data, transaction) {
+      await transaction.insert(postTable).values(data as TPost[]).returning();
+
+      return true;
     },
 
     async getPosts(params = {}) {
@@ -176,6 +176,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
           .leftJoin(tagTable, eq(postToTagTable.tagId, tagTable.id))
           .groupBy(postTable.id, userTable.id)
           .where(and(eq(postTable.id, id), isPostNotDeletedFilter)),
+          
         db
           .select({
             ...getTableColumns(commentTable),

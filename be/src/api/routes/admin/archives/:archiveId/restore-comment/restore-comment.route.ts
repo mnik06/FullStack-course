@@ -24,7 +24,9 @@ const routes: FastifyPluginAsync = async function (f) {
       archiveId: req.params.archiveId,
       commentRepo: fastify.repos.commentRepo,
       archiveRepo: fastify.repos.archiveRepo,
-      postRepo: fastify.repos.postRepo
+      postRepo: fastify.repos.postRepo,
+      transactionManager: fastify.transactionManager,
+      userProfileRepo: fastify.repos.userProfileRepo
     });
   });
 };

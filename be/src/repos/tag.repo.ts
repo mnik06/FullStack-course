@@ -16,6 +16,7 @@ export function getTagRepo(db: NodePgDatabase): ITagRepo {
         searchQuery: filters.search,
         trgmSearchColumns: [tagTable.name]
       });
+      
       const tagIdsFilter = filters.tagIds ? inArray(tagTable.id, filters.tagIds) : undefined;
 
       const tags = await db
