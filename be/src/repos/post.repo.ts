@@ -1,4 +1,4 @@
-import { and, asc, countDistinct, desc, eq, exists, getTableColumns, inArray, isNull } from 'drizzle-orm';
+import { and, asc, countDistinct, desc, eq, exists, getTableColumns, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { commentTable, postTable, postToTagTable, tagTable, userTable } from 'src/services/drizzle/schema';
@@ -11,6 +11,7 @@ import { PostSchemaWithComments } from 'src/types/post/schemas/PostWithComments'
 import { PostSchemaWithCommentsCount } from 'src/types/post/schemas/PostWithCommentsCount';
 import { getSearchService } from 'src/services/search/search.service';
 import { jsonAggBuildObject, totalCountOver } from 'src/repos/common/helpers';
+import { PostWithDeletedAtSchema } from 'src/types/post/schemas/PostWithDeletedAt';
 
 const getIsPostNotDeletedFilter = () => {
   return isNull(postTable.deletedAt);
@@ -46,7 +47,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
     },
 
     async createMultiplePosts(data, transaction) {
-      await transaction.insert(postTable).values(data as TPost[]).returning();
+      await transaction.insert(postTable).values(data as TPost[]);
 
       return true;
     },
@@ -116,9 +117,9 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       };
     },
 
-    async getPostsWithCommentsByUserId(userId: string) {
-      const isPostNotDeletedFilter = getIsPostNotDeletedFilter();
-      const isCommentNotDeletedFilter = getIsCommentNotDeletedFilter();
+    async getPostsWithCommentsByUserId(userId: string, skipDeleted = true) {
+      const isPostNotDeletedFilter = skipDeleted ? undefined : getIsPostNotDeletedFilter();
+      const isCommentNotDeletedFilter = skipDeleted ? undefined : getIsCommentNotDeletedFilter();
 
       const [posts, comments] = await Promise.all([
         db
@@ -159,9 +160,9 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       })));
     },
 
-    async getPostById(id) {
-      const isPostNotDeletedFilter = getIsPostNotDeletedFilter();
-      const isCommentNotDeletedFilter = getIsCommentNotDeletedFilter();
+    async getPostById(id, skipDeleted = true) {
+      const isPostNotDeletedFilter = skipDeleted ? undefined : getIsPostNotDeletedFilter();
+      const isCommentNotDeletedFilter = skipDeleted ? undefined : getIsCommentNotDeletedFilter();
 
       const [[post], comments] = await Promise.all([
         db
@@ -195,6 +196,12 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         ...post,
         comments
       });
+    },
+
+    async getSoftDeletedPosts() {
+      const posts = await db.select().from(postTable).where(isNotNull(postTable.deletedAt));
+
+      return PostWithDeletedAtSchema.array().parse(posts);
     },
 
     async updatePostById(id, data) {
@@ -260,6 +267,17 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .where(eq(commentTable.postId, id));
 
       return !!post;
+    },
+
+    async restoreSoftDeletedPosts(ids, transaction) {
+      const dbToUse = transaction || db;
+
+      await dbToUse
+        .update(postTable)
+        .set({ deletedAt: null })
+        .where(inArray(postTable.id, ids));
+
+      return true;
     }
   };
 } 

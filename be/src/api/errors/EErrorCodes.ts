@@ -9,7 +9,8 @@ export enum EErrorCodes {
   USER_ALREADY_INVITED = 1007,
   POST_OWNER_NOT_FOUND = 1008,
   COMMENT_OWNER_NOT_FOUND = 1009,
-  POST_NOT_FOUND = 1010
+  POST_NOT_FOUND = 1010,
+  COMMENT_NOT_FOUND = 1011
 }
 
 export function getErrorCodesDescription() {
