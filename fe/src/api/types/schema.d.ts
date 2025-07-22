@@ -119,6 +119,178 @@ export interface paths {
       };
     };
   };
+  "/api/admin/archives/soft/comments/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                /** Format: uuid */
+                id: string;
+                text: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: uuid */
+                postId: string;
+                /** Format: uuid */
+                userId: string;
+                user: {
+                  subId: string;
+                  email: string;
+                  isActive?: boolean;
+                  id: string;
+                  name: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  isPending: boolean;
+                  /** @enum {string} */
+                  role: "admin" | "user";
+                };
+                /** Format: date-time */
+                deletedAt: string | null;
+              })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/comments/{commentId}/restore/": {
+    post: {
+      parameters: {
+        path: {
+          commentId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/posts/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                /** Format: uuid */
+                id: string;
+                title: string;
+                description: string;
+                readingTime: number;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: uuid */
+                userId: string;
+                user: {
+                  subId: string;
+                  email: string;
+                  isActive?: boolean;
+                  id: string;
+                  name: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  isPending: boolean;
+                  /** @enum {string} */
+                  role: "admin" | "user";
+                };
+                tags: {
+                    id: string;
+                    name: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                  }[];
+                /** Format: date-time */
+                deletedAt: string | null;
+              })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/posts/{postId}/restore/": {
+    post: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/users/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                subId: string;
+                email: string;
+                isActive?: boolean;
+                id: string;
+                name: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                isPending: boolean;
+                /** @enum {string} */
+                role: "admin" | "user";
+                /** Format: date-time */
+                deletedAt: string | null;
+              })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/users/{userId}/restore/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/admin/tags/": {
     post: {
       requestBody: {
@@ -549,79 +721,6 @@ export interface paths {
                   };
                 })[];
             };
-          };
-        };
-      };
-    };
-  };
-  "/api/posts/test": {
-    get: {
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": ({
-                /** Format: uuid */
-                id: string;
-                title: string;
-                description: string;
-                readingTime: number;
-                /** Format: date-time */
-                updatedAt: string;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: uuid */
-                userId: string;
-                user: {
-                  subId: string;
-                  email: string;
-                  isActive?: boolean;
-                  id: string;
-                  name: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  isPending: boolean;
-                  /** @enum {string} */
-                  role: "admin" | "user";
-                };
-                tags: {
-                    id: string;
-                    name: string;
-                    /** Format: date-time */
-                    createdAt: string;
-                    /** Format: date-time */
-                    updatedAt: string;
-                  }[];
-                comments: ({
-                    /** Format: uuid */
-                    id: string;
-                    text: string;
-                    /** Format: date-time */
-                    updatedAt: string;
-                    /** Format: date-time */
-                    createdAt: string;
-                    /** Format: uuid */
-                    postId: string;
-                    /** Format: uuid */
-                    userId: string;
-                    user: {
-                      subId: string;
-                      email: string;
-                      isActive?: boolean;
-                      id: string;
-                      name: string | null;
-                      /** Format: date-time */
-                      createdAt: string;
-                      /** Format: date-time */
-                      updatedAt: string;
-                      isPending: boolean;
-                      /** @enum {string} */
-                      role: "admin" | "user";
-                    };
-                  })[];
-              })[];
           };
         };
       };
@@ -1119,9 +1218,10 @@ export interface components {
      * - POST_OWNER_NOT_FOUND -> 1008
      * - COMMENT_OWNER_NOT_FOUND -> 1009
      * - POST_NOT_FOUND -> 1010
+     * - COMMENT_NOT_FOUND -> 1011
      * @enum {integer}
      */
-    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 | 1009 | 1010;
+    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 | 1009 | 1010 | 1011;
   };
   responses: never;
   parameters: never;

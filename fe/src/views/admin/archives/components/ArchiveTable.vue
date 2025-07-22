@@ -2,7 +2,7 @@
   <AppTable
     v-loading.fullscreen="loading"
     :headers="headers"
-    :data="archives"
+    :data="finalArchives"
   >
     <template #entity="{ row }">
       <el-tag>
@@ -43,6 +43,7 @@
       </el-popconfirm>
 
       <el-popconfirm
+        v-if="!row.isSoft"
         title="Are you sure you want to delete this archive?"
         width="250"
         @confirm="handleDelete(row)"
@@ -61,12 +62,15 @@
 </template>
 
 <script lang="ts" setup>
+
 const emit = defineEmits<{
   (e: 'restore', row: TArchive): void
   (e: 'delete', row: TArchive): void
 }>()
-defineProps<{
-  archives: TArchive[]
+const props = defineProps<{
+  selectedEntity: TArchiveEntity
+  hardArchives: TArchive[]
+  softArchives: TSoftDeletedPost[] | TSoftDeletedUser[] | TSoftDeletedComment[]
 }>()
 
 const { openModal } = useModals()
@@ -79,6 +83,21 @@ const headers: IAppTableHeader[] = [
   { label: 'Data', property: 'data' },
   { property: 'actions', width: 300, align: 'right' }
 ]
+
+const finalArchives = computed(() => {
+  const archives: IUnifiedArchive[] = [
+    ...props.hardArchives,
+    ...props.softArchives?.map(archive => ({
+      ...archive,
+      data: archive,
+      deletedAt: archive.deletedAt,
+      entityType: props.selectedEntity,
+      isSoft: true
+    })) ?? []
+  ]
+
+  return archives
+})
 
 function prettifyEntityName (entity: TArchiveEntity) {
   const titleByType: Record<TArchiveEntity, string> = {

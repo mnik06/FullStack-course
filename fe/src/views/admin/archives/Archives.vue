@@ -17,7 +17,9 @@
       >
         <ArchiveTable
           v-loading="loading"
-          :archives="archives"
+          :hard-archives="hardArchives"
+          :soft-archives="softArchives[tab.value]"
+          :selected-entity="tab.value"
           @restore="handleRestore"
           @delete="handleDelete"
         />
@@ -44,34 +46,68 @@ const tabs: ITab[] = [
 const route = useRoute()
 
 const loading = ref(false)
-const archives = ref<TArchive[]>([])
+const hardArchives = ref<TArchive[]>([])
+const softArchives = reactive<{
+  users: TSoftDeletedUser[]
+  posts: TSoftDeletedPost[]
+  comments: TSoftDeletedComment[]
+}>({
+  users: [],
+  posts: [],
+  comments: []
+})
+
 const activeTab = ref<TArchiveEntity>(route.query.activeTab as TArchiveEntity || tabs[0].value)
 
-const restoreHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
+const restoreHardHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
   post: (id) => archivesService.restorePostFromArchive(id),
   comment: (id) => archivesService.restoreCommentFromArchive(id),
   user: (id) => archivesService.restoreUserFromArchive(id)
 }
 
+const restoreSoftHandlerByType: Record<TArchiveEntity, (id: string) => Promise<any>> = {
+  post: (id) => archivesService.restoreSoftDeletedPosts(id),
+  comment: (id) => archivesService.restoreSoftDeletedComments(id),
+  user: (id) => archivesService.restoreSoftDeletedUsers(id)
+}
+
 function onTabChange () {
-  archives.value = []
+  hardArchives.value = []
 
   replaceRouterQuery({ activeTab: activeTab.value })
   fetchArchives()
 }
 
+function fetchHardArchives () {
+  return archivesService.getArchives({ entityType: activeTab.value })
+    .then((res) => { hardArchives.value = res })
+}
+
+function fetchSoftArchives () {
+  const methodByEntity = {
+    post: archivesService.getSoftDeletedPosts,
+    comment: archivesService.getSoftDeletedComments,
+    user: archivesService.getSoftDeletedUsers
+  }
+
+  return methodByEntity[activeTab.value]()
+    .then((res) => { softArchives[activeTab.value] = res })
+}
+
 function fetchArchives () {
   loading.value = true
 
-  return archivesService.getArchives({ entityType: activeTab.value })
-    .then((res) => { archives.value = res })
+  return Promise.allSettled([
+    fetchHardArchives(),
+    fetchSoftArchives()
+  ])
     .finally(() => { loading.value = false })
 }
 
-function handleRestore (row: TArchive) {
+function handleRestore (row: IUnifiedArchive) {
   loading.value = true
 
-  return restoreHandlerByType[row.entityType](row.id)
+  return (row.isSoft ? restoreSoftHandlerByType : restoreHardHandlerByType)[row.entityType](row.id)
     .then(() => {
       notificationHandler({ text: 'Archive restored successfully', type: 'success' })
       return fetchArchives()
