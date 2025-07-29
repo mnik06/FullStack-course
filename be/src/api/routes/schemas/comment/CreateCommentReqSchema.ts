@@ -1,5 +1,6 @@
 import { z } from 'zod';
+import { CommentUpsertData } from 'src/types/comment/schemas/CommentUpsertData';
 
-export const CreateCommentReqSchema = z.object({
-  text: z.string()
-}); 
+export const CreateCommentReqSchema = CommentUpsertData.extend({});
+
+export type TCreateCommentReq = z.infer<typeof CreateCommentReqSchema>;

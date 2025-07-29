@@ -17,7 +17,7 @@ import healthCheck from './plugins/health-check.plugin';
 import routePrinter from './plugins/route-printer.plugin';
 import { setupSwagger } from './plugins/swagger.plugin';
 import { getLoggerOptions } from './plugins/logger.plugin';
-import { getDb, dbHealthCheck } from 'src/services/drizzle/drizzle.service';
+import { getDb, dbHealthCheck, getTransactionManager } from 'src/services/drizzle/drizzle.service';
 import { getCognitoService } from 'src/services/cognito/cognito.service';
 import { kmsService } from 'src/services/kms/kms.service';
 import { getSendgridService } from 'src/services/sendgrid/sendgrid.service';
@@ -81,6 +81,7 @@ async function run() {
     })
   );
   server.decorate('repos', getRepos(server.db));
+  server.decorate('transactionManager', getTransactionManager(server.db));
 
   server.register(autoTagging);
 

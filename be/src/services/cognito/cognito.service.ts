@@ -1,5 +1,6 @@
 import {
   AdminCreateUserCommand, 
+  AdminDeleteUserCommand, 
   AdminDisableUserCommand, 
   AdminEnableUserCommand, 
   AdminGetUserCommand, 
@@ -127,6 +128,13 @@ export function getCognitoService(): IIdentityService {
 
     async enableUser(email: string) {
       await client.send(new AdminEnableUserCommand({
+        Username: email,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID!
+      }));
+    },
+
+    async deleteUser(email) {
+      await client.send(new AdminDeleteUserCommand({
         Username: email,
         UserPoolId: process.env.COGNITO_USER_POOL_ID!
       }));

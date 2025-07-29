@@ -15,8 +15,12 @@ class PostsService {
     return useApiClient.patch('/api/posts/{postId}/', post, { dynamicKeys: { postId: id } })
   }
 
-  deletePost (id: string) {
-    return useApiClient.delete('/api/posts/{postId}/', { dynamicKeys: { postId: id } })
+  deletePostHard (id: string) {
+    return useApiClient.delete('/api/posts/{postId}/delete-hard/', { dynamicKeys: { postId: id } })
+  }
+
+  deletePostSoft (id: string) {
+    return useApiClient.delete('/api/posts/{postId}/delete-soft/', { dynamicKeys: { postId: id } })
   }
 
   getComments (postId: string) {
@@ -27,8 +31,16 @@ class PostsService {
     return useApiClient.post('/api/posts/{postId}/comments/', { text }, { dynamicKeys: { postId } })
   }
 
-  deleteComment (postId: string, commentId: string) {
-    return useApiClient.delete('/api/posts/{postId}/comments/{commentId}/', { dynamicKeys: { postId, commentId } })
+  deleteCommentHard (postId: string, commentId: string) {
+    return useApiClient.delete('/api/posts/{postId}/comments/{commentId}/delete-hard/', { dynamicKeys: { postId, commentId } })
+  }
+
+  deleteCommentSoft (postId: string, commentId: string) {
+    return useApiClient.delete('/api/posts/{postId}/comments/{commentId}/delete-soft/', { dynamicKeys: { postId, commentId } })
+  }
+
+  editPostTags (postId: string, tagIds: string[]) {
+    return useApiClient.post('/api/posts/{postId}/edit-tags/', { tagIds }, { dynamicKeys: { postId } })
   }
 }
 

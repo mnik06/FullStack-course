@@ -7,7 +7,7 @@
       FullStack Course
     </router-link>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-5">
       <AppAccess
         v-for="item in navigationItems"
         :key="item.routeName"
@@ -18,7 +18,7 @@
           class="flex items-center gap-1 link text-lg"
           active-class="active"
         >
-          <component :is="item.icon" class="w-5 h-5" />
+          <component :is="item.icon" class="w-4 h-4" />
           <span>{{ item.label }}</span>
         </router-link>
       </AppAccess>
@@ -38,7 +38,9 @@
 
 <script lang="ts" setup>
 import IconPost from '~icons/icon/post'
+import IconTag from '~icons/icon/tag'
 import IconUser from '~icons/icon/user'
+import IconArchive from '~icons/icon/archive'
 
 interface INavigationItem {
   label: string
@@ -57,6 +59,18 @@ const navigationItems: INavigationItem[] = [
     label: 'Users',
     routeName: 'users',
     icon: IconUser,
+    roles: ['admin']
+  },
+  {
+    label: 'Tags',
+    routeName: 'tags',
+    icon: IconTag,
+    roles: ['admin']
+  },
+  {
+    label: 'Archives',
+    routeName: 'archives',
+    icon: IconArchive,
     roles: ['admin']
   }
 ]

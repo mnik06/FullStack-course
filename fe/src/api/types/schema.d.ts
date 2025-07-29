@@ -15,6 +15,356 @@ export interface paths {
       };
     };
   };
+  "/api/admin/archives/": {
+    get: {
+      parameters: {
+        query?: {
+          entityType?: "post" | "comment" | "user";
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                id: string;
+                /** Format: date-time */
+                deletedAt: string;
+                deletedBy: string;
+                entityId: string;
+                /** @enum {string} */
+                entityType: "post" | "comment" | "user";
+                data: {
+                  [key: string]: unknown;
+                };
+              })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/{archiveId}/": {
+    delete: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/{archiveId}/restore-comment/": {
+    post: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/{archiveId}/restore-post/": {
+    post: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/{archiveId}/restore-user/": {
+    post: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/comments/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                /** Format: uuid */
+                id: string;
+                text: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: uuid */
+                postId: string;
+                /** Format: uuid */
+                userId: string;
+                user: {
+                  subId: string;
+                  email: string;
+                  isActive?: boolean;
+                  id: string;
+                  name: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  isPending: boolean;
+                  /** @enum {string} */
+                  role: "admin" | "user";
+                };
+                /** Format: date-time */
+                deletedAt: string | null;
+              })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/comments/{commentId}/restore/": {
+    post: {
+      parameters: {
+        path: {
+          commentId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/posts/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                /** Format: uuid */
+                id: string;
+                title: string;
+                description: string;
+                readingTime: number;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: uuid */
+                userId: string;
+                user: {
+                  subId: string;
+                  email: string;
+                  isActive?: boolean;
+                  id: string;
+                  name: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  isPending: boolean;
+                  /** @enum {string} */
+                  role: "admin" | "user";
+                };
+                tags: {
+                    id: string;
+                    name: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                  }[];
+                /** Format: date-time */
+                deletedAt: string | null;
+              })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/posts/{postId}/restore/": {
+    post: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/users/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": ({
+                subId: string;
+                email: string;
+                isActive?: boolean;
+                id: string;
+                name: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                isPending: boolean;
+                /** @enum {string} */
+                role: "admin" | "user";
+                /** Format: date-time */
+                deletedAt: string | null;
+              })[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archives/soft/users/{userId}/restore/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/tags/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/tags/{tagId}/": {
+    delete: {
+      parameters: {
+        path: {
+          tagId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          tagId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/admin/users/": {
     get: {
       parameters: {
@@ -50,6 +400,44 @@ export interface paths {
                 totalPages?: number;
                 page?: number;
               };
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/delete-hard/": {
+    delete: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/delete-soft/": {
+    delete: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
             };
           };
         };
@@ -195,6 +583,7 @@ export interface paths {
           sortBy?: "createdAt" | "title" | "commentsCount";
           sortOrder?: "asc" | "desc";
           numericFilters?: string[] | string;
+          tagIds?: string[] | string;
         };
       };
       responses: {
@@ -206,7 +595,7 @@ export interface paths {
                   /** Format: uuid */
                   id: string;
                   title: string;
-                  description?: string | null;
+                  description: string;
                   readingTime: number;
                   /** Format: date-time */
                   updatedAt: string;
@@ -228,6 +617,14 @@ export interface paths {
                     /** @enum {string} */
                     role: "admin" | "user";
                   };
+                  tags: {
+                      id: string;
+                      name: string;
+                      /** Format: date-time */
+                      createdAt: string;
+                      /** Format: date-time */
+                      updatedAt: string;
+                    }[];
                   commentsCount: number;
                 })[];
               meta: {
@@ -243,11 +640,18 @@ export interface paths {
       };
     };
     post: {
-      requestBody: {
+      requestBody?: {
         content: {
           "application/json": {
-            title: string;
-            description?: string | null;
+            title?: string;
+            description?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+            /** Format: uuid */
+            id?: string;
+            tagIds?: string[];
           };
         };
       };
@@ -259,7 +663,7 @@ export interface paths {
               /** Format: uuid */
               id: string;
               title: string;
-              description?: string | null;
+              description: string;
               readingTime: number;
               /** Format: date-time */
               updatedAt: string;
@@ -281,6 +685,14 @@ export interface paths {
                 /** @enum {string} */
                 role: "admin" | "user";
               };
+              tags: {
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                }[];
               comments: ({
                   /** Format: uuid */
                   id: string;
@@ -329,7 +741,7 @@ export interface paths {
               /** Format: uuid */
               id: string;
               title: string;
-              description?: string | null;
+              description: string;
               readingTime: number;
               /** Format: date-time */
               updatedAt: string;
@@ -351,6 +763,14 @@ export interface paths {
                 /** @enum {string} */
                 role: "admin" | "user";
               };
+              tags: {
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                }[];
               comments: ({
                   /** Format: uuid */
                   id: string;
@@ -383,23 +803,6 @@ export interface paths {
         };
       };
     };
-    delete: {
-      parameters: {
-        path: {
-          postId: string;
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": {
-              success: boolean;
-            };
-          };
-        };
-      };
-    };
     patch: {
       parameters: {
         path: {
@@ -411,6 +814,13 @@ export interface paths {
           "application/json": {
             title?: string;
             description?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+            /** Format: uuid */
+            id?: string;
+            tagIds?: string[];
           };
         };
       };
@@ -422,7 +832,7 @@ export interface paths {
               /** Format: uuid */
               id: string;
               title: string;
-              description?: string | null;
+              description: string;
               readingTime: number;
               /** Format: date-time */
               updatedAt: string;
@@ -444,6 +854,14 @@ export interface paths {
                 /** @enum {string} */
                 role: "admin" | "user";
               };
+              tags: {
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                }[];
               comments: ({
                   /** Format: uuid */
                   id: string;
@@ -525,10 +943,14 @@ export interface paths {
           postId: string;
         };
       };
-      requestBody: {
+      requestBody?: {
         content: {
           "application/json": {
-            text: string;
+            text?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
           };
         };
       };
@@ -569,24 +991,6 @@ export interface paths {
     };
   };
   "/api/posts/{postId}/comments/{commentId}/": {
-    delete: {
-      parameters: {
-        path: {
-          postId: string;
-          commentId: string;
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": {
-              success: boolean;
-            };
-          };
-        };
-      };
-    };
     patch: {
       parameters: {
         path: {
@@ -637,6 +1041,140 @@ export interface paths {
       };
     };
   };
+  "/api/posts/{postId}/comments/{commentId}/delete-hard/": {
+    delete: {
+      parameters: {
+        path: {
+          commentId: string;
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/comments/{commentId}/delete-soft/": {
+    delete: {
+      parameters: {
+        path: {
+          commentId: string;
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/delete-hard/": {
+    delete: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/delete-soft/": {
+    delete: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/posts/{postId}/edit-tags/": {
+    post: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            tagIds: string[];
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              }[];
+          };
+        };
+      };
+    };
+  };
+  "/api/tags/": {
+    get: {
+      parameters: {
+        query?: {
+          search?: string;
+          tagIds?: string[];
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              }[];
+          };
+        };
+      };
+    };
+  };
   "/api/user-profile/": {
     get: {
       responses: {
@@ -676,9 +1214,14 @@ export interface components {
      * - INVITE_EXPIRED -> 1004
      * - USER_ALREADY_ACTIVATED -> 1005
      * - USER_NOT_FOUND -> 1006
+     * - USER_ALREADY_INVITED -> 1007
+     * - POST_OWNER_NOT_FOUND -> 1008
+     * - COMMENT_OWNER_NOT_FOUND -> 1009
+     * - POST_NOT_FOUND -> 1010
+     * - COMMENT_NOT_FOUND -> 1011
      * @enum {integer}
      */
-    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006;
+    ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 | 1009 | 1010 | 1011;
   };
   responses: never;
   parameters: never;

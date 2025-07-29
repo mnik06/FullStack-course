@@ -1,11 +1,19 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
-import { TComment } from 'src/types/comment/schemas/Comment';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
+import { TCommentUpsertData } from 'src/types/comment/schemas/CommentUpsertData';
+import { TComment } from 'src/types/comment/schemas/Comment';
 
-export function createComment(params: {
+export async function createNewComment(params: {
   commentRepo: ICommentRepo;
-  data: Partial<TComment>;
+  data: TCommentUpsertData;
   user: TUserProfile;
+  postId: string;
 }) {
-  return params.commentRepo.createComment(params.data, params.user);
-} 
+  const comment = await params.commentRepo.createComment({
+    ...params.data,
+    postId: params.postId,
+    userId: params.user.id
+  });
+
+  return comment as TComment;
+}

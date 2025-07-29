@@ -9,7 +9,7 @@
       <el-badge
         type="primary"
         :hidden="!isSomeFilterApplied"
-        :value="modelValue.length"
+        :value="appliedFiltersCount"
       >
         <el-button class="w-[32px] h-[32px]" type="primary" :plain="!isSomeFilterApplied">
           <IconFilters class="w-4 h-4" />
@@ -32,23 +32,16 @@
             </el-button>
           </div>
 
-          <div v-for="option in options" :key="option.label" class="flex flex-col mt-2">
-            <span class="font-medium text-slate-600">{{ option.label }}:</span>
+          <PostsFiltersNumeric v-model="localModel.numericFilters" />
 
-            <div class="flex items-center gap-2 mt-0.5">
-              <NumericOperatorSelect
-                v-model="localModel[option.key].operator"
-                class="flex-1"
-              />
-
-              <el-input-number
-                v-model="localModel[option.key].value"
-                class="flex-1"
-                size="small"
-                placeholder="Value"
-                :controls="false"
-              />
-            </div>
+          <div class="flex flex-col mt-2">
+            <span class="font-medium text-slate-600">Tags:</span>
+            <PostsTagsSelect
+              v-model="localModel.tagIds"
+              size="small"
+              class="mt-0.5"
+              :teleported="false"
+            />
           </div>
 
           <div class="flex items-center justify-end mt-auto w-full pt-3">
@@ -76,57 +69,25 @@
 <script lang="ts" setup>
 import { replaceRouterQuery } from '@/router'
 
-const modelValue = defineModel<string[]>()
-
-const options = [
-  {
-    key: 'commentsCount',
-    label: 'Comments Count'
-  },
-  {
-    key: 'readingTime',
-    label: 'Reading Time (min)'
-  }
-]
+const modelValue = defineModel<IPostFilters>()
+const localModel = ref<IPostFilters>({
+  tagIds: [],
+  numericFilters: []
+})
 
 const dropdownRef = useTemplateRef('dropdownRef')
 
-const parsedModelValue = computed(() => {
-  return Object.fromEntries(
-    modelValue.value.map(f => {
-      const [key, operator, value] = f.split('_')
-      return [key, { value: Number(value), operator }]
-    })
-  )
-})
-
-const isSomeFilterApplied = computed(() => !!modelValue.value.length)
-
-const localModel = ref(createLocalModel())
-
-function createLocalModel () {
-  return options.reduce((acc, option) => {
-    acc[option.key] = {
-      operator: parsedModelValue.value[option.key]?.operator,
-      value: parsedModelValue.value[option.key]?.value
-    }
-    return acc
-  }, {} as Record<string, { operator: string; value: number }>)
-}
-
-function convertParsedFiltersToString (filters: Record<string, { operator: string; value: number }>) {
-  return Object.entries(filters)
-    .filter(([_, { value, operator }]) => value !== undefined && operator !== undefined)
-    .map(([key, { value, operator }]) => `${key}_${operator}_${value}`)
-}
+const isSomeFilterApplied = computed(() => modelValue.value.tagIds.length || modelValue.value.numericFilters.length)
+const appliedFiltersCount = computed(() => modelValue.value.tagIds.length + modelValue.value.numericFilters.length)
 
 function applyFilters () {
-  const stringifiedFilters = convertParsedFiltersToString(localModel.value)
-
-  modelValue.value = stringifiedFilters
+  modelValue.value = {
+    tagIds: localModel.value.tagIds,
+    numericFilters: localModel.value.numericFilters
+  }
   dropdownRef.value?.handleClose()
 
-  replaceRouterQuery({ numericFilters: stringifiedFilters })
+  replaceRouterQuery({ numericFilters: localModel.value.numericFilters, tagIds: localModel.value.tagIds })
 }
 
 function closeDropdown () {
@@ -134,15 +95,16 @@ function closeDropdown () {
 }
 
 function clearFilters () {
-  modelValue.value = []
-  localModel.value = createLocalModel()
+  modelValue.value = {
+    numericFilters: [],
+    tagIds: []
+  }
 
   dropdownRef.value?.handleClose()
-
-  replaceRouterQuery({ numericFilters: null })
+  replaceRouterQuery({ numericFilters: null, tagIds: null })
 }
 
 watch(modelValue, () => {
-  localModel.value = createLocalModel()
-})
+  localModel.value = { ...modelValue.value }
+}, { immediate: true })
 </script>

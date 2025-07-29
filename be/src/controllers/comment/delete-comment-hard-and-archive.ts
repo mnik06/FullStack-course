@@ -1,0 +1,32 @@
+import { ICommentRepo } from 'src/types/repos/ICommentRepo';
+import { HttpError } from 'src/api/errors/HttpError';
+import { createNewArchiveHelper } from 'src/controllers/common/create-new-archive-helper';
+import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
+import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
+
+export async function deleteCommentHardAndArchive(params: {
+  commentRepo: ICommentRepo,
+  commentId: string,
+  archiveRepo: IArchiveRepo,
+  user: TUserProfile
+}) {
+  const comment = await params.commentRepo.getCommentById(params.commentId);
+
+  if (!comment) {
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Comment not found'
+    });
+  }
+
+  await params.commentRepo.deleteCommentHard(params.commentId);
+  await createNewArchiveHelper({
+    archiveRepo: params.archiveRepo,
+    entityType: 'comment',
+    entityId: params.commentId,
+    user: params.user,
+    data: comment
+  });
+
+  return { success: true };
+}

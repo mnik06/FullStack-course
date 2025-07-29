@@ -31,6 +31,18 @@ class ErrorService {
       USER_ALREADY_INVITED: {
         message: 'User with this email is already invited',
         code: 1007
+      },
+      POST_OWNER_NOT_FOUND: {
+        message: 'Post owner not found',
+        code: 1008
+      },
+      COMMENT_OWNER_NOT_FOUND: {
+        message: 'Comment owner not found',
+        code: 1009
+      },
+      POST_NOT_FOUND: {
+        message: 'Post not found',
+        code: 1010
       }
     }
   }

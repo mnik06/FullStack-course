@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "post_tag_unique" ON "posts_to_tags" USING btree ("post_id","tag_id");

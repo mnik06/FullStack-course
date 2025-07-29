@@ -12,7 +12,9 @@ const rolePermissions: Record<TUserRole, IPermissionEntry[]> = {
     { action: 'create_comment' },
     { action: 'read_comment' },
     { action: 'manage_comment' },
-    { action: 'manage_users' }
+    { action: 'manage_users' },
+    { action: 'manage_tags' },
+    { action: 'manage_archive' }
   ],
   user: [
     { action: 'create_post' },

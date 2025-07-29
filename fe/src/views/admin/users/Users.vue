@@ -34,34 +34,47 @@
         <el-button
           v-if="row.isPending"
           type="primary"
-          class="w-full"
           size="small"
           @click="handleResendInvite(row.id)"
         >
           Resend invite
         </el-button>
 
-        <el-popconfirm
+        <div
           v-else-if="row.isActive"
-          title="Are you sure to deactivate this user?"
-          width="200"
-          @confirm="handleDisableUser(row.id)"
+          class="flex items-center justify-end"
         >
-          <template #reference>
-            <el-button type="danger" size="small" class="w-full">Deactivate</el-button>
-          </template>
-        </el-popconfirm>
+          <el-popconfirm
+            title="Are you sure you want to delete this user?"
+            width="200"
+            @confirm="handleDeleteUserHard(row.id)"
+          >
+            <template #reference>
+              <el-button type="danger" size="small">Delete</el-button>
+            </template>
+          </el-popconfirm>
+
+          <el-popconfirm
+            title="Are you sure you want to deactivate this user?"
+            width="200"
+            @confirm="handleDisableUser(row.id)"
+          >
+            <template #reference>
+              <el-button type="danger" size="small">Deactivate</el-button>
+            </template>
+          </el-popconfirm>
+        </div>
 
         <el-popconfirm
           v-else
-          title="Are you sure to activate this user?"
+          title="Are you sure you want to activate this user?"
           width="200"
           type="success"
           hide-icon
           @confirm="handleActivateUser(row.id)"
         >
           <template #reference>
-            <el-button type="success" size="small" class="w-full">Activate</el-button>
+            <el-button type="success" size="small">Activate</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -96,7 +109,8 @@ const headers: IAppTableHeader[] = [
   },
   {
     property: 'actions',
-    width: 130
+    align: 'right',
+    width: 250
   }
 ]
 
@@ -160,6 +174,19 @@ function handleResendInvite (id: string) {
     .then(fetchUsers)
     .then(() => {
       notificationHandler({ text: 'Invite resent successfully', type: 'success' })
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+function handleDeleteUserHard (id: string) {
+  loading.value = true
+
+  usersService.deleteUserHard(id)
+    .then(fetchUsers)
+    .then(() => {
+      notificationHandler({ text: 'User deleted successfully', type: 'success' })
     })
     .finally(() => {
       loading.value = false

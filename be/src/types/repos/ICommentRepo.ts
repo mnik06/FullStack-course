@@ -1,13 +1,20 @@
 import { TComment } from 'src/types/comment/schemas/Comment';
-import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
+import { TCommentWithDeletedAt } from 'src/types/comment/schemas/CommentWithDeletedAt';
+import { TTransaction } from 'src/types/ITransactionManager';
 
 export interface ICommentRepo {
-  createComment(data: Partial<TComment>, user: TUserProfile): Promise<TComment>;
-  getCommentById(id: string): Promise<TComment | null>;
-  getCommentsByPostId(postId: string): Promise<TComment[]>;
+  createComment(data: Partial<TComment>): Promise<TComment | null>;
+  createMultipleComments(data: Partial<TComment>[], transaction: TTransaction): Promise<boolean>;
+  getCommentById(id: string, skipDeleted?: boolean): Promise<TComment | null>;
+  getCommentsByPostIds(postId: string[], skipDeleted?: boolean): Promise<TComment[]>;
+  getComments(params?: { userId?: string }): Promise<TComment[]>;
+  getCommentsByUserId(userId: string, skipDeleted?: boolean): Promise<TComment[]>;
+  getSoftDeletedComments(): Promise<TCommentWithDeletedAt[]>;
   updateCommentById(
     id: string, 
     data: Partial<TComment>, 
   ): Promise<TComment | null>;
-  deleteComment(id: string): Promise<boolean>;
+  deleteCommentSoft(id: string): Promise<boolean>;
+  deleteCommentHard(id: string): Promise<boolean>;
+  restoreSoftDeletedComments(ids: string[], transaction?: TTransaction): Promise<boolean>;
 } 

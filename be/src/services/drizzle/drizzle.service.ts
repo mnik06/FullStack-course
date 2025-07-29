@@ -1,6 +1,6 @@
 import { THealthMetrics } from 'src/types/HealthMetrics';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { ITransactionManager } from 'src/types/ITransaction';
+import { ITransactionManager } from 'src/types/ITransactionManager';
 
 export function getDb(opts : {
   port: number,

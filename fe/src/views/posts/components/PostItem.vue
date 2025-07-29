@@ -22,31 +22,32 @@
               <IconEdit class="w-4 h-4" />
             </el-button>
 
-            <el-popconfirm
-              title="Are you sure to delete this post?"
-              width="200"
-              @confirm="handleDeletePost"
-            >
-              <template #reference>
-                <el-button type="danger" size="small" class="w-7 h-7">
-                  <IconDelete class="w-4 h-4" />
-                </el-button>
-              </template>
-            </el-popconfirm>
+            <el-button type="danger" size="small" class="w-7 h-7" @click="handleDeletePost">
+              <IconDelete class="w-4 h-4" />
+            </el-button>
           </div>
         </AppAccess>
       </div>
     </template>
 
     <div class="flex flex-col">
-      <div class="flex items-center mb-2 gap-1">
-        <el-avatar class="bg-cream-can" size="small">
-          {{ $filters.getInitials(post.user.name) }}
-        </el-avatar>
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-1">
+          <el-avatar class="bg-cream-can" size="small">
+            {{ $filters.getInitials(post.user.name) }}
+          </el-avatar>
 
-        <span class="font-medium text-xs">
-          {{ post.user.id === authStore.user.id ? 'You' : post.user.name }}
-        </span>
+          <span class="font-medium text-xs">
+            {{ post.user.id === authStore.user.id ? 'You' : post.user.name }}
+          </span>
+        </div>
+
+        <PostsTags
+          :post-id="post.id"
+          :tags="post.tags"
+          :is-owner="post.user.id === authStore.user.id"
+          @tags-updated="handleTagsUpdated"
+        />
       </div>
 
       <p v-if="showFull">{{ post.description }}</p>
@@ -103,14 +104,13 @@
 </template>
 
 <script lang="ts" setup>
-import { notificationHandler } from '@/core/helpers'
-
-const emit = defineEmits(['editPost', 'postDeleted'])
+const emit = defineEmits(['editPost', 'postDeleted', 'updatePost'])
 const props = defineProps<{
   post: TPost | TPosts[number]
   showFull?: boolean
 }>()
 
+const { openModal } = useModals()
 const authStore = useAuthStore()
 
 const postComments = ref<TPostComment[]>((props.post as TPost).comments || [])
@@ -131,11 +131,20 @@ async function toggleComments () {
 }
 
 function handleDeletePost () {
-  postsService.deletePost(props.post.id)
-    .then(() => {
-      notificationHandler({ text: 'Post deleted successfully', type: 'success' })
+  openModal('AppDeleteOptionsModal', {
+    deleteSoftHandler: () => postsService.deletePostSoft(props.post.id),
+    deleteHardHandler: () => postsService.deletePostHard(props.post.id),
+    onDeleted: () => {
       emit('postDeleted', props.post)
-    })
+    }
+  })
+}
+
+function handleTagsUpdated (tags: TTag[]) {
+  emit('updatePost', {
+    ...props.post,
+    tags
+  })
 }
 
 function fetchPostComments () {

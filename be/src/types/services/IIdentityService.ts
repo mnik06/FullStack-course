@@ -11,4 +11,5 @@ export interface IIdentityService {
   }): Promise<void>;
   disableUser(email: string): Promise<void>;
   enableUser(email: string): Promise<void>;
+  deleteUser(email: string): Promise<void>;
 }
