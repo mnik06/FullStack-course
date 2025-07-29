@@ -6,7 +6,7 @@ export interface ICommentRepo {
   createComment(data: Partial<TComment>): Promise<TComment | null>;
   createMultipleComments(data: Partial<TComment>[], transaction: TTransaction): Promise<boolean>;
   getCommentById(id: string, skipDeleted?: boolean): Promise<TComment | null>;
-  getCommentsByPostId(postId: string, skipDeleted?: boolean): Promise<TComment[]>;
+  getCommentsByPostIds(postId: string[], skipDeleted?: boolean): Promise<TComment[]>;
   getComments(params?: { userId?: string }): Promise<TComment[]>;
   getCommentsByUserId(userId: string, skipDeleted?: boolean): Promise<TComment[]>;
   getSoftDeletedComments(): Promise<TCommentWithDeletedAt[]>;

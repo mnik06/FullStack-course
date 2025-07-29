@@ -6,6 +6,7 @@ export async function restoreSoftDeletedComment(params: {
   commentId: string;
   commentRepo: ICommentRepo;
 }) {
+  // TODO: add posts and users check
   const comment = await params.commentRepo.getCommentById(params.commentId, false);
 
   if (!comment) {

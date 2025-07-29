@@ -45,7 +45,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
       return CommentSchema.parse(comment);
     },
 
-    async getCommentsByPostId(postId, skipDeleted = true) {
+    async getCommentsByPostIds(postIds, skipDeleted = true) {
       const isCommentNotDeletedFilter = skipDeleted ? getIsCommentNotDeletedFilter() : undefined;
 
       const comments = await db
@@ -54,7 +54,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
           user: userTable
         })
         .from(commentTable)
-        .where(and(eq(commentTable.postId, postId), isCommentNotDeletedFilter))
+        .where(and(inArray(commentTable.postId, postIds), isCommentNotDeletedFilter))
         .leftJoin(userTable, eq(commentTable.userId, userTable.id));
 
       return CommentSchema.array().parse(comments);

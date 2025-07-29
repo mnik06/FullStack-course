@@ -24,6 +24,10 @@ export async function restoreSoftDeletedUser(params: {
 
   const posts = await params.postRepo.getPostsWithCommentsByUserId(params.userId, false);
   const comments = await params.commentRepo.getCommentsByUserId(params.userId, false);
+  const commentsForPosts = await params.commentRepo.getCommentsByPostIds(
+    posts.map((p) => p.id), 
+    false
+  );
 
   await params.transactionManager.execute(async ({ sharedTx }) => {
     await params.userProfileRepo.restoreSoftDeletedUserProfile(params.userId, sharedTx);
@@ -34,6 +38,13 @@ export async function restoreSoftDeletedUser(params: {
 
     if (comments.length) {
       await params.commentRepo.restoreSoftDeletedComments(comments.map((c) => c.id), sharedTx);
+    }
+
+    if (commentsForPosts.length) {
+      await params.commentRepo.restoreSoftDeletedComments(
+        commentsForPosts.map((c) => c.id), 
+        sharedTx
+      );
     }
   });
 

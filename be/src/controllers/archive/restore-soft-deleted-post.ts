@@ -10,6 +10,7 @@ export async function restoreSoftDeletedPost(params: {
   commentRepo: ICommentRepo,
   transactionManager: ITransactionManager,
 }) {
+  // TODO: add user check
   const post = await params.postRepo.getPostById(params.postId, false);
 
   if (!post) {
@@ -20,7 +21,7 @@ export async function restoreSoftDeletedPost(params: {
     });
   }
 
-  const comments = await params.commentRepo.getCommentsByPostId(params.postId, false);
+  const comments = await params.commentRepo.getCommentsByPostIds([params.postId], false);
 
   await params.transactionManager.execute(async ({ sharedTx }) => {
     await params.postRepo.restoreSoftDeletedPosts([params.postId], sharedTx);

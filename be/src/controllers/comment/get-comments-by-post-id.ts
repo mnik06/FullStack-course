@@ -4,5 +4,5 @@ export function getCommentsByPostId(params: {
   commentRepo: ICommentRepo;
   postId: string
 }) {
-  return params.commentRepo.getCommentsByPostId(params.postId);
+  return params.commentRepo.getCommentsByPostIds([params.postId]);
 } 

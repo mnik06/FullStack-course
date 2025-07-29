@@ -64,7 +64,7 @@ export async function restoreUserFromArchive(params: {
       });
     }
 
-    await params.archiveRepo.deleteArchiveById(userArchive.id);
+    await params.archiveRepo.deleteArchiveById(userArchive.id, sharedTx);
   });
 
   return { success: true };
