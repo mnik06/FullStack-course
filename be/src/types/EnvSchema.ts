@@ -19,7 +19,12 @@ export const EnvSchema = z.object({
   SENDGRID_API_KEY: z.string(),
 
   HMAC_KEY_ID: z.string(),
-  INVITES_EMAIL_TEMPLATE_ID: z.string()
+  INVITES_EMAIL_TEMPLATE_ID: z.string(),
+
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.string(),
+
+  WEBSOCKETS_PORT: z.string()
 });
 
 export type TEnv = z.infer<typeof EnvSchema>;

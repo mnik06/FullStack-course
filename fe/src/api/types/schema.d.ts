@@ -137,20 +137,7 @@ export interface paths {
                 postId: string;
                 /** Format: uuid */
                 userId: string;
-                user: {
-                  subId: string;
-                  email: string;
-                  isActive?: boolean;
-                  id: string;
-                  name: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  isPending: boolean;
-                  /** @enum {string} */
-                  role: "admin" | "user";
-                };
+                user?: unknown;
                 /** Format: date-time */
                 deletedAt: string | null;
               })[];
@@ -196,28 +183,8 @@ export interface paths {
                 createdAt: string;
                 /** Format: uuid */
                 userId: string;
-                user: {
-                  subId: string;
-                  email: string;
-                  isActive?: boolean;
-                  id: string;
-                  name: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  isPending: boolean;
-                  /** @enum {string} */
-                  role: "admin" | "user";
-                };
-                tags: {
-                    id: string;
-                    name: string;
-                    /** Format: date-time */
-                    createdAt: string;
-                    /** Format: date-time */
-                    updatedAt: string;
-                  }[];
+                user?: unknown;
+                tags?: unknown;
                 /** Format: date-time */
                 deletedAt: string | null;
               })[];
@@ -1171,6 +1138,16 @@ export interface paths {
                 updatedAt: string;
               }[];
           };
+        };
+      };
+    };
+  };
+  "/api/test/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
         };
       };
     };
