@@ -35,6 +35,10 @@ export const sessionRouteGuard: NavigationGuard = async (to, _from, next) => {
     authService.signout()
   }
 
+  if (!websocketsService.isConnected && isLoggedIn) {
+    websocketsService.connect()
+  }
+
   if (to.meta.roles) {
     if (!to.meta.roles.includes(authStore.user.role)) {
       next({ name: routeNames.signin })

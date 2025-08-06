@@ -24,6 +24,8 @@ type TSortOrder = 'asc' | 'desc'
 
 type TRouteName = keyof typeof import('@/router/route-names')['routeNames']
 
+type TWebsocketMessageType = keyof typeof import('@/types/enums')['EWebsocketMessageType']
+
 interface IAppSorting<T extends string> {
   sortBy: T
   sortOrder: TSortOrder

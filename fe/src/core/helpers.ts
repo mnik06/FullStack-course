@@ -33,7 +33,7 @@ export const createHashedObject = <
 
 export const notificationHandler = (
   notification?: string | ICustomNotification | TAppAxiosError,
-  customNotificationOptions?: TElementPlus['NotificationOptions']
+  customNotificationOptions?: Partial<TElementPlus['NotificationOptions']>
 ) => {
   const type = (notification as ICustomNotification)?.type || 'error'
   const customMessage = typeof notification === 'string'
