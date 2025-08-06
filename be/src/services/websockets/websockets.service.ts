@@ -1,10 +1,10 @@
 import { createAdapter } from '@socket.io/redis-adapter';
 import Redis from 'ioredis';
 import { Server, Socket } from 'socket.io';
-import { IWebSocketsService } from './IWebSocketsService';
+import { IWebsocketsService } from './IWebsocketsService';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
-export function getWebsocketsService(): IWebSocketsService {
+export function getWebsocketsService(): IWebsocketsService {
   const pubClient = new Redis({
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT),
@@ -99,17 +99,19 @@ export function getWebsocketsService(): IWebSocketsService {
     handleBrokerMessage(channel, message) {
       const roomName = channel.replace('room:', '');
 
+      console.log('roomname:', roomName);
+
       rooms.get(roomName)?.forEach((socketId) => {
         connections.get(socketId)?.emit(message.type, message.data);
       });
     },
 
-    sendMessage(message, room) {
+    sendMessageToRoom(room, message) {
       this.publishMessageToBroker(message, room);
     },
 
     sendMessageToUser(userId, message) {
-      this.sendMessage(message, `user:${userId}`);
+      this.sendMessageToRoom(`user:${userId}`, message);
     },
 
     joinRoom(room: string, socketId: string) {

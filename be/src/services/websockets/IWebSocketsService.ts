@@ -3,7 +3,7 @@ import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 import { IIdentityService } from 'src/types/services/IIdentityService';
 import { IWebsocketMessage } from 'src/types/websockets/WebsocketsTypes';
 
-export interface IWebSocketsService {
+export interface IWebsocketsService {
   getSocketServer(): Server;
   startSocketsServer(): Promise<void>;
   addAuthMiddleware(userProfileRepo: IUserProfileRepo, identityService: IIdentityService): void;
@@ -11,7 +11,7 @@ export interface IWebSocketsService {
   subscribeToBroker(): void;
   publishMessageToBroker(message: IWebsocketMessage, room: string): void;
   handleBrokerMessage(channel: string, message: IWebsocketMessage): void;
-  sendMessage(message: IWebsocketMessage, room: string): void;
+  sendMessageToRoom(room: string, message: IWebsocketMessage): void;
   sendMessageToUser(userId: string, message: IWebsocketMessage): void;
   joinRoom(room: string, socketId: string): void;
   leaveRoom(room: string, socketId: string): void;

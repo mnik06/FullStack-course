@@ -18,7 +18,7 @@ export function getCommentRepo(db: NodePgDatabase): ICommentRepo {
         db.select().from(userTable).where(eq(userTable.id, data.userId as string))
       ]);
 
-      return comment ? CommentSchema.parse({ ...comment, user }) : null;
+      return CommentSchema.parse({ ...comment, user });
     },
 
     async createMultipleComments(data, transaction) {

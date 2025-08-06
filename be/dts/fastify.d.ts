@@ -7,7 +7,7 @@ import { IIdentityService } from 'src/types/services/IIdentityService';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 import { ISignatureService } from 'src/types/services/ISignatureService';
 import { ITransactionManager } from 'src/types/ITransactionManager';
-import { IWebSocketsService } from 'src/services/websockets/IWebSocketsService';
+import { IWebsocketsService } from 'src/services/websockets/IWebsocketsService';
 
 type TTransactionContext = Parameters<ITransactionManager['execute']>[0] extends (
   ctx: infer T
@@ -25,7 +25,7 @@ declare module 'fastify' {
     mailService: IMailService,
     storageService: IStorageService,
     signatureService: ISignatureService,
-    websocketsService: IWebSocketsService,
+    websocketsService: IWebsocketsService,
     transactionManager: ITransactionManager
   }
 
