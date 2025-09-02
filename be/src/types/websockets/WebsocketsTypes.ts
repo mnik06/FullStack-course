@@ -8,4 +8,5 @@ export type TWebsocketMessage = keyof typeof EWebsocketMessageType;
 export interface IWebsocketMessage {
   type: TWebsocketMessage;
   data: any;
+  skipUserIds?: string[];
 }

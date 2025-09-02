@@ -32,6 +32,12 @@ class WebsocketsService {
 
     this.socket.emit(event, data)
   }
+
+  removeListener (event: TApiWebsocketMessageType, cb?: (data: any) => void) {
+    if (!this.socket) return
+
+    this.socket.off(event, cb)
+  }
 }
 
 export const websocketsService = new WebsocketsService()

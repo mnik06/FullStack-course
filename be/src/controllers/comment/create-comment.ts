@@ -23,7 +23,8 @@ export async function createNewComment(params: {
   await notifyCommentsUpdated({
     postId: params.postId,
     postRepo: params.postRepo,
-    websocketsService: params.websocketsService
+    websocketsService: params.websocketsService,
+    userId: params.user.id
   });
 
   return comment;

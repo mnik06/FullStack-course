@@ -34,8 +34,10 @@ const loading = ref(false)
 function fetchPost () {
   loading.value = true
 
-  postsService.getPostById(route.params.id as string)
-    .then((res) => { post.value = res })
+  return Promise.all([
+    postsService.getPostById(route.params.id as string).then((res) => { post.value = res }),
+    subscribeToPostMessages()
+  ])
     .catch(() => {
       router.push({ name: routeNames.posts })
     })
@@ -43,6 +45,10 @@ function fetchPost () {
 }
 
 const { openModal } = useModals()
+
+function subscribeToPostMessages () {
+  return postsService.subscribeToPostEvents(route.params.id as string)
+}
 
 function handleOpenUpsertModal () {
   openModal('PostsUpsertModal', {

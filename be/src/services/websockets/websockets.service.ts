@@ -92,30 +92,36 @@ export function getWebsocketsService(): IWebsocketsService {
       });
     },
 
-    publishMessageToBroker(room, message) {
-      pubClient.publish(`room:${room}`, JSON.stringify(message));
+    publishMessageToBroker(room, message, skipUserIds) {
+      pubClient.publish(`room:${room}`, JSON.stringify({ ...message, skipUserIds }));
     },
 
     handleBrokerMessage(channel, message) {
       const roomName = channel.replace('room:', '');
 
-      const socketIds = roomName === '*' ? Array.from(connections.keys()) : rooms.get(roomName);
+      let socketIds = roomName === '*' ? Array.from(connections.keys()) : rooms.get(roomName);
+
+      if (message.skipUserIds) {
+        socketIds = Array.from(socketIds || []).filter((socketId) => {
+          return !message.skipUserIds?.some(userId => rooms.get(`user:${userId}`)?.has(socketId));
+        });
+      }
 
       socketIds?.forEach((socketId) => {
         connections.get(socketId)?.emit(message.type, message.data);
       });
     },
 
-    sendMessageToRoom(room, message) {
-      this.publishMessageToBroker(room, message);
+    sendMessageToRoom(room, message, skipUserIds) {
+      this.publishMessageToBroker(room, message, skipUserIds);
+    },
+
+    sendMessageToAll(message, skipUserIds) {
+      this.publishMessageToBroker('*', message, skipUserIds);
     },
 
     sendMessageToUser(userId, message) {
       this.sendMessageToRoom(`user:${userId}`, message);
-    },
-
-    sendMessageToAll(message) {
-      this.publishMessageToBroker('*', message);
     },
 
     joinRoom(room: string, socketId: string) {
