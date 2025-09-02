@@ -9,12 +9,14 @@ export interface IWebsocketsService {
   addAuthMiddleware(userProfileRepo: IUserProfileRepo, identityService: IIdentityService): void;
   listenConnections(): void;
   subscribeToBroker(): void;
-  publishMessageToBroker(message: IWebsocketMessage, room: string): void;
+  publishMessageToBroker(room: string, message: IWebsocketMessage): void;
   handleBrokerMessage(channel: string, message: IWebsocketMessage): void;
   sendMessageToRoom(room: string, message: IWebsocketMessage): void;
+  sendMessageToAll(message: IWebsocketMessage): void;
   sendMessageToUser(userId: string, message: IWebsocketMessage): void;
   joinRoom(room: string, socketId: string): void;
   leaveRoom(room: string, socketId: string): void;
+  addUserToRoom(userId: string, room: string): void;
   addConnection(socket: Socket): void;
   removeConnection(socket: Socket): void;
 }

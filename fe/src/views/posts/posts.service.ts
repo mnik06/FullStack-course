@@ -42,6 +42,10 @@ class PostsService {
   editPostTags (postId: string, tagIds: string[]) {
     return useApiClient.post('/api/posts/{postId}/edit-tags/', { tagIds }, { dynamicKeys: { postId } })
   }
+
+  subscribeToPostEvents (postId: string) {
+    return useApiClient.post('/api/posts/{postId}/subscribe-to-events/', undefined, { dynamicKeys: { postId } })
+  }
 }
 
 export const postsService = new PostsService()

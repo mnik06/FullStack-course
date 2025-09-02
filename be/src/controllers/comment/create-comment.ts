@@ -1,9 +1,9 @@
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 import { TCommentUpsertData } from 'src/types/comment/schemas/CommentUpsertData';
-import { HttpError } from 'src/api/errors/HttpError';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
 import { IWebsocketsService } from 'src/services/websockets/IWebsocketsService';
+import { notifyCommentsUpdated } from 'src/controllers/common/comment/notify-post-comments-updated';
 
 export async function createNewComment(params: {
   commentRepo: ICommentRepo;
@@ -13,14 +13,6 @@ export async function createNewComment(params: {
   postId: string;
   websocketsService: IWebsocketsService;
 }) {
-  const post = await params.postRepo.getPostById(params.postId);
-
-  if (!post) {
-    throw new HttpError({
-      statusCode: 404,
-      message: 'Post not found'
-    });
-  }
 
   const comment = await params.commentRepo.createComment({
     ...params.data,
@@ -28,18 +20,10 @@ export async function createNewComment(params: {
     userId: params.user.id
   });
 
-  params.websocketsService.sendMessageToUser(post.userId, {
-    type: 'added_comment_to_post',
-    data: {
-      addedBy: comment.user.name
-    }
-  });
-  
-  params.websocketsService.sendMessageToRoom(`post:${post.id}`, {
-    type: 'added_comment_to_post',
-    data: {
-      addedBy: comment.user.name
-    }
+  await notifyCommentsUpdated({
+    postId: params.postId,
+    postRepo: params.postRepo,
+    websocketsService: params.websocketsService
   });
 
   return comment;

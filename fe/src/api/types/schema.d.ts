@@ -1117,6 +1117,25 @@ export interface paths {
       };
     };
   };
+  "/api/posts/{postId}/subscribe-to-events/": {
+    post: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/tags/": {
     get: {
       parameters: {
@@ -1138,16 +1157,6 @@ export interface paths {
                 updatedAt: string;
               }[];
           };
-        };
-      };
-    };
-  };
-  "/api/test/": {
-    get: {
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: never;
         };
       };
     };
@@ -1199,6 +1208,8 @@ export interface components {
      * @enum {integer}
      */
     ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 | 1009 | 1010 | 1011;
+    /** @enum {string} */
+    WebsocketMessageType: "post_comments_updated" | "post_comments_count_updated";
   };
   responses: never;
   parameters: never;

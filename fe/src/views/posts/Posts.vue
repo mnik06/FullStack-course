@@ -111,5 +111,13 @@ watch(search, debouncedFetchPosts)
 
 onMounted(() => {
   postsStore.fetchAvailableTags()
+
+  websocketsService.listenEvent('post_comments_count_updated', (data) => {
+    const post = posts.value.find((post) => post.id === data.postId)
+
+    if (post) {
+      post.commentsCount = data.commentsCount
+    }
+  })
 })
 </script>

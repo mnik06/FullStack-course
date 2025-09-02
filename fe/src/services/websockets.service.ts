@@ -21,13 +21,13 @@ class WebsocketsService {
     this.socket.disconnect()
   }
 
-  listenEvent (event: string, cb: (data: any) => void) {
+  listenEvent (event: TApiWebsocketMessageType, cb: (data: any) => void) {
     if (!this.socket) return
 
     this.socket.on(event, cb)
   }
 
-  sendEvent (event: string, data: any) {
+  sendEvent (event: TApiWebsocketMessageType, data: any) {
     if (!this.socket) return
 
     this.socket.emit(event, data)

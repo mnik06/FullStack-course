@@ -24,8 +24,11 @@ const routes: FastifyPluginAsync = async function (f) {
     preHandler: [requirePermission('manage_comment', (req) => postService.checkIsCommentOwner(fastify, req))]
   }, (req) => {
     return deleteCommentSoft({
+      commentId: req.params.commentId,
+      postId: req.params.postId,
       commentRepo: fastify.repos.commentRepo,
-      commentId: req.params.commentId
+      postRepo: fastify.repos.postRepo,
+      websocketsService: fastify.websocketsService
     });
   });
 };
