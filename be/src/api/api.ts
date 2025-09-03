@@ -21,6 +21,8 @@ import { getDb, dbHealthCheck, getTransactionManager } from 'src/services/drizzl
 import { getCognitoService } from 'src/services/cognito/cognito.service';
 import { kmsService } from 'src/services/kms/kms.service';
 import { getSendgridService } from 'src/services/sendgrid/sendgrid.service';
+import websocketsPlugin from './plugins/websockets.plugin';
+import { getWebsocketsService } from 'src/services/websockets/websockets.service';
 
 async function run() {
   const server = fastify({
@@ -69,6 +71,8 @@ async function run() {
   server.decorate('identityService', getCognitoService());
   server.decorate('signatureService', kmsService());
   server.decorate('mailService', getSendgridService());
+  server.decorate('websocketsService', getWebsocketsService());
+
   server.decorate(
     'db',
     getDb({
@@ -98,6 +102,7 @@ async function run() {
     skip: ['/api/documentation'],
     logLevel: 'silent'
   });
+  server.register(websocketsPlugin);
 
   // load routes
   server.register(autoload, {

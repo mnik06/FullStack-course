@@ -3,11 +3,13 @@ import { HttpError } from 'src/api/errors/HttpError';
 import { ITransactionManager } from 'src/types/ITransactionManager';
 import { ICommentRepo } from 'src/types/repos/ICommentRepo';
 import { IPostRepo } from 'src/types/repos/IPostRepo';
+import { IUserProfileRepo } from 'src/types/repos/IUserProfileRepo';
 
 export async function restoreSoftDeletedPost(params: {
   postId: string,
   postRepo: IPostRepo,
   commentRepo: ICommentRepo,
+  userProfileRepo: IUserProfileRepo,
   transactionManager: ITransactionManager,
 }) {
   // TODO: add user check
@@ -18,6 +20,16 @@ export async function restoreSoftDeletedPost(params: {
       statusCode: 404,
       message: 'Post not found',
       errorCode: EErrorCodes.POST_NOT_FOUND
+    });
+  }
+
+  const postOwner = await params.userProfileRepo.getUserProfileById(post.userId);
+
+  if (!postOwner) {
+    throw new HttpError({
+      statusCode: 404,
+      message: 'Post owner not found',
+      errorCode: EErrorCodes.POST_OWNER_NOT_FOUND
     });
   }
 

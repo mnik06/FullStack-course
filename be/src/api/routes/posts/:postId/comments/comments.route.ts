@@ -42,9 +42,11 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return createNewComment({
       commentRepo: fastify.repos.commentRepo,
+      postRepo: fastify.repos.postRepo,
       data: req.body,
       postId: req.params.postId,
-      user: req.user as TUserProfile
+      user: req.user as TUserProfile,
+      websocketsService: fastify.websocketsService
     });
   });
 };

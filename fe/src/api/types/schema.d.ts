@@ -137,20 +137,7 @@ export interface paths {
                 postId: string;
                 /** Format: uuid */
                 userId: string;
-                user: {
-                  subId: string;
-                  email: string;
-                  isActive?: boolean;
-                  id: string;
-                  name: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  isPending: boolean;
-                  /** @enum {string} */
-                  role: "admin" | "user";
-                };
+                user?: unknown;
                 /** Format: date-time */
                 deletedAt: string | null;
               })[];
@@ -196,28 +183,8 @@ export interface paths {
                 createdAt: string;
                 /** Format: uuid */
                 userId: string;
-                user: {
-                  subId: string;
-                  email: string;
-                  isActive?: boolean;
-                  id: string;
-                  name: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  isPending: boolean;
-                  /** @enum {string} */
-                  role: "admin" | "user";
-                };
-                tags: {
-                    id: string;
-                    name: string;
-                    /** Format: date-time */
-                    createdAt: string;
-                    /** Format: date-time */
-                    updatedAt: string;
-                  }[];
+                user?: unknown;
+                tags?: unknown;
                 /** Format: date-time */
                 deletedAt: string | null;
               })[];
@@ -1150,6 +1117,25 @@ export interface paths {
       };
     };
   };
+  "/api/posts/{postId}/subscribe-to-events/": {
+    post: {
+      parameters: {
+        path: {
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/tags/": {
     get: {
       parameters: {
@@ -1222,6 +1208,8 @@ export interface components {
      * @enum {integer}
      */
     ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 | 1009 | 1010 | 1011;
+    /** @enum {string} */
+    WebsocketMessageType: "post_comments_updated" | "post_comments_count_updated" | "user_post_commented";
   };
   responses: never;
   parameters: never;

@@ -3,12 +3,18 @@ import { HttpError } from 'src/api/errors/HttpError';
 import { createNewArchiveHelper } from 'src/controllers/common/create-new-archive-helper';
 import { IArchiveRepo } from 'src/types/repos/IArchiveRepo';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
+import { IPostRepo } from 'src/types/repos/IPostRepo';
+import { IWebsocketsService } from 'src/services/websockets/IWebsocketsService';
+import { notifyCommentsUpdated } from 'src/controllers/common/comment/notify-post-comments-updated';
 
 export async function deleteCommentHardAndArchive(params: {
-  commentRepo: ICommentRepo,
   commentId: string,
+  postId: string,
+  commentRepo: ICommentRepo,
+  postRepo: IPostRepo,
   archiveRepo: IArchiveRepo,
-  user: TUserProfile
+  user: TUserProfile,
+  websocketsService: IWebsocketsService
 }) {
   const comment = await params.commentRepo.getCommentById(params.commentId);
 
@@ -26,6 +32,13 @@ export async function deleteCommentHardAndArchive(params: {
     entityId: params.commentId,
     user: params.user,
     data: comment
+  });
+
+  await notifyCommentsUpdated({
+    postId: params.postId,
+    postRepo: params.postRepo,
+    websocketsService: params.websocketsService,
+    userId: params.user.id
   });
 
   return { success: true };

@@ -4,6 +4,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import { EErrorCodes, getErrorCodesDescription } from '../errors/EErrorCodes';
 import { jsonSchemaTransform } from 'fastify-type-provider-zod';
+import { EWebsocketMessageType } from 'src/types/websockets/WebsocketsTypes';
 
 export async function setupSwagger(server: FastifyInstance, userName: string, pwd: string) {
   await server.register(fastifyBasicAuth, {
@@ -39,6 +40,10 @@ export async function setupSwagger(server: FastifyInstance, userName: string, pw
             type: 'integer',
             enum: Object.values(EErrorCodes).filter((value) => typeof value === 'number'),
             description: getErrorCodesDescription()
+          },
+          WebsocketMessageType: {
+            type: 'string',
+            enum: Object.values(EWebsocketMessageType).filter((value) => typeof value === 'string')
           }
         }
       }

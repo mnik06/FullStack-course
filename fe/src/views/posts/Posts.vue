@@ -106,10 +106,24 @@ function handleOpenUpsertModal (postToEdit?: TPost) {
   })
 }
 
+function handlePostCommentsCountUpdated (data: any) {
+  const post = posts.value.find((post) => post.id === data.postId)
+
+  if (post) {
+    post.commentsCount = data.commentsCount
+  }
+}
+
 watch([sorting, pagination, filters], fetchPosts, { deep: true, immediate: true })
 watch(search, debouncedFetchPosts)
 
 onMounted(() => {
   postsStore.fetchAvailableTags()
+
+  websocketsService.listenEvent('post_comments_count_updated', handlePostCommentsCountUpdated)
+})
+
+onBeforeUnmount(() => {
+  websocketsService.removeListener('post_comments_count_updated', handlePostCommentsCountUpdated)
 })
 </script>

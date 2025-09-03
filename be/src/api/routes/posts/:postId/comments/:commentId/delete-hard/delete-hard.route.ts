@@ -25,10 +25,13 @@ const routes: FastifyPluginAsync = async function (f) {
     preHandler: [requirePermission('manage_comment', (req) => postService.checkIsCommentOwner(fastify, req))]
   }, (req) => {
     return deleteCommentHardAndArchive({
-      commentRepo: fastify.repos.commentRepo,
       commentId: req.params.commentId,
+      postId: req.params.postId,
+      commentRepo: fastify.repos.commentRepo,
+      postRepo: fastify.repos.postRepo,
       archiveRepo: fastify.repos.archiveRepo,
-      user: req.user as TUserProfile
+      user: req.user as TUserProfile,
+      websocketsService: fastify.websocketsService
     });
   });
 };

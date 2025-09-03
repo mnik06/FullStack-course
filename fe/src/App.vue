@@ -23,4 +23,6 @@
 import Layout from '@/layouts/Layout.vue'
 
 const { messages, locale } = useI18n()
+
+websocketsService.attachGlobalHandlers()
 </script>

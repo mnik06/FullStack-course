@@ -28,6 +28,7 @@ class AuthService {
 
   signout () {
     return signOut().then(() => {
+      websocketsService.disconnect()
       window.location.href = router.resolve({ name: routeNames.signin }).fullPath
     })
   }

@@ -150,8 +150,28 @@ function handleTagsUpdated (tags: TTag[]) {
 function fetchPostComments () {
   postCommentsLoading.value = true
 
-  return postsService.getComments(props.post.id)
-    .then((res) => { postComments.value = res })
+  return Promise.all([
+    postsService.getComments(props.post.id).then((res) => { postComments.value = res }),
+    subscribeToPostMessages()
+  ])
     .finally(() => { postCommentsLoading.value = false })
 }
+
+function subscribeToPostMessages () {
+  return postsService.subscribeToPostEvents(props.post.id)
+}
+
+function handlePostCommentsUpdated (data: { postId: string; comments: TPostComment[] }) {
+  if (data.postId === props.post.id) {
+    postComments.value = data.comments
+  }
+}
+
+onMounted(() => {
+  websocketsService.listenEvent('post_comments_updated', handlePostCommentsUpdated)
+})
+
+onBeforeUnmount(() => {
+  websocketsService.removeListener('post_comments_updated', handlePostCommentsUpdated)
+})
 </script>

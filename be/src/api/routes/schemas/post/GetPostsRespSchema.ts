@@ -6,5 +6,5 @@ export const GetPostsRespSchema = z.object({
   data: z.array(PostSchemaWithCommentsCount),
   meta: PaginationMetadataSchema
 });
-
+  
 export type TGetPostsResp = z.infer<typeof GetPostsRespSchema>
