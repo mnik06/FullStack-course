@@ -1,5 +1,7 @@
 type TIndexedObject<T = any> = Record<string, T>
 
+type TPartialRecord<K extends string, T> = Partial<Record<K, T>>
+
 type TCallbackFn<T extends unknown[] = [], R = void> = (...args: T) => R
 
 type TFormatterFunction<T> = (row: T) => (number | string)

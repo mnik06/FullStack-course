@@ -1209,7 +1209,7 @@ export interface components {
      */
     ErrorCodes: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 | 1009 | 1010 | 1011;
     /** @enum {string} */
-    WebsocketMessageType: "post_comments_updated" | "post_comments_count_updated";
+    WebsocketMessageType: "post_comments_updated" | "post_comments_count_updated" | "user_post_commented";
   };
   responses: never;
   parameters: never;

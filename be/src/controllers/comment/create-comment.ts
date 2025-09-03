@@ -13,6 +13,7 @@ export async function createNewComment(params: {
   postId: string;
   websocketsService: IWebsocketsService;
 }) {
+  const post = await params.postRepo.getPostById(params.postId);
 
   const comment = await params.commentRepo.createComment({
     ...params.data,
@@ -26,6 +27,16 @@ export async function createNewComment(params: {
     websocketsService: params.websocketsService,
     userId: params.user.id
   });
+
+  if (post && post.userId !== params.user.id) {
+    params.websocketsService.sendMessageToUser(post.userId, {
+      type: 'user_post_commented',
+      data: {
+        commentedByName: params.user.name,
+        postId: params.postId
+      }
+    });
+  }
 
   return comment;
 }
