@@ -22,7 +22,9 @@ const routes: FastifyPluginAsync = async function (f) {
   }, (req) => {
     return restoreSoftDeletedComment({
       commentRepo: fastify.repos.commentRepo,
-      commentId: req.params.commentId
+      commentId: req.params.commentId,
+      postRepo: fastify.repos.postRepo,
+      userProfileRepo: fastify.repos.userProfileRepo
     });
   });
 };
