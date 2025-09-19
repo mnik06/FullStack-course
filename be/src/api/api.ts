@@ -1,4 +1,5 @@
- 
+/* eslint-disable max-len */
+
 import 'src/services/env/env.service';
 import fastify from 'fastify';
 import autoload from '@fastify/autoload';
@@ -71,6 +72,15 @@ async function run() {
   server.decorate('identityService', getCognitoService());
   server.decorate('signatureService', kmsService());
   server.decorate('mailService', getSendgridService());
+
+  // WEBSOCKETS - Треба запускати WebSocket сервер на окремому порту і як окремий сервіс, 
+  // щоб мати можливість масштабуватись і зменшити навантаження на АПІ сервер. Зараз ти його запускаєш разом з АПІ сервером.
+  // Чому це важливо:
+  // - Ізоляція навантаження: WebSocket з'єднання тримають постійні TCP з'єднання, що споживає пам'ять та ресурси
+  // - Ізоляція збоїв: Якщо API сервер падає, WebSocket з'єднання залишаються активними і навпаки
+  // - Незалежне масштабування: Можна запускати різну кількість інстансів API та WebSocket серверів залежно від навантаження
+  // - Незалежні деплойменти: Можна оновлювати один сервіс без впливу на інший
+
   server.decorate('websocketsService', getWebsocketsService());
 
   server.decorate(

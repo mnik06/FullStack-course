@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { and, asc, countDistinct, desc, eq, exists, getTableColumns, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
@@ -35,6 +36,11 @@ const getTagFilters = (db: NodePgDatabase, tagIds: string[]) => {
 export function getPostRepo(db: NodePgDatabase): IPostRepo {
   return {
     async createPost(data) {
+      // CODE REVIEW - методи в репозиторії мають виконувати 1 дію. 
+      // Якщо це створення, то виконується лише створення, а не отримання юзера.
+      // Отримання юзера це бізнес логіка, яка виконується в контролері.
+      // До того ж, коли юзер створюєш пост, ти вже знаєш що це за юзер. Він є у тебе в реквесті. 
+      // Можна використати його, або отримати юзера з бази, але в контроллері, а не тут. 
       const [[post], [user]] = await Promise.all([
         db
           .insert(postTable)
@@ -121,6 +127,7 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
       const isPostNotDeletedFilter = skipDeleted ? getIsPostNotDeletedFilter() : undefined;
       const isCommentNotDeletedFilter = skipDeleted ? getIsCommentNotDeletedFilter() : undefined;
 
+      // CODE REVIEW - Ти маєш зробити 1 select в базу і джоінити до нього інші таблиці.
       const [posts, comments] = await Promise.all([
         db
           .select({
@@ -217,6 +224,13 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         return null;
       }
 
+      // CODE REVIEW - Апдейт поста не має гетати якісь данні. В репозиторії методи мають бути прості і чисті, без зайвих додаткових логік. 
+      // Вся бізнес логіка має бути в контролері. 
+      // Якщо тобі треба повернути якісь данні після апдейту, то зроби гет цих данних після апдейту в контролері. 
+      
+      // Гетати данні з 3 таблиць одночасно не правильно, ти маєш зробити 1 гет і джоінити до нього інші таблиці.
+      // І до того ж, в тебе на фронті вєе є ці всі данні, і вони не змінюються під час апдейту поста, тому гетати їх заново не має сенсу.  
+      
       const [[user], comments, tags] = await Promise.all([
         db
           .select({
@@ -261,7 +275,9 @@ export function getPostRepo(db: NodePgDatabase): IPostRepo {
         .set({ deletedAt: new Date() })
         .where(eq(postTable.id, id))
         .returning();
-
+      
+      // CODE REVIEW - Оновлення коментарів не має бути в репозиторії постів, це має бути в репозиторіх коментарів. 
+      // Це вже бізнес логіка. Ти це маєш робити в контролері, де ти маєш викликати deletePostSoft та deleteCommentsSoftByPostId.
       await db.update(commentTable)
         .set({ deletedAt: new Date() })
         .where(eq(commentTable.postId, id));

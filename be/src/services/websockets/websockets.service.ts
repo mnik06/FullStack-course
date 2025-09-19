@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { createAdapter } from '@socket.io/redis-adapter';
 import Redis from 'ioredis';
 import { Server, Socket } from 'socket.io';
@@ -5,12 +6,21 @@ import { IWebsocketsService } from './IWebsocketsService';
 import { TUserProfile } from 'src/types/user-profile/schemas/UserProfile';
 
 export function getWebsocketsService(): IWebsocketsService {
+  // --
+  // redis cache
+  // redis shared state
+  // redis atomic counter 
   const pubClient = new Redis({
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT),
     lazyConnect: true
   });
   const subClient = pubClient.duplicate();
+
+  // WEBSOCKETS - Socket.IO вже має вбудовану систему rooms і connections. Тобі не треба робити це в ручному режимі.
+  // Тому краще це взяти з самого socketServer
+  // socketServer.sockets.sockets.get(socketId)
+  // socketServer.sockets.adapter.rooms.get(roomName)
 
   // socket id to socket
   const connections: Map<string, Socket> = new Map();

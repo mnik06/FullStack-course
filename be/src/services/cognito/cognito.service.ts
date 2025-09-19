@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   AdminCreateUserCommand, 
   AdminDeleteUserCommand, 
@@ -42,6 +43,7 @@ export function getCognitoService(): IIdentityService {
 
   return {
     async createNewUser({ email, password }) {
+      // CODE REVIEW - Ти маєш завжди використовувати try/catch в services, для того щоб контролювати помилки які приходить з цих сервісів.
       const res = await this.createNewPendingUser({ email });
   
       if (res) {

@@ -21,6 +21,9 @@ export async function createNewComment(params: {
     userId: params.user.id
   });
 
+  // WEBSOCKETS - Треба додати try/catch всюди де використовуєш вебсокети, 
+  // щоб запобігти падіння сервера якщо вебсокет не доступний. 
+  
   await notifyCommentsUpdated({
     postId: params.postId,
     postRepo: params.postRepo,

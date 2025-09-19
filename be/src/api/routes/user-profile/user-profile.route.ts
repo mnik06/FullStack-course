@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { FastifyPluginAsync } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
@@ -13,7 +14,7 @@ const routes: FastifyPluginAsync = async function (f) {
         200: GetUserProfileRespSchema
       }
     }
-  }, getUserProfile);
+  }, getUserProfile); // CODE REVIEW - не треба виносити це в окремий метод, так як він нічого не робить, ти можеш просто повернути тут req.user.
 };
 
 export default routes; 

@@ -19,5 +19,7 @@ export async function updateCommentById(params: {
     });
   }
 
+  // WEBSOCKETS - Треба додати WebSocket або видалити цей контроллер якщо він не використовується.
+  
   return comment;
 } 

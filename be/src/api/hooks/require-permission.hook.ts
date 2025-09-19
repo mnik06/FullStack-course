@@ -35,6 +35,10 @@ export function requirePermission(
   resourceCheck?: (request: FastifyRequest) => Promise<boolean>
 ) {
   return async (request: FastifyRequest) => {
+    // CODE REVIEW - request.user?.role as TUserRole - цей вираз не вірний. 
+    // В цій перевірці ти маєш бути впевнений що в тебе є request.user. 
+    // Якщо request.user не існує, то користувач не авторизований і не може мати права доступу, 
+    // тому ти спочатку маєш перевірити чи є юзер, і якщо його не має то одразу повернути помилку
     const permissionEntry = rolePermissions[request.user?.role as TUserRole]
       ?.find((entry) => entry.action === action);
 
